@@ -3,14 +3,14 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.UseCases;
+namespace Application.UseCases.User.Commands.CreateUser;
 
 public record CreateUserCommand : IRequest<Guid?>
 {
-    public string Name { get; init; } = string.Empty;
-    public string Email { get; init; } = string.Empty;
-    public string Password { get; init; } = string.Empty;
-    public string Username { get; init; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+    public required string Username { get; set; }
 }
 
 public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid?>

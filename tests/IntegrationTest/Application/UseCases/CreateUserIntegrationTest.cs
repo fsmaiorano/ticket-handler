@@ -1,11 +1,6 @@
-﻿using Application.UseCases;
+﻿using Application.UseCases.User.Commands.CreateUser;
 using Application.UseCases.User.Queries;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Bogus;
 
 namespace IntegrationTest.Application.UseCases
 {
@@ -23,15 +18,41 @@ namespace IntegrationTest.Application.UseCases
         {
             var command = new CreateUserCommand
             {
-                Name = "Test",
-                Email = "test@test.com",
-                Password = "password",
-                Username = "test"
+                Name = new Faker().Name.FullName(),
+                Email = new Faker().Internet.Email(),
+                Password = new Faker().Internet.Password(),
+                Username = new Faker().Internet.UserName()
             };
 
             await SendAsync(command);
-            
-            var query = new GetPokemonByEmailQuery
+
+            var query = new GetUserByEmail
+            {
+                Email = command.Email
+            };
+
+            var user = await SendAsync(query);
+            Assert.IsNotNull(user);
+            Assert.AreEqual(command.Name, user?.Name);
+            Assert.AreEqual(command.Email, user?.Email);
+            Assert.AreEqual(command.Password, user?.Password);
+            Assert.AreEqual(command.Username, user?.Username);
+        }
+
+        [TestMethod]
+        public async Task CreateUserValidationError()
+        {
+            var command = new CreateUserCommand
+            {
+                Name = new Faker().Name.FullName(),
+                Email = new Faker().Internet.Email(),
+                Password = "12",
+                Username = new Faker().Internet.UserName()
+            };
+
+            var x = await SendAsync(command);
+
+            var query = new GetUserByEmail
             {
                 Email = command.Email
             };
