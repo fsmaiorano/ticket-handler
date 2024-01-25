@@ -13,16 +13,10 @@ public record CreateUserCommand : IRequest<Guid?>
     public required string Username { get; set; }
 }
 
-public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid?>
+public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext context) : IRequestHandler<CreateUserCommand, Guid?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<CreateUserHandler> _logger;
-
-    public CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<CreateUserHandler> _logger = logger;
 
     public async Task<Guid?> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -39,7 +33,7 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid?>
         _context.Users.Add(user);
         await _context.SaveChangesAsync(cancellationToken);
 
-        var createdUser = await _context.Users.FindAsync(user.Id);
+        var createdUser = await _context.Users.FindAsync([user.Id], cancellationToken);
 
         return createdUser?.Id ?? null;
     }
