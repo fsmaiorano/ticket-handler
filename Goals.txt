@@ -1,0 +1,18 @@
+Ticket Handler
+
+área de gerenciamento
+Criar novas categorias
+
+
+Funcionalidades:
+
+Gravar Tickets
+Tickets ficam disponiveis para um grupo
+Devem ter categorias
+
+Users:
+
+Criar usuarios
+Criar grupos de usuarios
+Podem pertercer a mais de um grupo
+
