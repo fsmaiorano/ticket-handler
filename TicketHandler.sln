@@ -7,20 +7,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{333C3C72-96F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F125E648-4DB4-417E-A486-80CC14F23251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{513A73A6-54C1-4E36-B41B-5169F0DFF7CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{513A73A6-54C1-4E36-B41B-5169F0DFF7CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{E2467DCF-F8AB-43EC-AB65-1BDA3593210F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{E2467DCF-F8AB-43EC-AB65-1BDA3593210F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{4BBC2286-5A55-4933-B074-436D4D00C6FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{4BBC2286-5A55-4933-B074-436D4D00C6FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E98EBCD2-F4C9-4267-AB3C-324A44287DD0}"
 	ProjectSection(SolutionItems) = preProject
 		Goals.txt = Goals.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "tests\IntegrationTest\IntegrationTest.csproj", "{6F0F6F0D-4489-4667-B8F5-4B4607215483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTest", "tests\IntegrationTest\IntegrationTest.csproj", "{6F0F6F0D-4489-4667-B8F5-4B4607215483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{C868FB90-2F5D-482B-8156-2F7F1F3FDA21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\WebApi\WebApi.csproj", "{3B9B697E-CE3A-46AE-B07C-BDB2F9646754}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,10 +44,10 @@ Global
 		{6F0F6F0D-4489-4667-B8F5-4B4607215483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F0F6F0D-4489-4667-B8F5-4B4607215483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F0F6F0D-4489-4667-B8F5-4B4607215483}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C868FB90-2F5D-482B-8156-2F7F1F3FDA21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C868FB90-2F5D-482B-8156-2F7F1F3FDA21}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C868FB90-2F5D-482B-8156-2F7F1F3FDA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C868FB90-2F5D-482B-8156-2F7F1F3FDA21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9B697E-CE3A-46AE-B07C-BDB2F9646754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9B697E-CE3A-46AE-B07C-BDB2F9646754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9B697E-CE3A-46AE-B07C-BDB2F9646754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9B697E-CE3A-46AE-B07C-BDB2F9646754}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,7 +57,7 @@ Global
 		{E2467DCF-F8AB-43EC-AB65-1BDA3593210F} = {333C3C72-96FA-4A0A-8ED4-2C0A9D4638AB}
 		{4BBC2286-5A55-4933-B074-436D4D00C6FE} = {333C3C72-96FA-4A0A-8ED4-2C0A9D4638AB}
 		{6F0F6F0D-4489-4667-B8F5-4B4607215483} = {F125E648-4DB4-417E-A486-80CC14F23251}
-		{C868FB90-2F5D-482B-8156-2F7F1F3FDA21} = {333C3C72-96FA-4A0A-8ED4-2C0A9D4638AB}
+		{3B9B697E-CE3A-46AE-B07C-BDB2F9646754} = {333C3C72-96FA-4A0A-8ED4-2C0A9D4638AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14B60D1F-0FCC-4E97-BB1B-40CCF159522C}

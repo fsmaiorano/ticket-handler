@@ -8,22 +8,26 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
     {
         RuleFor(x => x.Name)
             .NotEmpty()
+            .NotNull()
             .MinimumLength(3)
             .MaximumLength(100);
 
         RuleFor(x => x.Email)
             .NotEmpty()
+            .NotNull()
             .EmailAddress()
             .MinimumLength(3)
             .MaximumLength(100);
 
         RuleFor(x => x.Password)
             .NotEmpty()
+            .NotNull()
             .MinimumLength(3)
             .MaximumLength(100);
 
         RuleFor(x => x.Username)
             .NotEmpty()
+            .NotNull()
             .MinimumLength(3)
             .MaximumLength(100);
     }

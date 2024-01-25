@@ -1,9 +1,18 @@
-﻿namespace Application.Common.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Application.Common.Models;
 
 public class User
 {
-    public required string Username { get; set; }
-    public required string Name { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
+    [JsonPropertyName("username")]
+    public string? Username { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("email")]
+    public string? Email { get; set; }
+
+    [JsonPropertyName("password")]
+    public string? Password { get; set; }
 }

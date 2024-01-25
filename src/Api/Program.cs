@@ -1,11 +1,21 @@
 using Application;
+using Application.Common.Models;
+using Application.UseCases.User.Commands.CreateUser;
+using FluentValidation;
 using Infrastructure;
+using MediatR;
+using System;
 using System.Text.Json.Serialization;
+using WebApi;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddWebApiServices();
 
 builder.Services.AddLogging(loggingBuilder =>
 {
@@ -18,11 +28,6 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
 
 builder.Services.AddCors();
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
-
 var app = builder.Build();
 
 app.UseCors(builder => builder
@@ -30,30 +35,45 @@ app.UseCors(builder => builder
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-var sampleTodos = new Todo[] {
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-};
+Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+app.UseSwagger();
+app.UseSwaggerUI(
+    options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Ticket Handler API");
+        options.RoutePrefix = string.Empty;
+    }
+);
+
+app.UseHttpsRedirection();
+
+var mediator = app.Services.GetService(typeof(ISender)) as ISender ?? throw new NullReferenceException("Mediator is null");
+
+app.MapPost("/users", async (User input) =>
+{
+    try
+    {
+        var command = new CreateUserCommand()
+        {
+            Name = input.Name ?? string.Empty,
+            Email = input.Email ?? string.Empty,
+            Password = input.Password ?? string.Empty,
+            Username = input.Username ?? string.Empty
+        };
+
+        var result = await mediator.Send(command);
+        return result is not null ? Results.Ok(result) : Results.BadRequest();
+
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return Results.BadRequest();
+    }
+
+}).WithName("CreateUser").WithOpenApi();
 
 app.Run();
-
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
-
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-
-}
-
 
 public partial class Program { }
