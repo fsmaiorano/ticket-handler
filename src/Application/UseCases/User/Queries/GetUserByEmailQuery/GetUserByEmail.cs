@@ -11,16 +11,10 @@ public record GetUserByEmail : IRequest<UserEntity?>
     public required string Email { get; set; }
 }
 
-public class GetPokemonByEmailHandler : IRequestHandler<GetUserByEmail, UserEntity?>
+public class GetPokemonByEmailHandler(ILogger<GetPokemonByEmailHandler> logger, IDataContext context) : IRequestHandler<GetUserByEmail, UserEntity?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetPokemonByEmailHandler> _logger;
-
-    public GetPokemonByEmailHandler(ILogger<GetPokemonByEmailHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetPokemonByEmailHandler> _logger = logger;
 
     public async Task<UserEntity?> Handle(GetUserByEmail request, CancellationToken cancellationToken)
     {
