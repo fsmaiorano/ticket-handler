@@ -20,21 +20,29 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
 
     public async Task<Guid?> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("CreateUserCommand: {@Request}", request);
-
-        var user = new UserEntity
+        try
         {
-            Name = request.Name,
-            Email = request.Email,
-            Password = request.Password,
-            Username = request.Username
-        };
+            _logger.LogInformation("CreateUserCommand: {@Request}", request);
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync(cancellationToken);
+            var user = new UserEntity
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Password = request.Password,
+                Username = request.Username
+            };
 
-        var createdUser = await _context.Users.FindAsync([user.Id], cancellationToken);
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync(cancellationToken);
 
-        return createdUser?.Id ?? null;
+            var createdUser = await _context.Users.FindAsync([user.Id], cancellationToken);
+
+            return createdUser?.Id ?? null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "CreateUserCommand: {@Request}", request);
+            throw;
+        }
     }
 }
