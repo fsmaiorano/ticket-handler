@@ -17,7 +17,7 @@ internal class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var solutionPath = GetSolutionPath();
             var builder = new ConfigurationBuilder()
                 .SetBasePath(solutionPath.FullName)
-                .AddJsonFile("src/Api/appsettings.json", optional: false)
+                .AddJsonFile("src/WebApi/appsettings.json", optional: false)
                 .Build();
 
             configurationBuilder.AddConfiguration(builder);

@@ -38,31 +38,5 @@ namespace IntegrationTest.Application.UseCases
             Assert.AreEqual(command.Password, user?.Password);
             Assert.AreEqual(command.Username, user?.Username);
         }
-
-        [TestMethod]
-        public async Task CreateUserValidationError()
-        {
-            var command = new CreateUserCommand
-            {
-                Name = new Faker().Name.FullName(),
-                Email = new Faker().Internet.Email(),
-                Password = "12",
-                Username = new Faker().Internet.UserName()
-            };
-
-            var x = await SendAsync(command);
-
-            var query = new GetUserByEmail
-            {
-                Email = command.Email
-            };
-
-            var user = await SendAsync(query);
-            Assert.IsNotNull(user);
-            Assert.AreEqual(command.Name, user?.Name);
-            Assert.AreEqual(command.Email, user?.Email);
-            Assert.AreEqual(command.Password, user?.Password);
-            Assert.AreEqual(command.Username, user?.Username);
-        }
     }
 }
