@@ -65,13 +65,12 @@ public class DataContext : DbContext, IDataContext
                 var solutionPath = GetSolutionPath();
 
                 var connectionString = string.Empty;
-                Console.WriteLine($"DockerCompose Environment: {Environment.GetEnvironmentVariable("DockerCompose")}");
-                if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DefaultConnection")) && Environment.GetEnvironmentVariable("DockerCompose") == "false")
+                if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DefaultConnection")))
                 {
                     Console.WriteLine($"Using appsettings.json to get connection string");
                     var builder = new ConfigurationBuilder()
                         .SetBasePath(solutionPath.FullName)
-                        .AddJsonFile("src/Api/appsettings.json", optional: false)
+                        .AddJsonFile("src/WebApi/appsettings.json", optional: false)
                         .Build();
 
                     Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
@@ -80,9 +79,7 @@ public class DataContext : DbContext, IDataContext
                 else
                 {
                     Console.WriteLine($"Using Environment Variable to get connection string");
-
-                    //connectionString = Environment.GetEnvironmentVariable("DockerCompose_DefaultConnection");
-                    connectionString = "User ID=postgres;Password=postgres;Server=db;Port=5432;Database=pokemon_database;";
+                    connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
                     Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
 
                     Console.WriteLine($"Connection string: {connectionString}");

@@ -15,3 +15,25 @@
 - [ ] Update a user
 - [ ] Get all users
 - [ ] Get a user by id
+
+### Commands
+
+### Create migration
+
+```bash
+dotnet ef migrations add InitialCreate
+```
+
+### Update database
+
+```bash
+dotnet ef database update
+```
+
+#### Query to drop database
+
+```sql
+USE master;
+ALTER DATABASE tickethandler SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+DROP DATABASE tickethandler ;
+```
