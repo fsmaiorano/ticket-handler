@@ -1,8 +1,9 @@
 ﻿using Application.UseCases.User.Commands.CreateUser;
 using Application.UseCases.User.Queries;
 using Bogus;
+using Domain.Entities;
 
-namespace IntegrationTest.Application.UseCases;
+namespace IntegrationTest.Application.UseCases.User;
 
 [TestClass]
 public class CreateUserIntegrationTest : Testing
@@ -14,17 +15,13 @@ public class CreateUserIntegrationTest : Testing
     }
 
     [TestMethod]
-    public async Task CreateUser()
+    public static async Task<UserEntity?> CreateUser()
     {
-        var command = new CreateUserCommand
-        {
-            Name = new Faker().Name.FullName(),
-            Email = new Faker().Internet.Email(),
-            Password = new Faker().Internet.Password(),
-            Username = new Faker().Internet.UserName()
-        };
+        var command = CreateUserCommand();
 
         var createdUserId = await SendAsync(command);
+        Assert.IsNotNull(createdUserId);
+        Assert.IsInstanceOfType(createdUserId, typeof(Guid));
 
         var query = new GetUserByEmail
         {
@@ -37,5 +34,21 @@ public class CreateUserIntegrationTest : Testing
         Assert.AreEqual(command.Email, user?.Email);
         Assert.AreEqual(command.Password, user?.Password);
         Assert.AreEqual(command.Username, user?.Username);
+
+        return user;
+    }
+
+    [DataTestMethod]
+    public static CreateUserCommand CreateUserCommand()
+    {
+        var command = new CreateUserCommand
+        {
+            Name = new Faker().Name.FullName(),
+            Email = new Faker().Internet.Email(),
+            Password = new Faker().Internet.Password(),
+            Username = new Faker().Internet.UserName()
+        };
+
+        return command;
     }
 }
