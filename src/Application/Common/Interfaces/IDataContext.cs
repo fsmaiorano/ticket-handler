@@ -12,6 +12,9 @@ public interface IDataContext
     //DbSet<SpriteEntity> Sprites { get; }
     //DbSet<PokemonDetailEntity> Details { get; }
     DbSet<UserEntity> Users { get; }
+    DbSet<HolderEntity> Holders { get; }
+    DbSet<SectorEntity> Sectors { get; }
+
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

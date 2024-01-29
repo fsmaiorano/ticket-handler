@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Domain.Constants;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,9 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
                 Name = request.Name,
                 Email = request.Email,
                 Password = request.Password,
-                Username = request.Username
+                Username = request.Username,
+                Role = UserRoles.Administrator,
+                HolderId = Guid.NewGuid()
             };
 
             _context.Users.Add(user);
