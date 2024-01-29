@@ -5,18 +5,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.User.Queries;
-
-public record GetUserByEmail : IRequest<UserEntity?>
+public record GetUserByEmailQuery : IRequest<UserEntity?>
 {
     public required string Email { get; set; }
 }
 
-public class GetUserByEmailHandler(ILogger<GetUserByEmailHandler> logger, IDataContext context) : IRequestHandler<GetUserByEmail, UserEntity?>
+public class GetUserByEmailHandler(ILogger<GetUserByEmailHandler> logger, IDataContext context) : IRequestHandler<GetUserByEmailQuery, UserEntity?>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<GetUserByEmailHandler> _logger = logger;
 
-    public async Task<UserEntity?> Handle(GetUserByEmail request, CancellationToken cancellationToken)
+    public async Task<UserEntity?> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
     {
         UserEntity? user = default;
 

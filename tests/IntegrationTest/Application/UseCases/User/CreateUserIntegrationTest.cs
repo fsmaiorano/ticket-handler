@@ -8,14 +8,16 @@ namespace IntegrationTest.Application.UseCases.User;
 [TestClass]
 public class CreateUserIntegrationTest : Testing
 {
+    public static UserEntity? CreatedUser;
+
     [TestInitialize]
     public void TestInitialize()
     {
-
+        CreatedUser = default;
     }
 
     [TestMethod]
-    public static async Task<UserEntity?> CreateUser()
+    public async Task CreateUser()
     {
         var command = CreateUserCommand();
 
@@ -23,7 +25,7 @@ public class CreateUserIntegrationTest : Testing
         Assert.IsNotNull(createdUserId);
         Assert.IsInstanceOfType(createdUserId, typeof(Guid));
 
-        var query = new GetUserByEmail
+        var query = new GetUserByEmailQuery
         {
             Email = command.Email
         };
@@ -35,7 +37,7 @@ public class CreateUserIntegrationTest : Testing
         Assert.AreEqual(command.Password, user?.Password);
         Assert.AreEqual(command.Username, user?.Username);
 
-        return user;
+        CreatedUser = user;
     }
 
     [DataTestMethod]

@@ -10,15 +10,15 @@ public class UpdateUserIntegrationTest : Testing
     [TestInitialize]
     public void TestInitialize()
     {
-
+        var createUserIntegrationTest = new CreateUserIntegrationTest();
+        _ = createUserIntegrationTest.CreateUser();
     }
 
     [TestMethod]
     public async Task UpdateUser()
     {
-        var user = await CreateUserIntegrationTest.CreateUser();
-        Assert.IsNotNull(user);
-        
+        var user = CreateUserIntegrationTest.CreatedUser;
+
         var command = new UpdateUserCommand
         {
             Id = user!.Id,
@@ -34,7 +34,7 @@ public class UpdateUserIntegrationTest : Testing
         Assert.IsInstanceOfType(updatedUserId, typeof(Guid));
         Assert.AreEqual(updatedUserId, user.Id);
 
-         var query = new GetUserByEmail
+        var query = new GetUserByEmailQuery
         {
             Email = command.Email
         };

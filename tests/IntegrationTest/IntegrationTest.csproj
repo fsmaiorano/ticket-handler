@@ -7,6 +7,11 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Api\**" />
+    <EmbeddedResource Remove="Api\**" />
+    <None Remove="Api\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
@@ -20,8 +25,5 @@
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\WebApi\WebApi.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\Controllers\" />
   </ItemGroup>
 </Project>
