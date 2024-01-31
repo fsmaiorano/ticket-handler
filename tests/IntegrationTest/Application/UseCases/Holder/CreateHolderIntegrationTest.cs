@@ -10,6 +10,12 @@ public class CreateHolderIntegrationTest : Testing
 {
     public static HolderEntity? CreatedHolder;
 
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        CreatedHolder = default;
+    }
+
     [TestMethod]
     public async Task CreateHolder()
     {
