@@ -1,12 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Common.Interfaces;
-using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.UseCases.Holder.Commands.DeleteHolderCommand;
+namespace Application.UseCases.Holder.Commands.DeleteHolder;
 
 public record DeleteHolderCommand : IRequest<Guid?>
 {
