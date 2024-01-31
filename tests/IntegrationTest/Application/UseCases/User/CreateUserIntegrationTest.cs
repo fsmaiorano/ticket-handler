@@ -19,7 +19,7 @@ public class CreateUserIntegrationTest : Testing
     [TestMethod]
     public async Task CreateUser()
     {
-        var command = CreateUserCommand();
+        var command = CreateUserCommandFactory();
 
         var createdUserId = await SendAsync(command);
         Assert.IsNotNull(createdUserId);
@@ -41,7 +41,7 @@ public class CreateUserIntegrationTest : Testing
     }
 
     [DataTestMethod]
-    public static CreateUserCommand CreateUserCommand()
+    public static CreateUserCommand CreateUserCommandFactory()
     {
         var command = new CreateUserCommand
         {

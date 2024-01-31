@@ -1,4 +1,3 @@
-﻿using Application.UseCases.User.Commands.HolderUser;
 using FluentValidation;
 
 namespace Application.UseCases.Holder.Commands.DeleteHolder;

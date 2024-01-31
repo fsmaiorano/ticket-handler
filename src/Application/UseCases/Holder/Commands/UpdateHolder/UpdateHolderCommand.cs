@@ -1,5 +1,6 @@
-﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Holder.Commands.UpdateHolder;
@@ -7,13 +8,19 @@ namespace Application.UseCases.Holder.Commands.UpdateHolder;
 public record UpdateHolderCommand : IRequest<Guid?>
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; }
+    public string? Name { get; set; } = string.Empty;
 }
 
-public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataContext context) : IRequestHandler<UpdateHolderCommand, Guid?>
+public class UpdateHolderHandler : IRequestHandler<UpdateHolderCommand, Guid?>
 {
-    private readonly IDataContext _context = context;
-    private readonly ILogger<UpdateHolderHandler> _logger = logger;
+    private readonly IDataContext _context;
+    private readonly ILogger<UpdateHolderHandler> _logger;
+
+    public UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataContext context)
+    {
+        _logger = logger;
+        _context = context;
+    }
 
     public async Task<Guid?> Handle(UpdateHolderCommand request, CancellationToken cancellationToken)
     {
@@ -21,7 +28,7 @@ public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataConte
         {
             _logger.LogInformation("UpdateHolderCommand: {@Request}", request);
 
-            var holder = await _context.Holders.FindAsync(new object[] { request.Id }, cancellationToken);
+            var holder = await _context.Holders.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (holder is null)
             {
@@ -44,4 +51,3 @@ public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataConte
         }
     }
 }
-

@@ -1,19 +1,24 @@
-﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.UseCases.User.Commands.HolderUser;
+namespace Application.UseCases.Holder.Commands.DeleteHolder;
 
 public record DeleteHolderCommand : IRequest<Guid?>
 {
     public Guid Id { get; set; }
 }
 
-public class HolderUserHandler(ILogger<HolderUserHandler> logger, IDataContext context) : IRequestHandler<DeleteHolderCommand, Guid?>
+public class DeleteHolderHandler : IRequestHandler<DeleteHolderCommand, Guid?>
 {
-    private readonly IDataContext _context = context;
-    private readonly ILogger<HolderUserHandler> _logger = logger;
+    private readonly IDataContext _context;
+    private readonly ILogger<DeleteHolderHandler> _logger;
+
+    public DeleteHolderHandler(ILogger<DeleteHolderHandler> logger, IDataContext context)
+    {
+        _logger = logger;
+        _context = context;
+    }
 
     public async Task<Guid?> Handle(DeleteHolderCommand request, CancellationToken cancellationToken)
     {
@@ -21,11 +26,10 @@ public class HolderUserHandler(ILogger<HolderUserHandler> logger, IDataContext c
         {
             _logger.LogInformation("DeleteHolderCommand: {@Request}", request);
 
-            var holder = await _context.Holders.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var holder = await _context.Holders.FindAsync(request.Id, cancellationToken);
 
             if (holder is null)
             {
-                _logger.LogWarning("DeleteHolderCommand: Holder not found");
                 return null;
             }
 

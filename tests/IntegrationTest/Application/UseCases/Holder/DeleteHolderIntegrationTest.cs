@@ -1,10 +1,5 @@
-﻿using Application.UseCases.Holder.Queries;
-using IntegrationTest.Application.UseCases.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.UseCases.Holder.Commands.DeleteHolder;
+using Application.UseCases.Holder.Queries;
 
 namespace IntegrationTest.Application.UseCases.Holder;
 
@@ -14,11 +9,13 @@ public class DeleteHolderIntegrationTest : Testing
     [TestInitialize]
     public void TestInitialize()
     {
-
+        var createUserIntegrationTest = new CreateHolderIntegrationTest();
+        _ = createUserIntegrationTest.CreateHolder();
     }
 
+
     [TestMethod]
-    public async Task DeleteHolder()
+    public async Task TestMethod1()
     {
         var holder = CreateHolderIntegrationTest.CreatedHolder;
 
