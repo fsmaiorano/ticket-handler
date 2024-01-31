@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Holder.Commands;
+﻿using Application.UseCases.Holder.Commands.CreateHolder;
 using Application.UseCases.Holder.Queries;
 using Bogus;
 using Domain.Entities;
@@ -19,7 +19,7 @@ public class CreateHolderIntegrationTest : Testing
     [TestMethod]
     public async Task CreateHolder()
     {
-        var command = CreateHolderCommand();
+        var command = CreateHolderCommandFactory();
 
         var createdHolderId = await SendAsync(command);
         Assert.IsNotNull(createdHolderId);
@@ -38,7 +38,7 @@ public class CreateHolderIntegrationTest : Testing
     }
 
     [DataTestMethod]
-    public static CreateHolderCommand CreateHolderCommand()
+    public static CreateHolderCommand CreateHolderCommandFactory()
     {
         var command = new CreateHolderCommand
         {

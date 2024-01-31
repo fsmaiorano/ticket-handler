@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Holder.Commands.DeleteHolderCommand;
+﻿using Application.UseCases.Holder.Commands.DeleteHolder;
 using Application.UseCases.Holder.Queries;
 
 namespace IntegrationTest.Application.UseCases.Holder;

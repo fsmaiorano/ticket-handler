@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.User.Commands.UpdateUser;
@@ -30,7 +31,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Guid?>
         {
             _logger.LogInformation("UpdateUserCommand: {@Request}", request);
 
-            var user = await _context.Users.FindAsync(new object[] { request.Id }, cancellationToken);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (user is null)
             {
