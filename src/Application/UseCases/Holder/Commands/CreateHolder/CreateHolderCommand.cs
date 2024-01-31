@@ -3,7 +3,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.UseCases.Holder.Commands;
+namespace Application.UseCases.Holder.Commands.CreateHolder;
 
 public record CreateHolderCommand : IRequest<Guid?>
 {

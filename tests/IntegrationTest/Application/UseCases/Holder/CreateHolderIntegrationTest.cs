@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Holder.Commands;
+﻿using Application.UseCases.Holder.Commands.CreateHolder;
 using Application.UseCases.Holder.Queries;
 using Bogus;
 using Domain.Entities;
@@ -10,10 +10,16 @@ public class CreateHolderIntegrationTest : Testing
 {
     public static HolderEntity? CreatedHolder;
 
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        CreatedHolder = default;
+    }
+
     [TestMethod]
     public async Task CreateHolder()
     {
-        var command = CreateHolderCommand();
+        var command = CreateHolderCommandFactory();
 
         var createdHolderId = await SendAsync(command);
         Assert.IsNotNull(createdHolderId);
@@ -21,18 +27,18 @@ public class CreateHolderIntegrationTest : Testing
 
         var query = new GetHolderByIdQuery
         {
-            Id = (Guid)createdHolderId
+            Id = (Guid)createdHolderId,
         };
 
-        var holder = await SendAsync(query);
-        Assert.IsNotNull(holder);
-        Assert.AreEqual(command.Name, holder?.Name);
+        var createdHolder = await SendAsync(query);
+        Assert.IsNotNull(createdHolder);
+        Assert.AreEqual(command.Name, createdHolder?.Name);
 
-        CreatedHolder = holder;
+        CreatedHolder = createdHolder;
     }
 
     [DataTestMethod]
-    public static CreateHolderCommand CreateHolderCommand()
+    public static CreateHolderCommand CreateHolderCommandFactory()
     {
         var command = new CreateHolderCommand
         {

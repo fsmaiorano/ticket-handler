@@ -32,7 +32,6 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
                 Password = request.Password,
                 Username = request.Username,
                 Role = UserRoles.Administrator,
-                HolderId = Guid.NewGuid()
             };
 
             _context.Users.Add(user);
