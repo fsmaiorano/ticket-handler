@@ -15,13 +15,14 @@ public class CreateSectorIntegrationTest : Testing
     public void TestInitialize()
     {
         CreatedSector = default;
-        var createHolderIntegrationTest = new CreateHolderIntegrationTest();
-        _ = createHolderIntegrationTest.CreateHolder();
     }
 
     [TestMethod]
     public async Task CreateSector()
     {
+        var createHolderIntegrationTest = new CreateHolderIntegrationTest();
+        _ = createHolderIntegrationTest.CreateHolder();
+
         var command = CreateSectorCommandFactory();
 
         var createdSectorId = await SendAsync(command);
@@ -31,7 +32,6 @@ public class CreateSectorIntegrationTest : Testing
         var query = new GetSectorByIdQuery
         {
             Id = (Guid)createdSectorId,
-            
         };
 
         var createdSector = await SendAsync(query);

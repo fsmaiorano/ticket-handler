@@ -37,7 +37,7 @@ public class CreateHolderHandler : IRequestHandler<CreateHolderCommand, Guid?>
             _context.Holders.Add(holder);
             await _context.SaveChangesAsync(cancellationToken);
 
-            var createdHolder = await _context.Holders.FindAsync(holder.Id, cancellationToken);
+            var createdHolder = await _context.Holders.FindAsync([holder.Id], cancellationToken);
 
             return createdHolder?.Id ?? null;
         }

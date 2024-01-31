@@ -15,7 +15,7 @@ public class DeleteHolderIntegrationTest : Testing
 
 
     [TestMethod]
-    public async Task TestMethod1()
+    public async Task DeleteHolder()
     {
         var holder = CreateHolderIntegrationTest.CreatedHolder;
 

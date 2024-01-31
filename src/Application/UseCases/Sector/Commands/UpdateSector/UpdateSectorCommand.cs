@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Sector.Commands.UpdateSector;
@@ -22,7 +23,7 @@ public class UpdateSectorHandler(ILogger<UpdateSectorHandler> logger, IDataConte
         {
             _logger.LogInformation("UpdateSectorCommand: {@Request}", request);
 
-            var Sector = await _context.Sectors.FindAsync(new object[] { request.Id }, cancellationToken);
+            var Sector = await _context.Sectors.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (Sector is null)
             {
