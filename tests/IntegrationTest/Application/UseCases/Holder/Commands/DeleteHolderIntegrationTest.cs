@@ -1,7 +1,7 @@
 using Application.UseCases.Holder.Commands.DeleteHolder;
 using Application.UseCases.Holder.Queries;
 
-namespace IntegrationTest.Application.UseCases.Holder;
+namespace IntegrationTest.Application.UseCases.Holder.Commands;
 
 [TestClass]
 public class DeleteHolderIntegrationTest : Testing

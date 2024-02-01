@@ -2,8 +2,10 @@
 using Application.UseCases.User.Queries;
 using Bogus;
 using Domain.Entities;
+using IntegrationTest.Application.UseCases.Holder.Commands;
+using IntegrationTest.Application.UseCases.Sector.Commands;
 
-namespace IntegrationTest.Application.UseCases.User;
+namespace IntegrationTest.Application.UseCases.User.Commands;
 
 [TestClass]
 public class CreateUserIntegrationTest : Testing
@@ -19,6 +21,12 @@ public class CreateUserIntegrationTest : Testing
     [TestMethod]
     public async Task CreateUser()
     {
+        var createHolderIntegrationTest = new CreateHolderIntegrationTest();
+        _ = createHolderIntegrationTest.CreateHolder();
+
+        var createSectorIntegrationTest = new CreateSectorIntegrationTest();
+        _ = createSectorIntegrationTest.CreateSector();
+
         var command = CreateUserCommandFactory();
 
         var createdUserId = await SendAsync(command);
@@ -48,7 +56,9 @@ public class CreateUserIntegrationTest : Testing
             Name = new Faker().Name.FullName(),
             Email = new Faker().Internet.Email(),
             Password = new Faker().Internet.Password(),
-            Username = new Faker().Internet.UserName()
+            Username = new Faker().Internet.UserName(),
+            HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
+            SectorsId = [CreateSectorIntegrationTest.CreatedSector!.Id]
         };
 
         return command;

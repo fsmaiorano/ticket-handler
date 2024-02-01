@@ -2,7 +2,7 @@ using Application.UseCases.Holder.Commands.UpdateHolder;
 using Application.UseCases.Holder.Queries;
 using Bogus;
 
-namespace IntegrationTest.Application.UseCases.Holder;
+namespace IntegrationTest.Application.UseCases.Holder.Commands;
 
 [TestClass]
 public class UpdateHolderIntegrationTest : Testing

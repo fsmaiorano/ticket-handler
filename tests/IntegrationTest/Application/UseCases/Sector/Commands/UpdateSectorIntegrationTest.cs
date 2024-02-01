@@ -2,7 +2,7 @@
 using Application.UseCases.Sector.Queries;
 using Bogus;
 
-namespace IntegrationTest.Application.UseCases.Sector;
+namespace IntegrationTest.Application.UseCases.Sector.Commands;
 
 [TestClass]
 public class UpdateSectorIntegrationTest : Testing

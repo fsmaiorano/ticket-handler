@@ -1,7 +1,7 @@
 ﻿using Application.UseCases.Sector.Queries;
 using Application.UseCases.User.Commands.SectorUser;
 
-namespace IntegrationTest.Application.UseCases.Sector;
+namespace IntegrationTest.Application.UseCases.Sector.Commands;
 
 [TestClass]
 public class DeleteSectorIntegrationTest : Testing

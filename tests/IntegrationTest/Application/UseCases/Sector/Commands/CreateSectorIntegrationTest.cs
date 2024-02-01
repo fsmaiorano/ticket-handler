@@ -2,9 +2,9 @@
 using Application.UseCases.Sector.Queries;
 using Bogus;
 using Domain.Entities;
-using IntegrationTest.Application.UseCases.Holder;
+using IntegrationTest.Application.UseCases.Holder.Commands;
 
-namespace IntegrationTest.Application.UseCases.Sector;
+namespace IntegrationTest.Application.UseCases.Sector.Commands;
 
 [TestClass]
 public class CreateSectorIntegrationTest : Testing

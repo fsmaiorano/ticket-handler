@@ -3,7 +3,7 @@ using Application.UseCases.Holder.Queries;
 using Bogus;
 using Domain.Entities;
 
-namespace IntegrationTest.Application.UseCases.Holder;
+namespace IntegrationTest.Application.UseCases.Holder.Commands;
 
 [TestClass]
 public class CreateHolderIntegrationTest : Testing

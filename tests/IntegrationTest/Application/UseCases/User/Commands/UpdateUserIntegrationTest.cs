@@ -2,7 +2,7 @@
 using Application.UseCases.User.Queries;
 using Bogus;
 
-namespace IntegrationTest.Application.UseCases.User;
+namespace IntegrationTest.Application.UseCases.User.Commands;
 
 [TestClass]
 public class UpdateUserIntegrationTest : Testing

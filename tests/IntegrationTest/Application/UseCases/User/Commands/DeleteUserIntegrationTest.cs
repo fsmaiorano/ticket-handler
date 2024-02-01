@@ -1,7 +1,7 @@
 ﻿using Application.UseCases.User.Commands.DeleteUser;
 using Application.UseCases.User.Queries;
 
-namespace IntegrationTest.Application.UseCases.User;
+namespace IntegrationTest.Application.UseCases.User.Commands;
 
 [TestClass]
 public class DeleteUserIntegrationTest : Testing
