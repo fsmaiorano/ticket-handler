@@ -14,6 +14,7 @@ public class DataContext : DbContext, IDataContext
     // private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
+#pragma warning disable CS8618 
     public DataContext()
     {
 
@@ -23,6 +24,7 @@ public class DataContext : DbContext, IDataContext
     {
 
     }
+#pragma warning restore CS8618 
 
     public DataContext(
        DbContextOptions<DataContext> options,
