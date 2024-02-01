@@ -11,16 +11,10 @@ public record GetUserByIdQuery : IRequest<UserEntity?>
     public required Guid Id { get; init; }
 }
 
-public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserEntity?>
+public class GetUserByIdHandler(ILogger<GetUserByIdHandler> logger, IDataContext context) : IRequestHandler<GetUserByIdQuery, UserEntity?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetUserByIdHandler> _logger;
-
-    public GetUserByIdHandler(ILogger<GetUserByIdHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetUserByIdHandler> _logger = logger;
 
     public async Task<UserEntity?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {

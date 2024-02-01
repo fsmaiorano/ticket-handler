@@ -14,7 +14,8 @@ public interface IDataContext
     DbSet<UserEntity> Users { get; }
     DbSet<HolderEntity> Holders { get; }
     DbSet<SectorEntity> Sectors { get; }
-
+    DbSet<TicketEntity> Tickets { get; }
+    DbSet<AnswerEntity> Answers { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

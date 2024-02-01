@@ -14,7 +14,7 @@ public class GetUserQueriesIntegrationTest : Testing
     {
     }
 
-    [TestMethod("Get users list by holder id query")]
+    [TestMethod]
     public async Task GetUsersByHolderIdQuery()
     {
         var createHolderIntegrationTest = new CreateHolderIntegrationTest();
@@ -37,7 +37,7 @@ public class GetUserQueriesIntegrationTest : Testing
         Assert.IsTrue(users!.Count > 0);
     }
 
-    [TestMethod("Get empty list of users by holder id query")]
+    [TestMethod]
     public async Task GetUsersByHolderIdQueryEmptyList()
     {
         var createHolderIntegrationTest = new CreateHolderIntegrationTest();

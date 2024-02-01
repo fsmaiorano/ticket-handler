@@ -44,6 +44,8 @@ public class DataContext : DbContext, IDataContext
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<HolderEntity> Holders => Set<HolderEntity>();
     public DbSet<SectorEntity> Sectors => Set<SectorEntity>();
+    public DbSet<TicketEntity> Tickets => Set<TicketEntity>();
+    public DbSet<AnswerEntity> Answers => Set<AnswerEntity>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
