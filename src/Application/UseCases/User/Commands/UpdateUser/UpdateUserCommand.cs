@@ -14,16 +14,10 @@ public record UpdateUserCommand : IRequest<Guid?>
     public string? Username { get; set; }
 }
 
-public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Guid?>
+public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext context) : IRequestHandler<UpdateUserCommand, Guid?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<UpdateUserHandler> _logger;
-
-    public UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<UpdateUserHandler> _logger = logger;
 
     public async Task<Guid?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {

@@ -40,7 +40,6 @@ public class CreateTicketIntegrationTest : Testing
 
         var query = new GetTicketByIdQuery
         {
-
             Id = (Guid)createdTicketId
         };
 
