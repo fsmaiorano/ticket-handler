@@ -9,10 +9,10 @@ namespace Application.UseCases.Ticket.Commands.UpdateTicket;
 public record UpdateTicketCommand : IRequest<Guid?>
 {
     public required Guid Id { get; set; }
-    public required string Title { get; set; }
-    public required string Content { get; set; }
-    public required TicketStatus Status { get; set; }
-    public required TicketPriority Priority { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public TicketStatus Status { get; set; }
+    public TicketPriority Priority { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid? SectorId { get; set; }
     public required Guid? AssigneeId { get; set; }
