@@ -11,16 +11,10 @@ public record GetHolderByIdQuery : IRequest<HolderEntity?>
     public required Guid Id { get; init; }
 }
 
-public class GetHolderByIdHandler : IRequestHandler<GetHolderByIdQuery, HolderEntity?>
+public class GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataContext context) : IRequestHandler<GetHolderByIdQuery, HolderEntity?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetHolderByIdHandler> _logger;
-
-    public GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetHolderByIdHandler> _logger = logger;
 
     public async Task<HolderEntity?> Handle(GetHolderByIdQuery request, CancellationToken cancellationToken)
     {
@@ -29,7 +23,6 @@ public class GetHolderByIdHandler : IRequestHandler<GetHolderByIdQuery, HolderEn
         try
         {
             _logger.LogInformation("GetHolderById: {@Request}", request);
-
             holder = await _context.Holders.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         }
         catch (Exception ex)
