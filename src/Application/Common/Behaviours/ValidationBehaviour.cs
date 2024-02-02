@@ -21,12 +21,15 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
                     v.ValidateAsync(context, cancellationToken)));
 
             var failures = validationResults
-                .Where(r => r.Errors.Any())
+                .Where(r => r.Errors.Count != 0)
                 .SelectMany(r => r.Errors)
                 .ToList();
 
             if (failures.Count != 0)
+            {
+                Console.WriteLine($"Validation failed for {typeof(TRequest).Name}");
                 throw new Exceptions.ValidationException(failures);
+            }
         }
         return await next();
     }

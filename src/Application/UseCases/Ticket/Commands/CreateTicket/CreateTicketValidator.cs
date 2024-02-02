@@ -16,7 +16,7 @@ public class CreateTicketValidator : AbstractValidator<CreateTicketCommand>
             .NotEmpty()
             .NotNull()
             .MinimumLength(3)
-            .MaximumLength(100);
+            .MaximumLength(1000);
 
         RuleFor(x => x.Status)
             .NotEmpty()
