@@ -21,9 +21,6 @@ public class GetSectorQueriesIntegrationTest : Testing
 
         var createSectorIntegrationTest = new CreateSectorIntegrationTest();
         _ = createSectorIntegrationTest.CreateSector();
-        _ = createSectorIntegrationTest.CreateSector();
-        _ = createSectorIntegrationTest.CreateSector();
-        _ = createSectorIntegrationTest.CreateSector();
 
         var query = new GetSectorsByHolderIdQuery
         {
