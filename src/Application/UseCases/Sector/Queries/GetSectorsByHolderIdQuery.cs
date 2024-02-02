@@ -11,16 +11,10 @@ public record GetSectorsByHolderIdQuery : IRequest<List<SectorEntity>?>
     public required Guid HolderId { get; init; }
 }
 
-public class GetSectorsByHolderIdHandler : IRequestHandler<GetSectorsByHolderIdQuery, List<SectorEntity>?>
+public class GetSectorsByHolderIdHandler(ILogger<GetSectorsByHolderIdHandler> logger, IDataContext context) : IRequestHandler<GetSectorsByHolderIdQuery, List<SectorEntity>?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetSectorsByHolderIdHandler> _logger;
-
-    public GetSectorsByHolderIdHandler(ILogger<GetSectorsByHolderIdHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetSectorsByHolderIdHandler> _logger = logger;
 
     public async Task<List<SectorEntity>?> Handle(GetSectorsByHolderIdQuery request, CancellationToken cancellationToken)
     {

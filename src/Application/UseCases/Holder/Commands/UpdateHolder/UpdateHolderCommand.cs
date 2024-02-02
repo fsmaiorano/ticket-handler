@@ -11,16 +11,10 @@ public record UpdateHolderCommand : IRequest<Guid?>
     public string? Name { get; set; } = string.Empty;
 }
 
-public class UpdateHolderHandler : IRequestHandler<UpdateHolderCommand, Guid?>
+public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataContext context) : IRequestHandler<UpdateHolderCommand, Guid?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<UpdateHolderHandler> _logger;
-
-    public UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<UpdateHolderHandler> _logger = logger;
 
     public async Task<Guid?> Handle(UpdateHolderCommand request, CancellationToken cancellationToken)
     {

@@ -28,7 +28,7 @@ public record PaginatedList<T>
     {
         var count = await source.CountAsync();
         var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-        var urls = (Environment.GetEnvironmentVariable("ASPNETCORE_URLS")!.Split(";") ?? Array.Empty<string>()).FirstOrDefault();
+        var urls = (Environment.GetEnvironmentVariable("ASPNETCORE_URLS")!.Split(";") ?? []).FirstOrDefault();
 
         var previousPage = pageNumber > 1 ? $"{urls}/pokemon?pageNumber={pageNumber - 1}&pageSize={pageSize}" : null;
         var nextPage = pageNumber < count ? $"{urls}/pokemon?pageNumber={pageNumber + 1}&pageSize={pageSize}" : null;

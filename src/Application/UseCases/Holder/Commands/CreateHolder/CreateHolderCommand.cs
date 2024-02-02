@@ -11,16 +11,10 @@ public record CreateHolderCommand : IRequest<Guid?>
     public List<SectorEntity>? Sectors { get; set; }
 }
 
-public class CreateHolderHandler : IRequestHandler<CreateHolderCommand, Guid?>
+public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataContext context) : IRequestHandler<CreateHolderCommand, Guid?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<CreateHolderHandler> _logger;
-
-    public CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<CreateHolderHandler> _logger = logger;
 
     public async Task<Guid?> Handle(CreateHolderCommand request, CancellationToken cancellationToken)
     {

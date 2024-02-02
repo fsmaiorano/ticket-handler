@@ -9,16 +9,10 @@ public record DeleteHolderCommand : IRequest<Guid?>
     public Guid Id { get; set; }
 }
 
-public class DeleteHolderHandler : IRequestHandler<DeleteHolderCommand, Guid?>
+public class DeleteHolderHandler(ILogger<DeleteHolderHandler> logger, IDataContext context) : IRequestHandler<DeleteHolderCommand, Guid?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<DeleteHolderHandler> _logger;
-
-    public DeleteHolderHandler(ILogger<DeleteHolderHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<DeleteHolderHandler> _logger = logger;
 
     public async Task<Guid?> Handle(DeleteHolderCommand request, CancellationToken cancellationToken)
     {

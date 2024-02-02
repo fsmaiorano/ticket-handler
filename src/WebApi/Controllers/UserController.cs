@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.User.Commands.CreateUser;
 using Microsoft.AspNetCore.Mvc;
-using Application.Common.Exceptions;
 
 namespace WebApi.Controllers
 {
