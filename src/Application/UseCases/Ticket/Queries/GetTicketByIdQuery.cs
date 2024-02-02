@@ -11,16 +11,10 @@ public record GetTicketByIdQuery : IRequest<TicketEntity?>
     public required Guid Id { get; init; }
 }
 
-public class GetTicketByIdHandler : IRequestHandler<GetTicketByIdQuery, TicketEntity?>
+public class GetTicketByIdHandler(ILogger<GetTicketByIdHandler> logger, IDataContext context) : IRequestHandler<GetTicketByIdQuery, TicketEntity?>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetTicketByIdHandler> _logger;
-
-    public GetTicketByIdHandler(ILogger<GetTicketByIdHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetTicketByIdHandler> _logger = logger;
 
     public async Task<TicketEntity?> Handle(GetTicketByIdQuery request, CancellationToken cancellationToken)
     {
