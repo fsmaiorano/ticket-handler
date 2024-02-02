@@ -25,7 +25,9 @@ public class UpdateTicketIntegrationTest : Testing
             Content = "Updated Content",
             HolderId = ticket.HolderId,
             SectorId = ticket.SectorId,
-            AssigneeId = ticket.AssigneeId
+            AssigneeId = ticket.AssigneeId,
+            Priority = ticket.Priority,
+            Status = ticket.Status
         };
 
         var updatedTicketId = await SendAsync(command);

@@ -13,7 +13,7 @@ public record CreateAnswerCommand : IRequest<Guid?>
     public required Guid UserId { get; set; }
     public UserEntity? User { get; set; }
     public required Guid HolderId { get; set; }
-    public required Guid? SectorId { get; set; }
+    public required Guid SectorId { get; set; }
 }
 
 public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataContext context) : IRequestHandler<CreateAnswerCommand, Guid?>
