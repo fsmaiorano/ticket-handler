@@ -63,8 +63,8 @@ public class CreateTicketIntegrationTest : Testing
         {
             Title = new Faker().Lorem.Sentence(),
             Content = new Faker().Lorem.Paragraph(),
-            Status = new Faker().PickRandom<TicketStatus>(),
-            Priority = new Faker().PickRandom<TicketPriority>(),
+            Status = TicketStatus.Active,
+            Priority = TicketPriority.Medium,
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
             SectorId = CreateSectorIntegrationTest.CreatedSector!.Id,
             AssigneeId = CreateUserIntegrationTest.CreatedUser!.Id
