@@ -2,7 +2,7 @@
 
 namespace Application.Common.Models;
 
-public class User
+public class UserDto
 {
     [JsonPropertyName("username")]
     public string? Username { get; set; }
