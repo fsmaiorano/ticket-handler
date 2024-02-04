@@ -8,11 +8,11 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { registerRestaurant } from '@/services/register-restaurants'
+import { registerHolder } from '@/services/register-holders'
 
 const signUpForm = z.object({
   email: z.string().email(),
-  restaurantName: z.string().min(3),
+  holderName: z.string().min(3),
   managerName: z.string().min(3),
   phone: z.string(),
 })
@@ -23,15 +23,15 @@ export function SignUp() {
   const navigate = useNavigate()
   const { handleSubmit, register, formState } = useForm<SignUpForm>()
 
-  const { mutateAsync: registerRestaurantFn } = useMutation({
-    mutationFn: registerRestaurant,
+  const { mutateAsync: registerHolderFn } = useMutation({
+    mutationFn: registerHolder,
   })
 
   async function handleSignUp(data: SignUpForm) {
     try {
-      await registerRestaurantFn({
+      await registerHolderFn({
         email: data.email,
-        restaurantName: data.restaurantName,
+        holderName: data.holderName,
         managerName: data.managerName,
         phone: data.phone,
       })
@@ -65,11 +65,11 @@ export function SignUp() {
           </div>
           <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="restaurantName">Restaurant name</Label>
+              <Label htmlFor="holderName">Holder name</Label>
               <Input
-                id="restaurantName"
+                id="holderName"
                 type="text"
-                {...register('restaurantName')}
+                {...register('holderName')}
               />
             </div>
             <div className="space-y-2">

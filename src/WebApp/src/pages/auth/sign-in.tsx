@@ -44,7 +44,7 @@ export function SignIn() {
       <Helmet title="Sign-in" />
       <div className="p-8">
         <Button asChild className="absolute right-4 top-8" variant={'outline'}>
-          <Link to="/sign-up">New store</Link>
+          <Link to="/sign-up">New Holder</Link>
         </Button>
         <div className="flex w-[320px] flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
