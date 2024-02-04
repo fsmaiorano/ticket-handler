@@ -24,13 +24,7 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
             .NotNull()
             .MinimumLength(3)
             .MaximumLength(100);
-
-        RuleFor(x => x.Username)
-            .NotEmpty()
-            .NotNull()
-            .MinimumLength(3)
-            .MaximumLength(100);
-
+     
         RuleFor(x => x.SectorsId)
             .NotEmpty()
             .NotNull();

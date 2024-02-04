@@ -11,7 +11,6 @@ public record CreateUserCommand : IRequest<Guid?>
     public required string Name { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
-    public required string Username { get; set; }
     public required Guid HolderId { get; set; }
     public required List<Guid>? SectorsId { get; set; }
 }
@@ -32,7 +31,6 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
                 Name = request.Name,
                 Email = request.Email,
                 Password = request.Password,
-                Username = request.Username,
                 Role = UserRoles.Administrator,
                 HolderId = request.HolderId,
             };

@@ -44,7 +44,7 @@ public class CreateHolderAndUserIntegrationTest : Testing
 
         var createdUser = await SendAsync(query);
         Assert.IsNotNull(createdUser);
-        Assert.AreEqual(command.UserName, createdUser?.Name);
+        Assert.AreEqual(command.FullName, createdUser?.Name);
         Assert.AreEqual(createdUser?.Role, UserRoles.Administrator);
 
         CreatedUser = createdUser;
@@ -67,10 +67,9 @@ public class CreateHolderAndUserIntegrationTest : Testing
         var command = new CreateHolderAndUserCommand
         {
             HolderName = new Faker().Name.FullName(),
-            UserName = new Faker().Name.FullName(),
-            UserEmail = new Faker().Internet.Email(),
-            UserPassword = new Faker().Internet.Password(),
-            Username = new Faker().Internet.UserName(),
+            FullName = new Faker().Name.FullName(),
+            Email = new Faker().Internet.Email(),
+            Password = new Faker().Internet.Password(),
         };
 
         return command;

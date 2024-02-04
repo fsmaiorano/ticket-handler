@@ -4,9 +4,6 @@ namespace Application.Common.Models;
 
 public class UserDto
 {
-    [JsonPropertyName("username")]
-    public string? Username { get; set; }
-
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 

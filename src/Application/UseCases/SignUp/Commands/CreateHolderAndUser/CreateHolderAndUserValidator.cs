@@ -13,26 +13,20 @@ public class CreateHolderAndUserValidator : AbstractValidator<CreateHolderAndUse
             .MinimumLength(3)
             .MaximumLength(100);
 
-        RuleFor(x => x.UserName)
+        RuleFor(x => x.FullName)
             .NotEmpty()
             .NotNull()
             .MinimumLength(3)
             .MaximumLength(100);
 
-        RuleFor(x => x.UserEmail)
+        RuleFor(x => x.Email)
             .NotEmpty()
             .NotNull()
             .EmailAddress()
             .MinimumLength(3)
             .MaximumLength(100);
 
-        RuleFor(x => x.UserPassword)
-            .NotEmpty()
-            .NotNull()
-            .MinimumLength(3)
-            .MaximumLength(100);
-
-        RuleFor(x => x.Username)
+        RuleFor(x => x.Password)
             .NotEmpty()
             .NotNull()
             .MinimumLength(3)

@@ -24,7 +24,6 @@ namespace WebApi.Controllers
 
             var userDto = userEntity == null ? null : new UserDto
             {
-                Username = userEntity.Username,
                 Name = userEntity.Name,
                 Email = userEntity.Email,
                 Password = userEntity.Password

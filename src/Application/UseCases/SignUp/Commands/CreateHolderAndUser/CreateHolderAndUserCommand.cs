@@ -9,10 +9,9 @@ namespace Application.UseCases.SignUp.Commands.CreateHolderAndUser;
 public record CreateHolderAndUserCommand : IRequest<CreateHolderAndUserResponse>
 {
     public required string HolderName { get; set; }
-    public required string UserName { get; set; }
-    public required string UserEmail { get; set; }
-    public required string UserPassword { get; set; }
-    public required string Username { get; set; }
+    public required string FullName { get; set; }
+    public required string Email { get; set; }
+    public required string Password { get; set; }
 }
 
 public record CreateHolderAndUserResponse
@@ -39,10 +38,9 @@ public class CreateHolderAndUserHandler(ILogger<CreateHolderAndUserHandler> logg
 
             var user = new UserEntity
             {
-                Name = request.UserName,
-                Email = request.UserEmail,
-                Password = request.UserPassword,
-                Username = request.Username,
+                Name = request.FullName,
+                Email = request.Email,
+                Password = request.Password,
                 Role = UserRoles.Administrator,
                 Holder = holder,
                 HolderId = holder.Id

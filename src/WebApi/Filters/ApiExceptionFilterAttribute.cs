@@ -4,7 +4,6 @@ using Application.Common.Exceptions;
 
 namespace WebApi.Filters;
 
-
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
     private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
@@ -31,9 +30,9 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     private void HandleException(ExceptionContext context)
     {
         Type type = context.Exception.GetType();
-        if (_exceptionHandlers.ContainsKey(type))
+        if (_exceptionHandlers.TryGetValue(type, out Action<ExceptionContext>? value))
         {
-            _exceptionHandlers[type].Invoke(context);
+            value.Invoke(context);
             return;
         }
 

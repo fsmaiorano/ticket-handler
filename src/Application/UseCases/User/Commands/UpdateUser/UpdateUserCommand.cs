@@ -11,7 +11,6 @@ public record UpdateUserCommand : IRequest<Guid?>
     public string? Name { get; set; }
     public string? Email { get; set; }
     public string? Password { get; set; }
-    public string? Username { get; set; }
 }
 
 public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext context) : IRequestHandler<UpdateUserCommand, Guid?>
@@ -41,9 +40,6 @@ public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext c
 
             if (!string.IsNullOrWhiteSpace(request.Password))
                 user.Password = request.Password;
-
-            if (!string.IsNullOrWhiteSpace(request.Username))
-                user.Username = request.Username;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync(cancellationToken);

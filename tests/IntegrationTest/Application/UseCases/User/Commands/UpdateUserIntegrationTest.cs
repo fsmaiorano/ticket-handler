@@ -45,6 +45,5 @@ public class UpdateUserIntegrationTest : Testing
         Assert.AreEqual(command.Name, updatedUser?.Name);
         Assert.AreEqual(command.Email, updatedUser?.Email);
         Assert.AreEqual(command.Password, updatedUser?.Password);
-        Assert.AreEqual(command.Username, updatedUser?.Username);
     }
 }

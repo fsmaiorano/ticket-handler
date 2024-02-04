@@ -43,7 +43,6 @@ public class CreateUserIntegrationTest : Testing
         Assert.AreEqual(command.Name, user?.Name);
         Assert.AreEqual(command.Email, user?.Email);
         Assert.AreEqual(command.Password, user?.Password);
-        Assert.AreEqual(command.Username, user?.Username);
 
         CreatedUser = user;
     }

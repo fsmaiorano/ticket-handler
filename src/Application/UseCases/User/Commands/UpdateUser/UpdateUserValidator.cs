@@ -24,11 +24,5 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
             .NotNull()
             .MinimumLength(3)
             .MaximumLength(100);
-
-        RuleFor(x => x.Username)
-            .NotEmpty()
-            .NotNull()
-            .MinimumLength(3)
-            .MaximumLength(100);
     }
 }
