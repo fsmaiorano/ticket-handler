@@ -55,7 +55,6 @@ public class CreateUserIntegrationTest : Testing
             Name = new Faker().Name.FullName(),
             Email = new Faker().Internet.Email(),
             Password = new Faker().Internet.Password(),
-            Username = new Faker().Internet.UserName(),
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
             SectorsId = [CreateSectorIntegrationTest.CreatedSector!.Id]
         };

@@ -25,7 +25,6 @@ public class UpdateUserIntegrationTest : Testing
             Name = new Faker().Name.FullName(),
             Email = new Faker().Internet.Email(),
             Password = new Faker().Internet.Password(),
-            Username = new Faker().Internet.UserName()
         };
 
         var updatedUserId = await SendAsync(command);
