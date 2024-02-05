@@ -5,54 +5,53 @@ using Application.UseCases.User.Commands.UpdateUser;
 using Application.UseCases.User.Queries;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers;
+
+public class UserController : BaseController
 {
-    public class UserController : BaseController
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<Guid?>> Post(CreateUserCommand command)
     {
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Guid?>> Post(CreateUserCommand command)
+        return await Mediator.Send(command);
+    }
+
+    [HttpGet("{email}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<UserDto>> Get(string email)
+    {
+        var userEntity = await Mediator.Send(new GetUserByEmailQuery { Email = email });
+
+        var userDto = userEntity == null ? null : new UserDto
         {
-            return await Mediator.Send(command);
+            Name = userEntity.Name,
+            Email = userEntity.Email,
+            Password = userEntity.Password
+        };
+
+        return userEntity == null ? NotFound() : Ok(userDto);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> Put(Guid id, UpdateUserCommand command)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest();
         }
 
-        [HttpGet("{email}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<UserDto>> Get(string email)
-        {
-            var userEntity = await Mediator.Send(new GetUserByEmailQuery { Email = email });
+        await Mediator.Send(command);
 
-            var userDto = userEntity == null ? null : new UserDto
-            {
-                Name = userEntity.Name,
-                Email = userEntity.Email,
-                Password = userEntity.Password
-            };
+        return NoContent();
+    }
 
-            return userEntity == null ? NotFound() : Ok(userDto);
-        }
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> Delete(Guid id)
+    {
+        await Mediator.Send(new DeleteUserCommand { Id = id });
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Put(Guid id, UpdateUserCommand command)
-        {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
-
-            await Mediator.Send(command);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Delete(Guid id)
-        {
-            await Mediator.Send(new DeleteUserCommand { Id = id });
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

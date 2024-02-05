@@ -12,6 +12,7 @@ import { signIn } from '@/services/sign-in'
 
 const signInForm = z.object({
   email: z.string().email(),
+  password: z.string(),
 })
 
 type SignInForm = z.infer<typeof signInForm>
@@ -57,6 +58,10 @@ export function SignIn() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" {...register('email')} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Password</Label>
+              <Input id="password" type="password" {...register('password')} />
             </div>
             <Button
               disabled={formState.isSubmitting}

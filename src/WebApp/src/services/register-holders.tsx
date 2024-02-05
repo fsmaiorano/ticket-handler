@@ -13,7 +13,7 @@ export async function registerHolder({
     password,
     email,
 }: RegisterHolderRequest) {
-    await api.post('/api/SignUp', { holderName, fullName, password, email })
+    await api.post('/api/authentication/signup', { holderName, fullName, password, email })
 }
 
 
