@@ -1,11 +1,10 @@
-using Application.UseCases.SignUp.Commands.CreateHolderAndUser;
 using FluentValidation;
 
-namespace Application.UseCases.User.Commands.CreateHolderAndUser;
+namespace Application.UseCases.Authentication.Commands.SignUp;
 
-public class CreateHolderAndUserValidator : AbstractValidator<CreateHolderAndUserCommand>
+public class SignUpValidator : AbstractValidator<SignUpCommand>
 {
-    public CreateHolderAndUserValidator()
+    public SignUpValidator()
     {
         RuleFor(x => x.HolderName)
             .NotEmpty()

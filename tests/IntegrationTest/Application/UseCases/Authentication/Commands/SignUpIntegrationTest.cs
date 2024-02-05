@@ -1,5 +1,6 @@
+using Application.UseCases.Authentication.Commands.SignIn;
+using Application.UseCases.Authentication.Commands.SignUp;
 using Application.UseCases.Holder.Queries;
-using Application.UseCases.SignUp.Commands.CreateHolderAndUser;
 using Application.UseCases.User.Queries;
 using Bogus;
 using Domain.Constants;
@@ -7,10 +8,10 @@ using Domain.Entities;
 using IntegrationTest.Application.UseCases.Holder.Commands;
 using IntegrationTest.Application.UseCases.User.Commands;
 
-namespace IntegrationTest.Application.UseCases.SignUp.Commands;
+namespace IntegrationTest.Application.UseCases.Authentication.Commands;
 
 [TestClass]
-public class CreateHolderAndUserIntegrationTest : Testing
+public class SignUpIntegrationTest : Testing
 {
     public static UserEntity? CreatedUser;
     public static HolderEntity? CreatedHolder;
@@ -23,7 +24,7 @@ public class CreateHolderAndUserIntegrationTest : Testing
     }
 
     [TestMethod]
-    public async Task CreateHolderAndUser()
+    public async Task SignUp()
     {
         var createHolderIntegrationTest = new CreateHolderIntegrationTest();
         _ = createHolderIntegrationTest.CreateHolder();
@@ -31,9 +32,9 @@ public class CreateHolderAndUserIntegrationTest : Testing
         var createUserIntegrationTest = new CreateUserIntegrationTest();
         _ = createUserIntegrationTest.CreateUser();
 
-        var command = CreateHolderAndUserCommandFactory();
+        var command = SignUpCommandFactory();
 
-        var signUpResponse = await SendAsync<CreateHolderAndUserResponse>(command);
+        var signUpResponse = await SendAsync(command);
         Assert.IsNotNull(signUpResponse);
         Assert.IsNotNull(signUpResponse.CreatedUser);
 
@@ -61,10 +62,25 @@ public class CreateHolderAndUserIntegrationTest : Testing
         CreatedHolder = createdHolder;
     }
 
-    [DataTestMethod]
-    public static CreateHolderAndUserCommand CreateHolderAndUserCommandFactory()
+    [TestMethod]
+    public async Task SignIn()
     {
-        var command = new CreateHolderAndUserCommand
+        await SignUp();
+
+        var command = new SignInCommand
+        {
+            Email = CreatedUser?.Email ?? string.Empty,
+            Password = CreatedUser?.Password ?? string.Empty,
+        };
+
+        var token = await SendAsync(command);
+        Assert.IsNotNull(token);
+    }
+
+    [DataTestMethod]
+    public static SignUpCommand SignUpCommandFactory()
+    {
+        var command = new SignUpCommand
         {
             HolderName = new Faker().Name.FullName(),
             FullName = new Faker().Name.FullName(),

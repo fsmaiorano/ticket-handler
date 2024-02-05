@@ -12,7 +12,8 @@ public record CreateUserCommand : IRequest<Guid?>
     public required string Email { get; set; }
     public required string Password { get; set; }
     public required Guid HolderId { get; set; }
-    public required List<Guid>? SectorsId { get; set; }
+    public required UserRoles Role { get; set; }
+    public List<Guid>? SectorsId { get; set; }
 }
 
 public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext context) : IRequestHandler<CreateUserCommand, Guid?>
@@ -35,7 +36,7 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
                 HolderId = request.HolderId,
             };
 
-            if(request.SectorsId is not null)
+            if (request.SectorsId is not null)
             {
                 user.Sectors = [];
 

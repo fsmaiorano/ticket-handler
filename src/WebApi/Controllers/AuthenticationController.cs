@@ -1,6 +1,5 @@
-﻿using Application.UseCases.SignUp.Commands.CreateHolderAndUser;
+﻿using Application.UseCases.Authentication.Commands.SignUp;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers;
 
 namespace WebApi.Controllers;
 
@@ -8,8 +7,15 @@ public class AuthenticationController : BaseController
 {
     [HttpPost("signup")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<CreateHolderAndUserResponse>> Post(CreateHolderAndUserCommand command)
+    public async Task<ActionResult<SignUpResponse>> Post(SignUpCommand command)
     {
         return await Mediator.Send(command);
     }
+
+    //[HttpPost("signin")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //public async Task<ActionResult<string>> Post(CreateHolderAndUserCommand command)
+    //{
+    //    return await Mediator.Send(command);
+    //}
 }

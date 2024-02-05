@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.User.Commands.CreateUser;
 using Application.UseCases.User.Queries;
 using Bogus;
+using Domain.Constants;
 using Domain.Entities;
 using IntegrationTest.Application.UseCases.Holder.Commands;
 using IntegrationTest.Application.UseCases.Sector.Commands;
@@ -56,7 +57,8 @@ public class CreateUserIntegrationTest : Testing
             Email = new Faker().Internet.Email(),
             Password = new Faker().Internet.Password(),
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
-            SectorsId = [CreateSectorIntegrationTest.CreatedSector!.Id]
+            SectorsId = [CreateSectorIntegrationTest.CreatedSector!.Id],
+            Role = UserRoles.Administrator
         };
 
         return command;
