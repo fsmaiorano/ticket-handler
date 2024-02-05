@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Infrastructure.Context;
 
@@ -79,14 +80,34 @@ public class DataContext : DbContext, IDataContext
                         .AddJsonFile("src/WebApi/appsettings.json", optional: false)
                         .Build();
 
-                    Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
-                    connectionString = builder.GetConnectionString("DefaultConnection");
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        Environment.SetEnvironmentVariable("ContainerConnection", builder.GetConnectionString("ContainerConnection"));
+                        connectionString = builder.GetConnectionString("ContainerConnection");
+                    }
+                    else
+                    {
+                        Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
+                        connectionString = builder.GetConnectionString("DefaultConnection");
+                    }
                 }
                 else
                 {
                     Console.WriteLine($"Using Environment Variable to get connection string");
-                    connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-                    Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
+
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        connectionString = "Server=db,1433;Database=tickethandler;User=sa;Password=Your_password123;MultipleActiveResultSets=true";
+                        Environment.SetEnvironmentVariable("ContainerConnection", connectionString);
+                    }
+                    else
+                    {
+                        connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+                        Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
+                    }
+
+                    // connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+                    // Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
 
                     Console.WriteLine($"Connection string: {connectionString}");
                 }

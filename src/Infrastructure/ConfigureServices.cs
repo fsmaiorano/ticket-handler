@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Runtime.InteropServices;
+using Application.Common.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +19,22 @@ public static class ConfigureServices
 
         if (!AppDomain.CurrentDomain.FriendlyName.Contains("testhost"))
         {
-            services.AddDbContextFactory<DataContext>(options =>
-               options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-               b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)), ServiceLifetime.Transient);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                services.AddDbContextFactory<DataContext>(options =>
+                    options.UseSqlServer(configuration.GetConnectionString("ContainerConnection"),
+                    b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)), ServiceLifetime.Transient);
+            }
+            else
+            {
+                services.AddDbContextFactory<DataContext>(options =>
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)), ServiceLifetime.Transient);
+            }
+
+            // services.AddDbContextFactory<DataContext>(options =>
+            //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+            //    b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)), ServiceLifetime.Transient);
         }
         else
         {
