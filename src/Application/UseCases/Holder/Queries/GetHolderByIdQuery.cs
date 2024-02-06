@@ -23,7 +23,11 @@ public class GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataCon
         try
         {
             _logger.LogInformation("GetHolderById: {@Request}", request);
-            holder = await _context.Holders.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+            holder = await _context.Holders
+                .Include(h => h.Sectors)
+                .FirstOrDefaultAsync(h => h.Id == request.Id, cancellationToken);
+
         }
         catch (Exception ex)
         {
