@@ -11,7 +11,7 @@ using IntegrationTest.Application.UseCases.User.Commands;
 namespace IntegrationTest.Application.UseCases.Authentication.Commands;
 
 [TestClass]
-public class SignUpIntegrationTest : Testing
+public class AuthenticationIntegrationTest : Testing
 {
     public static UserEntity? CreatedUser;
     public static HolderEntity? CreatedHolder;

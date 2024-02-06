@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Linq;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,9 @@ public class GetUserByIdHandler(ILogger<GetUserByIdHandler> logger, IDataContext
         {
             _logger.LogInformation("GetUserById: {@Request}", request);
 
-            user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            user = await _context.Users
+                .Include(u => u.Sectors)
+                .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
         }
         catch (Exception ex)
         {
