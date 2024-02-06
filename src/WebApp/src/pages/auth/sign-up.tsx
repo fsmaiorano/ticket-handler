@@ -60,7 +60,7 @@ export function SignUp() {
                             Create an account
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            Be a part of the community and begin to sell your pizzas
+                            Sign up to create an account and start using our services
                         </p>
                     </div>
                     <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
