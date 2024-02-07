@@ -1,10 +1,8 @@
-using Application.UseCases.Sector.Commands.AssignUserToSector.Commands;
+using Application.UseCases.User.Commands.AssignUserToSector;
 using Application.UseCases.User.Queries;
-using Domain.Entities;
 using IntegrationTest.Application.UseCases.Sector.Commands;
-using IntegrationTest.Application.UseCases.User.Commands;
 
-namespace IntegrationTest.Application.UseCases.AssignUserToSector.Commands;
+namespace IntegrationTest.Application.UseCases.User.Commands;
 
 [TestClass]
 public class AssignUserToSectorIntegrationTest : Testing

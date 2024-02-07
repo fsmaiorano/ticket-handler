@@ -1,10 +1,9 @@
 using Application.Common.Interfaces;
-using Application.UseCases.Sector.Commands.CreateSector;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.UseCases.Sector.Commands.AssignUserToSector.Commands;
+namespace Application.UseCases.User.Commands.AssignUserToSector;
 public record AssignUserToSectorCommand : IRequest<bool>
 {
     public required Guid UserId { get; set; }
@@ -36,7 +35,7 @@ public class AssignUserToSectorHandler(ILogger<AssignUserToSectorHandler> logger
 
             if (sectors.Count > 0)
             {
-                var sectorsNotAssigned = sectors.Where(s => user.Sectors is not null && 
+                var sectorsNotAssigned = sectors.Where(s => user.Sectors is not null &&
                                                             !user.Sectors
                                                                 .Any(us => us.Id == s.Id))
                                                                 .ToList();

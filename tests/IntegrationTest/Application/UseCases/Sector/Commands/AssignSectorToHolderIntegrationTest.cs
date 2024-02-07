@@ -1,9 +1,8 @@
 using Application.UseCases.Holder.Queries;
-using Application.UseCases.Sector.Commands.AssignSectorToHolder.Commands;
+using Application.UseCases.Sector.Commands.AssignSectorToHolder;
 using IntegrationTest.Application.UseCases.Holder.Commands;
-using IntegrationTest.Application.UseCases.Sector.Commands;
 
-namespace IntegrationTest.Application.UseCases.AssignSectorToHolder.Commands;
+namespace IntegrationTest.Application.UseCases.Sector.Commands;
 
 [TestClass]
 public class AssignSectorToHolderIntegrationTest : Testing
