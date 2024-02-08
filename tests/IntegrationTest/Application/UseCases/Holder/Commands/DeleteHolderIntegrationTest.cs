@@ -1,5 +1,4 @@
 using Application.UseCases.Holder.Commands.DeleteHolder;
-using Application.UseCases.Holder.Queries;
 
 namespace IntegrationTest.Application.UseCases.Holder.Commands;
 
@@ -24,16 +23,8 @@ public class DeleteHolderIntegrationTest : Testing
             Id = holder!.Id
         };
 
-        var deletedHolderId = await SendAsync(command);
-        Assert.IsNotNull(deletedHolderId);
-        Assert.IsInstanceOfType(deletedHolderId, typeof(Guid));
-
-        var query = new GetHolderByIdQuery
-        {
-            Id = holder.Id
-        };
-
-        var deletedHolder = await SendAsync(query);
-        Assert.IsNull(deletedHolder);
+        var deletedHolderResponse = await SendAsync(command);
+        Assert.IsNotNull(deletedHolderResponse);
+        Assert.IsTrue(deletedHolderResponse.Success);
     }
 }

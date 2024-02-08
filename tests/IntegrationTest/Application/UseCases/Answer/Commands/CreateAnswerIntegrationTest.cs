@@ -40,17 +40,17 @@ public class CreateAnswerIntegrationTest : Testing
         var createdAnswer = await SendAsync(command);
         Assert.IsNotNull(createdAnswer);
         Assert.IsNotNull(createdAnswer.Answer);
-        Assert.IsInstanceOfType(createdAnswer, typeof(Guid));
 
         var query = new GetAnswerByIdQuery
         {
             Id = createdAnswer.Answer.Id,
         };
       
-        var storedAnswer = await SendAsync(query);
-        Assert.IsNotNull(storedAnswer);
+        var getAnswerByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getAnswerByIdResponse);
+        Assert.IsTrue(getAnswerByIdResponse.Success);
 
-        CreatedAnswer = storedAnswer.Answer;
+        CreatedAnswer = getAnswerByIdResponse.Answer;
     }
 
     [DataTestMethod]
@@ -59,10 +59,10 @@ public class CreateAnswerIntegrationTest : Testing
         var command = new CreateAnswerCommand
         {
             Content = new Faker().Lorem.Sentence(),
-            TicketId = Guid.NewGuid(),
-            UserId = Guid.NewGuid(),
-            HolderId = Guid.NewGuid(),
-            SectorId = Guid.NewGuid(),
+            TicketId = CreateTicketIntegrationTest.CreatedTicket!.Id,
+            UserId = CreateUserIntegrationTest.CreatedUser!.Id,
+            HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
+            SectorId = CreateSectorIntegrationTest.CreatedSector!.Id,
         };
 
         return command;

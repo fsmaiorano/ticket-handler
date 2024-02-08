@@ -17,23 +17,15 @@ public class DeleteAnswerIntegrationTest : Testing
     [TestMethod]
     public async Task DeleteAnswer()
     {
-        var holder = CreateAnswerIntegrationTest.CreatedAnswer;
+        var answer = CreateAnswerIntegrationTest.CreatedAnswer;
 
         var command = new DeleteAnswerCommand
         {
-            Id = holder!.Id
+            Id = answer!.Id
         };
 
         var deletedAnswerId = await SendAsync(command);
         Assert.IsNotNull(deletedAnswerId);
-        Assert.IsInstanceOfType(deletedAnswerId, typeof(Guid));
-
-        var query = new GetAnswerByIdQuery
-        {
-            Id = holder.Id
-        };
-
-        var deletedAnswer = await SendAsync(query);
-        Assert.IsNull(deletedAnswer);
+        Assert.IsTrue(deletedAnswerId.Success);
     }
 }

@@ -24,7 +24,6 @@ public class CreateHolderIntegrationTest : Testing
         var createHolderResult = await SendAsync(command);
         Assert.IsNotNull(createHolderResult);
         Assert.IsNotNull(createHolderResult.Holder);
-        Assert.IsInstanceOfType(createHolderResult, typeof(Guid));
 
         var query = new GetHolderByIdQuery
         {

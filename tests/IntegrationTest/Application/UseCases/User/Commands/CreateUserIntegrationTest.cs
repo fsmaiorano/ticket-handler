@@ -30,9 +30,10 @@ public class CreateUserIntegrationTest : Testing
 
         var command = CreateUserCommandFactory();
 
-        var createdUserId = await SendAsync(command);
-        Assert.IsNotNull(createdUserId);
-        Assert.IsInstanceOfType(createdUserId, typeof(Guid));
+        var createUserResponse = await SendAsync(command);
+        Assert.IsNotNull(createUserResponse);
+        Assert.IsNotNull(createUserResponse.User);
+        Assert.IsTrue(createUserResponse.Success);
 
         var query = new GetUserByEmailQuery
         {

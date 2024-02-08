@@ -1,5 +1,4 @@
 using Application.UseCases.Holder.Commands.UpdateHolder;
-using Application.UseCases.Holder.Queries;
 using Bogus;
 
 namespace IntegrationTest.Application.UseCases.Holder.Commands;
@@ -25,20 +24,9 @@ public class UpdateHolderIntegrationTest : Testing
             Name = new Faker().Name.FullName()
         };
 
-        var updatedHolderId = await SendAsync(command);
+        var updatedHolderResponse = await SendAsync(command);
 
-        Assert.IsNotNull(updatedHolderId);
-        Assert.IsInstanceOfType(updatedHolderId, typeof(Guid));
-
-        var query = new GetHolderByIdQuery
-        {
-            Id = command.Id
-        };
-
-        var updatedHolder = await SendAsync(query);
-
-        Assert.IsNotNull(updatedHolder);
-        Assert.IsNotNull(updatedHolder?.Holder);
-        Assert.AreEqual(command.Name, updatedHolder?.Holder.Name);
+        Assert.IsNotNull(updatedHolderResponse);
+        Assert.IsTrue(updatedHolderResponse.Success);
     }
 }

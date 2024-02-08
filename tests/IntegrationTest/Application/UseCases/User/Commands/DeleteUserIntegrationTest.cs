@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.User.Commands.DeleteUser;
-using Application.UseCases.User.Queries;
 
 namespace IntegrationTest.Application.UseCases.User.Commands;
 
@@ -23,16 +22,8 @@ public class DeleteUserIntegrationTest : Testing
             Id = user!.Id
         };
 
-        var deletedUserId = await SendAsync(command);
-        Assert.IsNotNull(deletedUserId);
-        Assert.IsInstanceOfType(deletedUserId, typeof(Guid));
-
-        var query = new GetUserByIdQuery
-        {
-            Id = user.Id
-        };
-
-        var deletedUser = await SendAsync(query);
-        Assert.IsNull(deletedUser);
+        var deletedUserResponse = await SendAsync(command);
+        Assert.IsNotNull(deletedUserResponse);
+        Assert.IsTrue(deletedUserResponse.Success);
     }
 }

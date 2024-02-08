@@ -31,9 +31,9 @@ public class GetUserQueriesIntegrationTest : Testing
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
         };
 
-        var users = await SendAsync(query);
-        Assert.IsNotNull(users);
-        Assert.IsInstanceOfType(users, typeof(List<UserEntity>));
+        var getUsersByHolderIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getUsersByHolderIdResponse);
+        Assert.IsTrue(getUsersByHolderIdResponse.Success);
     }
 
     [TestMethod]
@@ -50,9 +50,9 @@ public class GetUserQueriesIntegrationTest : Testing
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
         };
 
-        var users = await SendAsync(query);
-        Assert.IsNotNull(users);
-        Assert.IsInstanceOfType(users, typeof(List<UserEntity>));
+        var getUsersByHolderIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getUsersByHolderIdResponse);
+        Assert.IsTrue(getUsersByHolderIdResponse.Success);
     }
 }
 

@@ -23,8 +23,8 @@ public class GetAnswerIntegrationTest : Testing
             Id = CreateAnswerIntegrationTest.CreatedAnswer!.Id,
         };
 
-        var answer = await SendAsync(query);
-        Assert.IsNotNull(answer);
-        Assert.IsInstanceOfType(answer, typeof(AnswerEntity));
+        var getAnswerByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getAnswerByIdResponse);
+        Assert.IsTrue(getAnswerByIdResponse.Success);
     }
 }

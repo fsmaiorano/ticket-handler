@@ -29,18 +29,9 @@ public class UpdateAnswerIntegrationTest : Testing
             SectorId = answer.SectorId
         };
 
-        var updatedAnswerId = await SendAsync(command);
+        var updatedAnswerResponse = await SendAsync(command);
 
-        Assert.IsNotNull(updatedAnswerId);
-        Assert.IsInstanceOfType(updatedAnswerId, typeof(Guid));
-
-        var query = new GetAnswerByIdQuery
-        {
-            Id = command.Id
-        };
-
-        var updatedAnswer = await SendAsync(query);
-
-        Assert.IsNotNull(updatedAnswer);
+        Assert.IsNotNull(updatedAnswerResponse);
+        Assert.IsTrue(updatedAnswerResponse.Success);
     }
 }

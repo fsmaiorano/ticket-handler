@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Holder.Queries;
-using Domain.Entities;
 using IntegrationTest.Application.UseCases.Holder.Commands;
 
 namespace IntegrationTest.Application.UseCases.Holder.Queries;
@@ -23,8 +22,8 @@ public class GetHolderQueriesIntegrationTest : Testing
             Id = CreateHolderIntegrationTest.CreatedHolder!.Id,
         };
 
-        var holder = await SendAsync(query);
-        Assert.IsNotNull(holder);
-        Assert.IsInstanceOfType(holder, typeof(HolderEntity));
+        var getHolderByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getHolderByIdResponse);
+        Assert.IsTrue(getHolderByIdResponse.Success);
     }
 }

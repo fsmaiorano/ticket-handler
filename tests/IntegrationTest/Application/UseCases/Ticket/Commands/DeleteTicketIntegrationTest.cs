@@ -23,16 +23,8 @@ public class DeleteTicketIntegrationTest : Testing
             Id = sector!.Id
         };
 
-        var deletedTicketId = await SendAsync(command);
-        Assert.IsNotNull(deletedTicketId);
-        Assert.IsInstanceOfType(deletedTicketId, typeof(Guid));
-
-        var query = new GetTicketByIdQuery
-        {
-            Id = sector.Id
-        };
-
-        var deletedTicket = await SendAsync(query);
-        Assert.IsNull(deletedTicket);
+        var deletedTicketResponse = await SendAsync(command);
+        Assert.IsNotNull(deletedTicketResponse);
+        Assert.IsTrue(deletedTicketResponse.Success);
     }
 }

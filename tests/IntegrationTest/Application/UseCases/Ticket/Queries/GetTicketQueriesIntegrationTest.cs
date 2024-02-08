@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Ticket.Queries;
-using Domain.Entities;
 using IntegrationTest.Application.UseCases.Ticket.Commands;
 
 namespace IntegrationTest.Application.UseCases.Ticket.Queries;
@@ -23,8 +22,8 @@ public class GetTicketQueriesIntegrationTest : Testing
             Id = CreateTicketIntegrationTest.CreatedTicket!.Id,
         };
 
-        var tickets = await SendAsync(query);
-        Assert.IsNotNull(tickets);
-        Assert.IsInstanceOfType(tickets, typeof(TicketEntity));
+        var getTicketByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getTicketByIdResponse);
+        Assert.IsTrue(getTicketByIdResponse.Success);
     }
 }

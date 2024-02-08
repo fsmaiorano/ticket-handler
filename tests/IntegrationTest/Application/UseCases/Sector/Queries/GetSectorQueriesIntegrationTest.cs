@@ -27,9 +27,9 @@ public class GetSectorQueriesIntegrationTest : Testing
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
         };
 
-        var sectors = await SendAsync(query);
-        Assert.IsNotNull(sectors);
-        Assert.IsInstanceOfType(sectors, typeof(List<SectorEntity>));
+        var getSectorsByHolderIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getSectorsByHolderIdResponse);
+        Assert.IsTrue(getSectorsByHolderIdResponse.Success);
     }
 }
 

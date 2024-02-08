@@ -44,6 +44,7 @@ public class DeleteAnswerHandler(ILogger<DeleteAnswerHandler> logger, IDataConte
             await _context.SaveChangesAsync(cancellationToken);
 
             response.Success = true;
+            response.Message = "Answer deleted";
         }
         catch (Exception ex)
         {

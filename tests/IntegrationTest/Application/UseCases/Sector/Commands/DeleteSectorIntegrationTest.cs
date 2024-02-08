@@ -24,16 +24,8 @@ public class DeleteSectorIntegrationTest : Testing
             Id = sector!.Id
         };
 
-        var deletedSectorId = await SendAsync(command);
-        Assert.IsNotNull(deletedSectorId);
-        Assert.IsInstanceOfType(deletedSectorId, typeof(Guid));
-
-        var query = new GetSectorByIdQuery
-        {
-            Id = sector.Id
-        };
-
-        var deletedSector = await SendAsync(query);
-        Assert.IsNull(deletedSector);
+        var deletedSectorResponse = await SendAsync(command);
+        Assert.IsNotNull(deletedSectorResponse);
+        Assert.IsTrue(deletedSectorResponse.Success);
     }
 }

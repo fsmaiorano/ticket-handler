@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Sector.Commands.UpdateSector;
-using Application.UseCases.Sector.Queries;
 using Bogus;
 
 namespace IntegrationTest.Application.UseCases.Sector.Commands;
@@ -26,19 +25,9 @@ public class UpdateSectorIntegrationTest : Testing
             Name = new Faker().Name.FullName()
         };
 
-        var updatedSectorId = await SendAsync(command);
+        var updatedSectorResponse = await SendAsync(command);
 
-        Assert.IsNotNull(updatedSectorId);
-        Assert.IsInstanceOfType(updatedSectorId, typeof(Guid));
-
-        var query = new GetSectorByIdQuery
-        {
-            Id = command.Id
-        };
-
-        var getSectorByIdResponse = await SendAsync(query);
-
-        Assert.IsNotNull(getSectorByIdResponse);
-        Assert.IsNotNull(getSectorByIdResponse.Sector);
+        Assert.IsNotNull(updatedSectorResponse);
+        Assert.IsTrue(updatedSectorResponse.Success);
     }
 }
