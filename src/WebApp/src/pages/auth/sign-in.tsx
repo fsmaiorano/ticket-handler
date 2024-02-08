@@ -8,7 +8,9 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { AppContext } from '@/contexts/app-context'
 import { signIn } from '@/services/sign-in'
+import { useContext } from 'react'
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -19,6 +21,7 @@ type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
   const [searchParams] = useSearchParams()
+  const { userHandler, tokenHandler } = useContext(AppContext)
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
     defaultValues: {
@@ -37,6 +40,8 @@ export function SignIn() {
       })
 
       if (response) {
+        userHandler(response.user)
+        tokenHandler(response.token)
         window.location.href = response.redirectUrl
       } else {
         toast.success('We send you an email with a link to sign in')

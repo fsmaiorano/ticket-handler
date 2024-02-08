@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { User } from '@/models/user'
 
 export interface SignInRequest {
   email: string
@@ -8,6 +9,7 @@ export interface SignInRequest {
 export interface SignInResponse {
   token: string
   redirectUrl: string
+  user: User
 }
 
 export async function signIn({ email, password }: SignInRequest) {

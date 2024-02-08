@@ -14,7 +14,8 @@ public record SignInCommand : IRequest<SignInResponse>
 
 public class SignInResponse : BaseResponse
 {
-    public string? RedirectUrl { get; set; } 
+    public string? RedirectUrl { get; set; }
+    public string? Token { get; set; }
 }
 
 public class SignInCommandHandler(ILogger<SignInCommandHandler> logger, IDataContext context) : IRequestHandler<SignInCommand, SignInResponse>
@@ -48,11 +49,12 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> logger, IDataCon
 
                 return response;
             }
-            
+
             // Implement JWT token generation here
             response.Success = true;
             response.Message = "User signed in";
             response.RedirectUrl = "/";
+            response.Token = "JWT Token";
         }
         catch (Exception ex)
         {
