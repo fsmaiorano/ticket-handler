@@ -1,4 +1,5 @@
-﻿using Application.UseCases.Authentication.Commands.SignUp;
+﻿using Application.UseCases.Authentication.Commands.SignIn;
+using Application.UseCases.Authentication.Commands.SignUp;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -12,10 +13,10 @@ public class AuthenticationController : BaseController
         return await Mediator.Send(command);
     }
 
-    //[HttpPost("signin")]
-    //[ProducesResponseType(StatusCodes.Status200OK)]
-    //public async Task<ActionResult<string>> Post(CreateHolderAndUserCommand command)
-    //{
-    //    return await Mediator.Send(command);
-    //}
+    [HttpPost("signin")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<SignInResponse>> Post(SignInCommand command)
+    {
+       return await Mediator.Send(command);
+    }
 }

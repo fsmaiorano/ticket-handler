@@ -28,7 +28,10 @@ export function SignIn() {
 
   async function handleSignIn(data: SignInForm) {
     try {
-      const response = await authenticate({ email: data.email })
+      const response = await authenticate({
+        email: data.email,
+        password: data.password,
+      })
 
       if (response) {
         window.location.href = response.redirectUrl
