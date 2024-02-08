@@ -45,7 +45,7 @@ public class CreateSectorHandler(ILogger<CreateSectorHandler> logger, IDataConte
                 _logger.LogWarning("CreateSectorCommand: Sector already exists");
                 response.Message = "Sector already exists";
 
-                return null;
+                return response;
             }
 
             _context.Sectors.Add(sector);
@@ -58,7 +58,7 @@ public class CreateSectorHandler(ILogger<CreateSectorHandler> logger, IDataConte
                 _logger.LogWarning("CreateSectorCommand: Sector not found");
                 response.Message = "Sector not found";
 
-                return null;
+                return response;
             }
 
             response.Success = true;
