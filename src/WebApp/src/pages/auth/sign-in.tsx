@@ -21,7 +21,10 @@ export function SignIn() {
   const [searchParams] = useSearchParams()
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
-    defaultValues: { email: searchParams.get('email') ?? '' },
+    defaultValues: {
+      email: searchParams.get('email') ?? '',
+      password: searchParams.get('password') ?? '',
+    },
   })
 
   const { mutateAsync: authenticate } = useMutation({ mutationFn: signIn })
