@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,33 +7,49 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Sector.Queries;
 
-public record GetSectorsByHolderIdQuery : IRequest<List<SectorEntity>?>
+public record GetSectorsByHolderIdQuery : IRequest<GetSectorsByHolderIdResponse>
 {
     public required Guid HolderId { get; init; }
 }
 
-public class GetSectorsByHolderIdHandler(ILogger<GetSectorsByHolderIdHandler> logger, IDataContext context) : IRequestHandler<GetSectorsByHolderIdQuery, List<SectorEntity>?>
+public class GetSectorsByHolderIdResponse : BaseResponse
+{
+    public List<SectorEntity>? Sectors { get; set; }
+}
+
+public class GetSectorsByHolderIdHandler(ILogger<GetSectorsByHolderIdHandler> logger, IDataContext context) : IRequestHandler<GetSectorsByHolderIdQuery, GetSectorsByHolderIdResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<GetSectorsByHolderIdHandler> _logger = logger;
 
-    public async Task<List<SectorEntity>?> Handle(GetSectorsByHolderIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetSectorsByHolderIdResponse> Handle(GetSectorsByHolderIdQuery request, CancellationToken cancellationToken)
     {
-        List<SectorEntity>? sectors;
+        var response = new GetSectorsByHolderIdResponse();
 
         try
         {
             _logger.LogInformation("GetSectorsByHolderIdQuery.Handle");
 
-            sectors = await _context.Sectors.Where(x => x.HolderId == request.HolderId).ToListAsync(cancellationToken);
+            var sectors = await _context.Sectors.Where(x => x.HolderId == request.HolderId).ToListAsync(cancellationToken);
+
+            if (sectors is null)
+            {
+                _logger.LogWarning("GetSectorsByHolderIdQuery.Handle: Sectors not found");
+                response.Message = "Sectors not found";
+
+                return response;
+            }
+
+            response.Success = true;
+            response.Sectors = sectors;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "GetSectorsByHolderIdQuery.Handle");
-            sectors = default;
+            response.Message = ex.Message;
         }
 
-        return sectors;
+        return response;
     }
 }
 

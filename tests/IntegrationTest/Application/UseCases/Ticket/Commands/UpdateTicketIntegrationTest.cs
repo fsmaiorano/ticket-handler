@@ -30,26 +30,25 @@ public class UpdateTicketIntegrationTest : Testing
             Status = ticket.Status
         };
 
-        var updatedTicketId = await SendAsync(command);
+        var updatedTicketResponse = await SendAsync(command);
 
-        Assert.IsNotNull(updatedTicketId);
-        Assert.IsInstanceOfType(updatedTicketId, typeof(Guid));
-        Assert.AreEqual(updatedTicketId, ticket.Id);
+        Assert.IsNotNull(updatedTicketResponse);
+        Assert.IsTrue(updatedTicketResponse.Success);
 
         var query = new GetTicketByIdQuery
         {
             Id = command.Id
         };
 
-        var updatedTicket = await SendAsync(query);
-
-        Assert.IsNotNull(updatedTicket);
-        Assert.AreEqual(command.Title, updatedTicket?.Title);
-        Assert.AreEqual(command.Content, updatedTicket?.Content);
-        Assert.AreEqual(command.Status, updatedTicket?.Status);
-        Assert.AreEqual(command.Priority, updatedTicket?.Priority);
-        Assert.AreEqual(command.HolderId, updatedTicket?.HolderId);
-        Assert.AreEqual(command.SectorId, updatedTicket?.SectorId);
-        Assert.AreEqual(command.AssigneeId, updatedTicket?.AssigneeId);
+         var getTicketByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getTicketByIdResponse);
+        Assert.IsNotNull(getTicketByIdResponse.Ticket);
+        Assert.AreEqual(command.Title, getTicketByIdResponse.Ticket.Title);
+        Assert.AreEqual(command.Content, getTicketByIdResponse.Ticket.Content);
+        Assert.AreEqual(command.Status, getTicketByIdResponse.Ticket.Status);
+        Assert.AreEqual(command.Priority, getTicketByIdResponse.Ticket.Priority);
+        Assert.AreEqual(command.HolderId, getTicketByIdResponse.Ticket.HolderId);
+        Assert.AreEqual(command.SectorId, getTicketByIdResponse.Ticket.SectorId);
+        Assert.AreEqual(command.AssigneeId, getTicketByIdResponse.Ticket.AssigneeId);
     }
 }

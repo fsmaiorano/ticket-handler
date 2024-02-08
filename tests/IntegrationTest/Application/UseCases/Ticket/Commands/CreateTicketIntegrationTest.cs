@@ -34,26 +34,29 @@ public class CreateTicketIntegrationTest : Testing
 
         var command = CreateTicketCommandFactory();
 
-        var createdTicketId = await SendAsync(command);
-        Assert.IsNotNull(createdTicketId);
-        Assert.IsInstanceOfType(createdTicketId, typeof(Guid));
+        var createdTicketResponse = await SendAsync(command);
+        Assert.IsNotNull(createdTicketResponse);
+        Assert.IsNotNull(createdTicketResponse.Ticket);
+        Assert.IsInstanceOfType(createdTicketResponse.Ticket.Id, typeof(Guid));
+
 
         var query = new GetTicketByIdQuery
         {
-            Id = (Guid)createdTicketId
+            Id = createdTicketResponse.Ticket.Id
         };
 
-        var ticket = await SendAsync(query);
-        Assert.IsNotNull(ticket);
-        Assert.AreEqual(command.Title, ticket?.Title);
-        Assert.AreEqual(command.Content, ticket?.Content);
-        Assert.AreEqual(command.Status, ticket?.Status);
-        Assert.AreEqual(command.Priority, ticket?.Priority);
-        Assert.AreEqual(command.HolderId, ticket?.HolderId);
-        Assert.AreEqual(command.SectorId, ticket?.SectorId);
-        Assert.AreEqual(command.AssigneeId, ticket?.AssigneeId);
+        var getTicketByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getTicketByIdResponse);
+        Assert.IsNotNull(getTicketByIdResponse.Ticket);
+        Assert.AreEqual(command.Title, getTicketByIdResponse.Ticket.Title);
+        Assert.AreEqual(command.Content, getTicketByIdResponse.Ticket.Content);
+        Assert.AreEqual(command.Status, getTicketByIdResponse.Ticket.Status);
+        Assert.AreEqual(command.Priority, getTicketByIdResponse.Ticket.Priority);
+        Assert.AreEqual(command.HolderId, getTicketByIdResponse.Ticket.HolderId);
+        Assert.AreEqual(command.SectorId, getTicketByIdResponse.Ticket.SectorId);
+        Assert.AreEqual(command.AssigneeId, getTicketByIdResponse.Ticket.AssigneeId);
 
-        CreatedTicket = ticket;
+        CreatedTicket = getTicketByIdResponse.Ticket;
     }
 
     [DataTestMethod]

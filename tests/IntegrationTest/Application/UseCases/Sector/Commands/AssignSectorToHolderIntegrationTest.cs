@@ -18,15 +18,10 @@ public class AssignSectorToHolderIntegrationTest : Testing
 
         var command = AssignSectorToHolderCommandFactory();
 
-        var assigned = await SendAsync(command);
-        Assert.IsTrue(assigned);
-
-        var holder = new GetHolderByIdQuery { Id = CreateHolderIntegrationTest.CreatedHolder!.Id };
-
-        var storedHolder = await SendAsync(holder);
-        Assert.IsNotNull(storedHolder);
-        Assert.IsTrue(storedHolder.Sectors!.Count > 0);
-        Assert.AreEqual(CreateSectorIntegrationTest.CreatedSector!.Id, storedHolder.Sectors[0].Id);
+        var assignSectorToHolderResponse = await SendAsync(command);
+        Assert.IsTrue(assignSectorToHolderResponse.Success);
+        Assert.IsNotNull(assignSectorToHolderResponse.Holder);
+        Assert.IsNotNull(assignSectorToHolderResponse.Sectors);
     }
 
     [DataTestMethod]

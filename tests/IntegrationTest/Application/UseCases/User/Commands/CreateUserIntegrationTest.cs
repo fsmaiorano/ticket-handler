@@ -39,13 +39,14 @@ public class CreateUserIntegrationTest : Testing
             Email = command.Email
         };
 
-        var user = await SendAsync(query);
-        Assert.IsNotNull(user);
-        Assert.AreEqual(command.Name, user?.Name);
-        Assert.AreEqual(command.Email, user?.Email);
-        Assert.AreEqual(command.Password, user?.Password);
+        var getUserByEmailResponse = await SendAsync(query);
+        Assert.IsNotNull(getUserByEmailResponse);
+        Assert.IsNotNull(getUserByEmailResponse.User);
+        Assert.AreEqual(command.Name, getUserByEmailResponse.User.Name);
+        Assert.AreEqual(command.Email, getUserByEmailResponse.User.Email);
+        Assert.AreEqual(command.Password, getUserByEmailResponse.User.Password);
 
-        CreatedUser = user;
+        CreatedUser = getUserByEmailResponse.User;
     }
 
     [DataTestMethod]

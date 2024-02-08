@@ -1,23 +1,31 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Answer.Commands.DeleteAnswer;
 
-public record DeleteAnswerCommand : IRequest<Guid?>
+public record DeleteAnswerCommand : IRequest<DeleteAnswerResponse>
 {
     public Guid Id { get; init; }
 }
 
-public class DeleteAnswerHandler(ILogger<DeleteAnswerHandler> logger, IDataContext context) : IRequestHandler<DeleteAnswerCommand, Guid?>
+public class DeleteAnswerResponse : BaseResponse
+{
+
+}
+
+public class DeleteAnswerHandler(ILogger<DeleteAnswerHandler> logger, IDataContext context) : IRequestHandler<DeleteAnswerCommand, DeleteAnswerResponse>
 {
 
     private readonly IDataContext _context = context;
     private readonly ILogger<DeleteAnswerHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(DeleteAnswerCommand request, CancellationToken cancellationToken)
+    public async Task<DeleteAnswerResponse> Handle(DeleteAnswerCommand request, CancellationToken cancellationToken)
     {
+        var response = new DeleteAnswerResponse();
+
         try
         {
             _logger.LogInformation("DeleteAnswerCommand: {@Request}", request);
@@ -27,18 +35,22 @@ public class DeleteAnswerHandler(ILogger<DeleteAnswerHandler> logger, IDataConte
             if (answer is null)
             {
                 _logger.LogWarning("DeleteAnswerCommand: Answer not found");
-                return null;
+                response.Message = "Answer not found";
+
+                return response;
             }
 
             _context.Answers.Remove(answer);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return answer.Id;
+            response.Success = true;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "DeleteAnswerCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.User.Commands.UpdateUser;
 
-public record UpdateUserCommand : IRequest<Guid?>
+public record UpdateUserCommand : IRequest<UpdateUserResponse>
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
@@ -13,13 +14,20 @@ public record UpdateUserCommand : IRequest<Guid?>
     public string? Password { get; set; }
 }
 
-public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext context) : IRequestHandler<UpdateUserCommand, Guid?>
+public class UpdateUserResponse : BaseResponse
+{
+
+}
+
+public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext context) : IRequestHandler<UpdateUserCommand, UpdateUserResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<UpdateUserHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateUserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
+        var response = new UpdateUserResponse();
+
         try
         {
             _logger.LogInformation("UpdateUserCommand: {@Request}", request);
@@ -29,7 +37,9 @@ public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext c
             if (user is null)
             {
                 _logger.LogWarning("UpdateUserCommand: User not found");
-                return null;
+                response.Message = "User not found";
+
+                return response;
             }
 
             if (!string.IsNullOrWhiteSpace(request.Name))
@@ -44,12 +54,15 @@ public class UpdateUserHandler(ILogger<UpdateUserHandler> logger, IDataContext c
             _context.Users.Update(user);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return user.Id;
+            response.Success = true;
+            response.Message = "User updated";
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "UpdateUserCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

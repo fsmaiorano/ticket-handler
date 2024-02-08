@@ -1,23 +1,32 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Holder.Commands.CreateHolder;
 
-public record CreateHolderCommand : IRequest<Guid?>
+public record CreateHolderCommand : IRequest<CreateHolderResponse>
 {
     public required string Name { get; set; }
     public List<SectorEntity>? Sectors { get; set; }
 }
 
-public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataContext context) : IRequestHandler<CreateHolderCommand, Guid?>
+public class CreateHolderResponse : BaseResponse
+{
+    public HolderEntity? Holder { get; set; }
+}
+
+public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataContext context) : IRequestHandler<CreateHolderCommand, CreateHolderResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<CreateHolderHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(CreateHolderCommand request, CancellationToken cancellationToken)
+    public async Task<CreateHolderResponse> Handle(CreateHolderCommand request, CancellationToken cancellationToken)
     {
+        var response = new CreateHolderResponse();
+
         try
         {
             _logger.LogInformation("CreateHolderCommand: {@Request}", request);
@@ -28,17 +37,30 @@ public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataConte
                 Sectors = request.Sectors
             };
 
+            var holderExists = await _context.Holders.AnyAsync(x => x.Name == request.Name, cancellationToken);
+
+            if (holderExists)
+            {
+                _logger.LogWarning("CreateHolderCommand: Holder already exists");
+                response.Message = "Holder already exists";
+
+                return response;
+            }
+
             _context.Holders.Add(holder);
             await _context.SaveChangesAsync(cancellationToken);
 
             var createdHolder = await _context.Holders.FindAsync([holder.Id], cancellationToken);
 
-            return createdHolder?.Id ?? null;
+            response.Success = true;
+            response.Holder = createdHolder;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "CreateHolderCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

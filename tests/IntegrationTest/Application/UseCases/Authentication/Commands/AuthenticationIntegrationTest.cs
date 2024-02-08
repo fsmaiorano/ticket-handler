@@ -3,7 +3,6 @@ using Application.UseCases.Authentication.Commands.SignUp;
 using Application.UseCases.Holder.Queries;
 using Application.UseCases.User.Queries;
 using Bogus;
-using Domain.Constants;
 using Domain.Entities;
 using IntegrationTest.Application.UseCases.Holder.Commands;
 using IntegrationTest.Application.UseCases.User.Commands;
@@ -40,26 +39,29 @@ public class AuthenticationIntegrationTest : Testing
 
         var query = new GetUserByIdQuery
         {
-            Id = signUpResponse.CreatedUser,
+            Id = signUpResponse.CreatedUser.Id,
         };
 
         var createdUser = await SendAsync(query);
         Assert.IsNotNull(createdUser);
-        Assert.AreEqual(command.FullName, createdUser?.Name);
-        Assert.AreEqual(createdUser?.Role, UserRoles.Administrator);
+        Assert.IsNotNull(createdUser?.User);
+        Assert.AreEqual(command.FullName, createdUser.User.Name);
+        Assert.AreEqual(command.Email, createdUser.User.Email);
+        Assert.AreEqual(command.Password, createdUser.User.Password);
 
-        CreatedUser = createdUser;
+        CreatedUser = createdUser.User;
 
         var getHolderByIdQuery = new GetHolderByIdQuery
         {
-            Id = signUpResponse.CreatedHolder,
+            Id = signUpResponse!.CreatedHolder!.Id,
         };
 
         var createdHolder = await SendAsync(getHolderByIdQuery);
         Assert.IsNotNull(createdHolder);
-        Assert.AreEqual(command.HolderName, createdHolder?.Name);
+        Assert.IsNotNull(createdHolder?.Holder);
+        Assert.AreEqual(command.HolderName, createdHolder.Holder.Name);
 
-        CreatedHolder = createdHolder;
+        CreatedHolder = createdHolder.Holder;
     }
 
     [TestMethod]

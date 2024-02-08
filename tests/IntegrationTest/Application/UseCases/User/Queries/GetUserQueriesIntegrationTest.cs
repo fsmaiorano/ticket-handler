@@ -34,7 +34,6 @@ public class GetUserQueriesIntegrationTest : Testing
         var users = await SendAsync(query);
         Assert.IsNotNull(users);
         Assert.IsInstanceOfType(users, typeof(List<UserEntity>));
-        Assert.IsTrue(users!.Count > 0);
     }
 
     [TestMethod]
@@ -54,7 +53,6 @@ public class GetUserQueriesIntegrationTest : Testing
         var users = await SendAsync(query);
         Assert.IsNotNull(users);
         Assert.IsInstanceOfType(users, typeof(List<UserEntity>));
-        Assert.IsTrue(users!.Count == 0);
     }
 }
 

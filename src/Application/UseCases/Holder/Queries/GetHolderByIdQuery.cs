@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,34 +7,50 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Holder.Queries;
 
-public record GetHolderByIdQuery : IRequest<HolderEntity?>
+public record GetHolderByIdQuery : IRequest<GetHolderByIdResponse>
 {
     public required Guid Id { get; init; }
 }
 
-public class GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataContext context) : IRequestHandler<GetHolderByIdQuery, HolderEntity?>
+public class GetHolderByIdResponse : BaseResponse
+{
+    public HolderEntity? Holder { get; set; }
+}
+
+public class GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataContext context) : IRequestHandler<GetHolderByIdQuery, GetHolderByIdResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<GetHolderByIdHandler> _logger = logger;
 
-    public async Task<HolderEntity?> Handle(GetHolderByIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetHolderByIdResponse> Handle(GetHolderByIdQuery request, CancellationToken cancellationToken)
     {
-        HolderEntity? holder = default;
+        var response = new GetHolderByIdResponse();
 
         try
         {
             _logger.LogInformation("GetHolderById: {@Request}", request);
 
-            holder = await _context.Holders
+            var holder = await _context.Holders
                 .Include(h => h.Sectors)
                 .FirstOrDefaultAsync(h => h.Id == request.Id, cancellationToken);
 
+            if (holder is null)
+            {
+                _logger.LogWarning("GetHolderById: Holder not found");
+                response.Message = "Holder not found";
+
+                return response;
+            }
+
+            response.Success = true;
+            response.Holder = holder;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "GetHolderById: {@Request}", request);
+            response.Message = ex.Message;
         }
 
-        return holder;
+        return response;
     }
 }

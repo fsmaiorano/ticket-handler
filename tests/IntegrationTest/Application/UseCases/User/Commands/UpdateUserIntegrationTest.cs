@@ -27,22 +27,22 @@ public class UpdateUserIntegrationTest : Testing
             Password = new Faker().Internet.Password(),
         };
 
-        var updatedUserId = await SendAsync(command);
+        var updatedUserResponse = await SendAsync(command);
 
-        Assert.IsNotNull(updatedUserId);
-        Assert.IsInstanceOfType(updatedUserId, typeof(Guid));
-        Assert.AreEqual(updatedUserId, user.Id);
+        Assert.IsNotNull(updatedUserResponse);
+        Assert.IsTrue(updatedUserResponse.Success);
 
         var query = new GetUserByEmailQuery
         {
             Email = command.Email
         };
 
-        var updatedUser = await SendAsync(query);
+        var getUserByEmailResponse = await SendAsync(query);
 
-        Assert.IsNotNull(updatedUser);
-        Assert.AreEqual(command.Name, updatedUser?.Name);
-        Assert.AreEqual(command.Email, updatedUser?.Email);
-        Assert.AreEqual(command.Password, updatedUser?.Password);
+        Assert.IsNotNull(getUserByEmailResponse);
+        Assert.IsNotNull(getUserByEmailResponse.User);
+        Assert.AreEqual(command.Name, getUserByEmailResponse.User.Name);
+        Assert.AreEqual(command.Email, getUserByEmailResponse.User.Email);
+        Assert.AreEqual(command.Password, getUserByEmailResponse.User.Password);
     }
 }

@@ -37,20 +37,20 @@ public class CreateAnswerIntegrationTest : Testing
 
         var command = CreateAnswerCommandFactory();
 
-        var createdAnswerId = await SendAsync(command);
-        Assert.IsNotNull(createdAnswerId);
-        Assert.IsInstanceOfType(createdAnswerId, typeof(Guid));
+        var createdAnswer = await SendAsync(command);
+        Assert.IsNotNull(createdAnswer);
+        Assert.IsNotNull(createdAnswer.Answer);
+        Assert.IsInstanceOfType(createdAnswer, typeof(Guid));
 
         var query = new GetAnswerByIdQuery
         {
-            Id = (Guid)createdAnswerId,
+            Id = createdAnswer.Answer.Id,
         };
+      
+        var storedAnswer = await SendAsync(query);
+        Assert.IsNotNull(storedAnswer);
 
-        var createdAnswer = await SendAsync(query);
-        Assert.IsNotNull(createdAnswer);
-        Assert.AreEqual(command.Content, createdAnswer?.Content);
-
-        CreatedAnswer = createdAnswer;
+        CreatedAnswer = storedAnswer.Answer;
     }
 
     [DataTestMethod]

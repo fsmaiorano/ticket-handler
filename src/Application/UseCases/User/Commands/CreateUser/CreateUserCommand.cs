@@ -1,12 +1,14 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Constants;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.User.Commands.CreateUser;
 
-public record CreateUserCommand : IRequest<Guid?>
+public record CreateUserCommand : IRequest<CreateUserResponse>
 {
     public required string Name { get; set; }
     public required string Email { get; set; }
@@ -16,13 +18,20 @@ public record CreateUserCommand : IRequest<Guid?>
     public List<Guid>? SectorsId { get; set; }
 }
 
-public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext context) : IRequestHandler<CreateUserCommand, Guid?>
+public class CreateUserResponse : BaseResponse
+{
+    public UserEntity? User { get; set; }
+}
+
+public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext context) : IRequestHandler<CreateUserCommand, CreateUserResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<CreateUserHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<CreateUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
+        var response = new CreateUserResponse();
+
         try
         {
             _logger.LogInformation("CreateUserCommand: {@Request}", request);
@@ -35,6 +44,16 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
                 Role = UserRoles.Administrator,
                 HolderId = request.HolderId,
             };
+
+            var userExists = await _context.Users.AnyAsync(x => x.Email == request.Email, cancellationToken);
+
+            if (userExists)
+            {
+                _logger.LogWarning("CreateUserCommand: User already exists");
+                response.Message = "User already exists";
+
+                return response;
+            }
 
             if (request.SectorsId is not null)
             {
@@ -54,12 +73,24 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
 
             var createdUser = await _context.Users.FindAsync([user.Id], cancellationToken);
 
-            return createdUser?.Id ?? null;
+            if (createdUser is null)
+            {
+                _logger.LogWarning("CreateUserCommand: User not found");
+                response.Message = "User not found";
+
+                return response;
+            }
+
+            response.Success = true;
+            response.Message = "User created";
+            response.User = createdUser;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "CreateUserCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

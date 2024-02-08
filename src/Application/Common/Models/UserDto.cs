@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Domain.Constants;
+using System.Text.Json.Serialization;
 
 namespace Application.Common.Models;
 
@@ -12,4 +13,7 @@ public class UserDto
 
     [JsonPropertyName("password")]
     public string? Password { get; set; }
+
+    [JsonPropertyName("role")]
+    public UserRoles Role { get; set;}
 }

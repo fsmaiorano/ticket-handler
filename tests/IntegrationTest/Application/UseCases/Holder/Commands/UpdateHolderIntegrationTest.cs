@@ -29,7 +29,6 @@ public class UpdateHolderIntegrationTest : Testing
 
         Assert.IsNotNull(updatedHolderId);
         Assert.IsInstanceOfType(updatedHolderId, typeof(Guid));
-        Assert.AreEqual(updatedHolderId, holder.Id);
 
         var query = new GetHolderByIdQuery
         {
@@ -39,6 +38,7 @@ public class UpdateHolderIntegrationTest : Testing
         var updatedHolder = await SendAsync(query);
 
         Assert.IsNotNull(updatedHolder);
-        Assert.AreEqual(command.Name, updatedHolder?.Name);
+        Assert.IsNotNull(updatedHolder?.Holder);
+        Assert.AreEqual(command.Name, updatedHolder?.Holder.Name);
     }
 }

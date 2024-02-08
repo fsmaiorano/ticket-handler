@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,37 +7,48 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Sector.Queries;
 
-public record GetSectorByIdQuery : IRequest<SectorEntity?>
+public record GetSectorByIdQuery : IRequest<GetSectorByIdResponse>
 {
     public required Guid Id { get; init; }
 }
 
-public class GetSectorByIdHandler : IRequestHandler<GetSectorByIdQuery, SectorEntity?>
+public class GetSectorByIdResponse : BaseResponse
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetSectorByIdHandler> _logger;
+    public SectorEntity? Sector { get; set; }
+}
 
-    public GetSectorByIdHandler(ILogger<GetSectorByIdHandler> logger, IDataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+public class GetSectorByIdHandler(ILogger<GetSectorByIdHandler> logger, IDataContext context) : IRequestHandler<GetSectorByIdQuery, GetSectorByIdResponse>
+{
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetSectorByIdHandler> _logger = logger;
 
-    public async Task<SectorEntity?> Handle(GetSectorByIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetSectorByIdResponse> Handle(GetSectorByIdQuery request, CancellationToken cancellationToken)
     {
-        SectorEntity? Sector = default;
+        var response = new GetSectorByIdResponse();
 
         try
         {
             _logger.LogInformation("GetSectorById: {@Request}", request);
 
-            Sector = await _context.Sectors.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var sector = await _context.Sectors.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+            if (sector is null)
+            {
+                _logger.LogWarning("GetSectorById: Sector not");
+                response.Message = "Sector not found";
+
+                return response;
+            }
+
+            response.Success = true;
+            response.Sector = sector;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "GetSectorById: {@Request}", request);
+            response.Message = ex.Message;
         }
 
-        return Sector;
+        return response;
     }
 }

@@ -1,21 +1,29 @@
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Holder.Commands.DeleteHolder;
 
-public record DeleteHolderCommand : IRequest<Guid?>
+public record DeleteHolderCommand : IRequest<DeleteHolderResponse>
 {
     public Guid Id { get; set; }
 }
 
-public class DeleteHolderHandler(ILogger<DeleteHolderHandler> logger, IDataContext context) : IRequestHandler<DeleteHolderCommand, Guid?>
+public class DeleteHolderResponse : BaseResponse
+{
+
+}
+
+public class DeleteHolderHandler(ILogger<DeleteHolderHandler> logger, IDataContext context) : IRequestHandler<DeleteHolderCommand, DeleteHolderResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<DeleteHolderHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(DeleteHolderCommand request, CancellationToken cancellationToken)
+    public async Task<DeleteHolderResponse> Handle(DeleteHolderCommand request, CancellationToken cancellationToken)
     {
+        var response = new DeleteHolderResponse();
+
         try
         {
             _logger.LogInformation("DeleteHolderCommand: {@Request}", request);
@@ -24,18 +32,23 @@ public class DeleteHolderHandler(ILogger<DeleteHolderHandler> logger, IDataConte
 
             if (holder is null)
             {
-                return null;
+                _logger.LogWarning("DeleteHolderCommand: Holder not found");
+                response.Message = "Holder not found";
+
+                return response;
             }
 
             _context.Holders.Remove(holder);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return holder.Id;
+            response.Success = true;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "DeleteHolderCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

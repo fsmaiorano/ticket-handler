@@ -11,7 +11,7 @@ public class UserController : BaseController
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Guid?>> Post(CreateUserCommand command)
+    public async Task<ActionResult<CreateUserResponse>> Post(CreateUserCommand command)
     {
         return await Mediator.Send(command);
     }
@@ -20,16 +20,22 @@ public class UserController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<UserDto>> Get(string email)
     {
-        var userEntity = await Mediator.Send(new GetUserByEmailQuery { Email = email });
+        var getUserByEmailResponse = await Mediator.Send(new GetUserByEmailQuery { Email = email });
 
-        var userDto = userEntity == null ? null : new UserDto
+        if (getUserByEmailResponse.User is null)
+            return NotFound();
+
+        if (!getUserByEmailResponse.Success)
+            return BadRequest(getUserByEmailResponse.Message);
+
+        var userDto = new UserDto
         {
-            Name = userEntity.Name,
-            Email = userEntity.Email,
-            Password = userEntity.Password
+            Name = getUserByEmailResponse.User.Name,
+            Email = getUserByEmailResponse.User.Email,
+            Role = getUserByEmailResponse.User.Role
         };
 
-        return userEntity == null ? NotFound() : Ok(userDto);
+        return Ok(userDto);
     }
 
     [HttpPut("{id}")]
@@ -51,7 +57,6 @@ public class UserController : BaseController
     public async Task<ActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteUserCommand { Id = id });
-
         return NoContent();
     }
 }

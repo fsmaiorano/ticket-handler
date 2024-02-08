@@ -11,7 +11,7 @@ namespace WebApi.Controllers
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Guid?>> Post(CreateSectorCommand command)
+        public async Task<ActionResult<CreateSectorResponse>> Post(CreateSectorCommand command)
         {
             return await Mediator.Send(command);
         }
@@ -20,16 +20,22 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<SectorDto>> Get(Guid id)
         {
-            var sectorEntity = await Mediator.Send(new GetSectorByIdQuery { Id = id });
+            var getSectorByIdResponse = await Mediator.Send(new GetSectorByIdQuery { Id = id });
 
-            var sectorDto = sectorEntity == null ? null : new SectorDto
+            if (getSectorByIdResponse.Sector is null)
+                return NotFound();
+
+            if (!getSectorByIdResponse.Success)
+                return BadRequest(getSectorByIdResponse.Message);
+
+            var sectorDto = new SectorDto
             {
-                Name = sectorEntity.Name,
-                HolderEntity = sectorEntity.HolderEntity,
-                Users = sectorEntity.Users
+                Name = getSectorByIdResponse.Sector.Name,
+                HolderId = getSectorByIdResponse.Sector.HolderId,
+                Users = getSectorByIdResponse.Sector.Users
             };
 
-            return sectorEntity == null ? NotFound() : Ok(sectorDto);
+            return Ok(sectorDto);
         }
 
         [HttpPut("{id}")]

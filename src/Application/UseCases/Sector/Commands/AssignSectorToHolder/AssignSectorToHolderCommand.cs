@@ -1,22 +1,32 @@
 using Application.Common.Interfaces;
+using Application.Common.Models;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Sector.Commands.AssignSectorToHolder;
-public record AssignSectorToHolderCommand : IRequest<bool>
+public record AssignSectorToHolderCommand : IRequest<AssignSectorToHolderResponse>
 {
     public required Guid HolderId { get; set; }
     public required List<Guid> SectorsId { get; set; }
 }
 
-public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> logger, IDataContext context) : IRequestHandler<AssignSectorToHolderCommand, bool>
+public class AssignSectorToHolderResponse : BaseResponse
+{
+    public HolderEntity? Holder { get; set; }
+    public List<SectorEntity>? Sectors { get; set; }
+}
+
+public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> logger, IDataContext context) : IRequestHandler<AssignSectorToHolderCommand, AssignSectorToHolderResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<AssignSectorToHolderHandler> _logger = logger;
 
-    public async Task<bool> Handle(AssignSectorToHolderCommand request, CancellationToken cancellationToken)
+    public async Task<AssignSectorToHolderResponse> Handle(AssignSectorToHolderCommand request, CancellationToken cancellationToken)
     {
+        var response = new AssignSectorToHolderResponse();
+
         try
         {
             _logger.LogInformation("AssignSectorToHolderCommand: {@Request}", request);
@@ -26,7 +36,9 @@ public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> lo
             if (holder is null)
             {
                 _logger.LogWarning("AssignSectorToHolderCommand: Holder not found");
-                return false;
+                response.Message = "Holder not found";
+
+                return response;
             }
 
             var sectors = await _context.Sectors
@@ -47,12 +59,16 @@ public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> lo
                 }
             }
 
-            return true;
+            response.Success = true;
+            response.Holder = holder;
+            response.Sectors = sectors;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "AssignSectorToHolderCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

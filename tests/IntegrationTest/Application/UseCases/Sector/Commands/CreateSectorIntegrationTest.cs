@@ -25,20 +25,21 @@ public class CreateSectorIntegrationTest : Testing
 
         var command = CreateSectorCommandFactory();
 
-        var createdSectorId = await SendAsync(command);
-        Assert.IsNotNull(createdSectorId);
-        Assert.IsInstanceOfType(createdSectorId, typeof(Guid));
+        var createdSectorResponse = await SendAsync(command);
+        Assert.IsNotNull(createdSectorResponse);
+        Assert.IsNotNull(createdSectorResponse.Sector);
 
         var query = new GetSectorByIdQuery
         {
-            Id = (Guid)createdSectorId,
+            Id = createdSectorResponse.Sector.Id,
         };
 
-        var createdSector = await SendAsync(query);
-        Assert.IsNotNull(createdSector);
-        Assert.AreEqual(command.Name, createdSector?.Name);
+        var getSectorByIdQueryResponse = await SendAsync(query);
+        Assert.IsNotNull(getSectorByIdQueryResponse);
+        Assert.IsNotNull(getSectorByIdQueryResponse.Sector);
+        Assert.AreEqual(command.Name, getSectorByIdQueryResponse.Sector.Name);
 
-        CreatedSector = createdSector;
+        CreatedSector = getSectorByIdQueryResponse.Sector;
     }
 
     [DataTestMethod]

@@ -1,22 +1,30 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.User.Commands.DeleteUser;
 
-public record DeleteUserCommand : IRequest<Guid?>
+public record DeleteUserCommand : IRequest<BaseResponse>
 {
     public Guid Id { get; set; }
 }
 
-public class DeleteUserHandler(ILogger<DeleteUserHandler> logger, IDataContext context) : IRequestHandler<DeleteUserCommand, Guid?>
+public class DeleteUserResponse : BaseResponse
+{
+
+}
+
+public class DeleteUserHandler(ILogger<DeleteUserHandler> logger, IDataContext context) : IRequestHandler<DeleteUserCommand, BaseResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<DeleteUserHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
+        var response = new BaseResponse();
+
         try
         {
             _logger.LogInformation("DeleteUserCommand: {@Request}", request);
@@ -26,18 +34,23 @@ public class DeleteUserHandler(ILogger<DeleteUserHandler> logger, IDataContext c
             if (user is null)
             {
                 _logger.LogWarning("DeleteUserCommand: User not found");
-                return null;
+                response.Message = "User not found";
+
+                return response;
             }
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return user.Id;
+            response.Success = true;
+            response.Message = "User deleted successfully";
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "DeleteUserCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

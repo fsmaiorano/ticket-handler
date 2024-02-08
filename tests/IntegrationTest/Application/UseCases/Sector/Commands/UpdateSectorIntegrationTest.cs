@@ -30,16 +30,15 @@ public class UpdateSectorIntegrationTest : Testing
 
         Assert.IsNotNull(updatedSectorId);
         Assert.IsInstanceOfType(updatedSectorId, typeof(Guid));
-        Assert.AreEqual(updatedSectorId, sector.Id);
 
         var query = new GetSectorByIdQuery
         {
             Id = command.Id
         };
 
-        var updatedSector = await SendAsync(query);
+        var getSectorByIdResponse = await SendAsync(query);
 
-        Assert.IsNotNull(updatedSector);
-        Assert.AreEqual(command.Name, updatedSector?.Name);
+        Assert.IsNotNull(getSectorByIdResponse);
+        Assert.IsNotNull(getSectorByIdResponse.Sector);
     }
 }

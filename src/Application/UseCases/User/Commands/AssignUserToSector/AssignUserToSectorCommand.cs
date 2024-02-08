@@ -1,22 +1,30 @@
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.User.Commands.AssignUserToSector;
-public record AssignUserToSectorCommand : IRequest<bool>
+public record AssignUserToSectorCommand : IRequest<AssignUserToSectorResponse>
 {
     public required Guid UserId { get; set; }
     public required List<Guid> SectorsId { get; set; }
 }
 
-public class AssignUserToSectorHandler(ILogger<AssignUserToSectorHandler> logger, IDataContext context) : IRequestHandler<AssignUserToSectorCommand, bool>
+public class AssignUserToSectorResponse : BaseResponse
+{
+
+}
+
+public class AssignUserToSectorHandler(ILogger<AssignUserToSectorHandler> logger, IDataContext context) : IRequestHandler<AssignUserToSectorCommand, AssignUserToSectorResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<AssignUserToSectorHandler> _logger = logger;
 
-    public async Task<bool> Handle(AssignUserToSectorCommand request, CancellationToken cancellationToken)
+    public async Task<AssignUserToSectorResponse> Handle(AssignUserToSectorCommand request, CancellationToken cancellationToken)
     {
+        var response = new AssignUserToSectorResponse();
+
         try
         {
             _logger.LogInformation("AssignUserToSectorCommand: {@Request}", request);
@@ -26,7 +34,9 @@ public class AssignUserToSectorHandler(ILogger<AssignUserToSectorHandler> logger
             if (user is null)
             {
                 _logger.LogWarning("AssignUserToSectorCommand: User not found");
-                return false;
+                response.Message = "User not found";
+
+                return response;
             }
 
             var sectors = await _context.Sectors
@@ -47,12 +57,15 @@ public class AssignUserToSectorHandler(ILogger<AssignUserToSectorHandler> logger
                 }
             }
 
-            return true;
+            response.Success = true;
+            response.Message = "User assigned to sector";
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "AssignUserToSectorCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

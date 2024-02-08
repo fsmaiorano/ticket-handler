@@ -11,7 +11,7 @@ namespace WebApi.Controllers
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Guid?>> Post(CreateTicketCommand command)
+        public async Task<ActionResult<CreateTicketResponse>> Post(CreateTicketCommand command)
         {
             return await Mediator.Send(command);
         }
@@ -20,20 +20,26 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<TicketDto>> Get(Guid id)
         {
-            var ticketEntity = await Mediator.Send(new GetTicketByIdQuery { Id = id });
+            var getTicketByIdResponse = await Mediator.Send(new GetTicketByIdQuery { Id = id });
 
-            var ticketDto = ticketEntity == null ? null : new TicketDto
+            if (getTicketByIdResponse.Ticket is null)
+                return NotFound();
+
+            if (!getTicketByIdResponse.Success)
+                return BadRequest(getTicketByIdResponse.Message);
+
+            var ticketDto = new TicketDto
             {
-                Title = ticketEntity.Title,
-                Content = ticketEntity.Content,
-                Status = ticketEntity.Status,
-                Priority = ticketEntity.Priority,
-                HolderId = ticketEntity.HolderId,
-                SectorId = ticketEntity.SectorId,
-                AssigneeId = ticketEntity.AssigneeId
+                Title = getTicketByIdResponse.Ticket.Title,
+                Content = getTicketByIdResponse.Ticket.Content,
+                Status = getTicketByIdResponse.Ticket.Status,
+                Priority = getTicketByIdResponse.Ticket.Priority,
+                HolderId = getTicketByIdResponse.Ticket.HolderId,
+                SectorId = getTicketByIdResponse.Ticket.SectorId,
+                AssigneeId = getTicketByIdResponse.Ticket.AssigneeId
             };
 
-            return ticketEntity == null ? NotFound() : Ok(ticketDto);
+            return Ok(ticketDto);
         }
 
         [HttpPut("{id}")]

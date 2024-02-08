@@ -11,7 +11,7 @@ namespace WebApi.Controllers
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Guid?>> Post(CreateHolderCommand command)
+        public async Task<ActionResult<CreateHolderResponse>> Post(CreateHolderCommand command)
         {
             return await Mediator.Send(command);
         }
@@ -20,15 +20,21 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<HolderDto>> Get(Guid id)
         {
-            var holderEntity = await Mediator.Send(new GetHolderByIdQuery { Id = id });
+            var getHolderByIdResponse = await Mediator.Send(new GetHolderByIdQuery { Id = id });
 
-            var holderDto = holderEntity == null ? null : new HolderDto
+            if (getHolderByIdResponse.Holder is null)
+                return NotFound();
+
+            if (!getHolderByIdResponse.Success)
+                return BadRequest(getHolderByIdResponse.Message);
+
+            var holderDto = new HolderDto
             {
-                Name = holderEntity.Name,
-                Sectors = holderEntity.Sectors
+                Name = getHolderByIdResponse.Holder.Name,
+                Sectors = getHolderByIdResponse.Holder.Sectors
             };
 
-            return holderEntity == null ? NotFound() : Ok(holderDto);
+            return Ok(holderDto);
         }
 
         [HttpPut("{id}")]

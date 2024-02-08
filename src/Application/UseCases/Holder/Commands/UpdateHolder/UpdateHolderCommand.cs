@@ -1,23 +1,31 @@
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Holder.Commands.UpdateHolder;
 
-public record UpdateHolderCommand : IRequest<Guid?>
+public record UpdateHolderCommand : IRequest<UpdateHolderResponse>
 {
     public Guid Id { get; set; }
     public string? Name { get; set; } = string.Empty;
 }
 
-public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataContext context) : IRequestHandler<UpdateHolderCommand, Guid?>
+public class UpdateHolderResponse : BaseResponse
+{
+
+}
+
+public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataContext context) : IRequestHandler<UpdateHolderCommand, UpdateHolderResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<UpdateHolderHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(UpdateHolderCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateHolderResponse> Handle(UpdateHolderCommand request, CancellationToken cancellationToken)
     {
+        var response = new UpdateHolderResponse();
+
         try
         {
             _logger.LogInformation("UpdateHolderCommand: {@Request}", request);
@@ -27,7 +35,9 @@ public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataConte
             if (holder is null)
             {
                 _logger.LogWarning("UpdateHolderCommand: Holder not found");
-                return null;
+                response.Message = "Holder not found";
+
+                return response;
             }
 
             if (!string.IsNullOrWhiteSpace(request.Name))
@@ -36,12 +46,14 @@ public class UpdateHolderHandler(ILogger<UpdateHolderHandler> logger, IDataConte
             _context.Holders.Update(holder);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return holder.Id;
+            response.Success = true;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "UpdateHolderCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

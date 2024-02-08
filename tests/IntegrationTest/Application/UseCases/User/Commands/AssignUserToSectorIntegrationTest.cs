@@ -18,15 +18,17 @@ public class AssignUserToSectorIntegrationTest : Testing
 
         var command = AssignUserToSectorCommandFactory();
 
-        var assigned = await SendAsync(command);
-        Assert.IsTrue(assigned);
+        var assignUserToSectorResponse = await SendAsync(command);
+        Assert.IsTrue(assignUserToSectorResponse.Success);
 
         var user = new GetUserByIdQuery { Id = CreateUserIntegrationTest.CreatedUser!.Id };
 
-        var storedUser = await SendAsync(user);
-        Assert.IsNotNull(storedUser);
-        Assert.IsTrue(storedUser.Sectors!.Count > 0);
-        Assert.AreEqual(CreateSectorIntegrationTest.CreatedSector!.Id, storedUser.Sectors[1].Id);
+        var getUserByIdResponse = await SendAsync(user);
+        Assert.IsNotNull(getUserByIdResponse);
+        Assert.IsNotNull(getUserByIdResponse.User);
+        Assert.IsNotNull(getUserByIdResponse.User.Sectors);
+        Assert.IsTrue(getUserByIdResponse.User.Sectors!.Count > 0);
+        Assert.AreEqual(CreateSectorIntegrationTest.CreatedSector!.Id, getUserByIdResponse.User.Sectors[1].Id);
     }
 
     [DataTestMethod]

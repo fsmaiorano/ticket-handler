@@ -1,22 +1,30 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Commands.DeleteTicket;
 
-public record DeleteTicketCommand : IRequest<Guid?>
+public record DeleteTicketCommand : IRequest<DeleteTicketResponse>
 {
     public Guid Id { get; init; }
 }
 
-public class DeleteTicketHandler(ILogger<DeleteTicketHandler> logger, IDataContext context) : IRequestHandler<DeleteTicketCommand, Guid?>
+public class DeleteTicketResponse : BaseResponse
+{
+
+}
+
+public class DeleteTicketHandler(ILogger<DeleteTicketHandler> logger, IDataContext context) : IRequestHandler<DeleteTicketCommand, DeleteTicketResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<DeleteTicketHandler> _logger = logger;
 
-    public async Task<Guid?> Handle(DeleteTicketCommand request, CancellationToken cancellationToken)
+    public async Task<DeleteTicketResponse> Handle(DeleteTicketCommand request, CancellationToken cancellationToken)
     {
+        var response = new DeleteTicketResponse();
+
         try
         {
             _logger.LogInformation("DeleteTicketCommand: {@Request}", request);
@@ -26,18 +34,23 @@ public class DeleteTicketHandler(ILogger<DeleteTicketHandler> logger, IDataConte
             if (ticket is null)
             {
                 _logger.LogWarning("DeleteTicketCommand: Ticket not found");
-                return null;
+                response.Message = "Ticket not found";
+                
+                return response;
             }
 
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return ticket.Id;
+            response.Success = true;
+            response.Message = "Ticket deleted successfully";
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "DeleteTicketCommand: {@Request}", request);
-            throw;
+            response.Message = ex.Message;
         }
+
+        return response;
     }
 }

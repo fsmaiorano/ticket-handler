@@ -1,8 +1,10 @@
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.UseCases.Holder.Commands.CreateHolder;
 using Application.UseCases.Holder.Commands.DeleteHolder;
 using Application.UseCases.User.Commands.CreateUser;
 using Domain.Constants;
+using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -16,10 +18,10 @@ public record SignUpCommand : IRequest<SignUpResponse>
     public required string Password { get; set; }
 }
 
-public record SignUpResponse
+public class SignUpResponse : BaseResponse
 {
-    public Guid CreatedUser { get; init; }
-    public Guid CreatedHolder { get; init; }
+    public UserEntity? CreatedUser { get; set; }
+    public HolderEntity? CreatedHolder { get; set; }
 }
 
 public class SignUpHandler(ILogger<SignUpHandler> logger, IDataContext context, IMediator mediator) : IRequestHandler<SignUpCommand, SignUpResponse>
@@ -30,6 +32,8 @@ public class SignUpHandler(ILogger<SignUpHandler> logger, IDataContext context, 
 
     public async Task<SignUpResponse> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
+        var response = new SignUpResponse();
+
         try
         {
             _logger.LogInformation("CreateHolderAndUserCommand: {@Request}", request);
@@ -39,8 +43,14 @@ public class SignUpHandler(ILogger<SignUpHandler> logger, IDataContext context, 
                 Name = request.HolderName
             };
 
-            var createdHolderGuid = await _mediator.Send(createHolderCommand, cancellationToken) ??
-                                    throw new Exception("Error creating holder");
+            var createdHolder = await _mediator.Send(createHolderCommand, cancellationToken) ?? throw new Exception("Error creating holder");
+
+            if (createdHolder is null || createdHolder.Holder is null)
+            {
+                _logger.LogWarning("CreateHolderAndUserCommand: Error creating holder");
+                response.Message = "Error creating holder";
+                return response;
+            }
 
             var createUserCommand = new CreateUserCommand
             {
@@ -48,32 +58,35 @@ public class SignUpHandler(ILogger<SignUpHandler> logger, IDataContext context, 
                 Email = request.Email,
                 Password = request.Password,
                 Role = UserRoles.Administrator,
-                HolderId = (Guid)createdHolderGuid,
+                HolderId = createdHolder.Holder.Id,
             };
 
-            var createdUserGuid = await _mediator.Send(createUserCommand, cancellationToken);
+            var createdUser = await _mediator.Send(createUserCommand, cancellationToken);
 
-            if (createdUserGuid is null)
+            if (createdUser is null || createdUser.User is null)
             {
                 var deleteHolderCommand = new DeleteHolderCommand
                 {
-                    Id = (Guid)createdHolderGuid
+                    Id = createdHolder.Holder.Id
                 };
 
                 _ = await _mediator.Send(deleteHolderCommand, cancellationToken);
-                throw new Exception("Error creating user or holder");
+                _logger.LogWarning("CreateHolderAndUserCommand: Error creating user");
+                response.Message = "Error creating user";
+                return response;
             }
 
-            return new SignUpResponse
-            {
-                CreatedUser = (Guid)createdUserGuid,
-                CreatedHolder = (Guid)createdHolderGuid
-            };
+            response.Success = true;
+            response.Message = "User and holder created";
+            response.CreatedUser = createdUser.User;
+            response.CreatedHolder = createdHolder.Holder;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "CreateHolderAndUserCommand: {@Request}", request);
-            throw;
+            response.Message = "Error creating holder and user";
         }
+
+        return response;
     }
 }

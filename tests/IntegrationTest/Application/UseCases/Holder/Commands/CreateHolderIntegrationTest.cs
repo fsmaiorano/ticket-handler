@@ -21,20 +21,22 @@ public class CreateHolderIntegrationTest : Testing
     {
         var command = CreateHolderCommandFactory();
 
-        var createdHolderId = await SendAsync(command);
-        Assert.IsNotNull(createdHolderId);
-        Assert.IsInstanceOfType(createdHolderId, typeof(Guid));
+        var createHolderResult = await SendAsync(command);
+        Assert.IsNotNull(createHolderResult);
+        Assert.IsNotNull(createHolderResult.Holder);
+        Assert.IsInstanceOfType(createHolderResult, typeof(Guid));
 
         var query = new GetHolderByIdQuery
         {
-            Id = (Guid)createdHolderId,
+            Id = createHolderResult.Holder.Id,
         };
 
         var createdHolder = await SendAsync(query);
         Assert.IsNotNull(createdHolder);
-        Assert.AreEqual(command.Name, createdHolder?.Name);
+        Assert.IsNotNull(createdHolder.Holder);
+        Assert.AreEqual(command.Name, createdHolder.Holder.Name);
 
-        CreatedHolder = createdHolder;
+        CreatedHolder = createdHolder.Holder;
     }
 
     [DataTestMethod]
