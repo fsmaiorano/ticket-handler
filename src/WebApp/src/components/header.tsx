@@ -17,9 +17,9 @@ export function Header() {
           </NavLink>
         </nav>
         <nav className="flex items-center space-x-4 lg:space-x-6">
-          <NavLink to="/my-tickets">
+          <NavLink to="/tickets">
             <UtensilsCrossed className="h-4 w-4" />
-            My Tickets
+            Tickets
           </NavLink>
         </nav>
         <div className="ml-auto flex items-center gap-2">

@@ -4,7 +4,7 @@ import { NotFound } from './pages/404'
 import { AppLayout } from './pages/_layouts/app-layout'
 import { AuthLayout } from './pages/_layouts/auth-layout'
 import { Dashboard } from './pages/app/dashboard/dashboard'
-import { MyTickets } from './pages/app/tickets/my-tickets'
+import { Tickets } from './pages/app/tickets/tickets'
 import { ApplicationError } from './pages/application-error'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
@@ -25,10 +25,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/',
+        path: '/tickets',
         element: (
           <PrivateRoute>
-            <MyTickets />
+            <Tickets />
           </PrivateRoute>
         ),
       },
