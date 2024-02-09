@@ -32,6 +32,8 @@ public static class ConfigureServices
                     b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)), ServiceLifetime.Transient);
             }
 
+            _ = DataSeed.SeedAsync(services.BuildServiceProvider());
+
             // services.AddDbContextFactory<DataContext>(options =>
             //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
             //    b => b.MigrationsAssembly(typeof(DataContext).Assembly.FullName)), ServiceLifetime.Transient);
