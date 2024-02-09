@@ -19,9 +19,7 @@ export function AppContextProvider({ children }: IAppContextProps) {
   const [token, setToken] = useState<string>({} as string)
 
   function userHandler(user: User) {
-    console.log('userHandler', user)
     user && setUser(user)
-    console.log('userHandler', user)
   }
 
   function tokenHandler(token: string) {

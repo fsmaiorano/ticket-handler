@@ -7,10 +7,14 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { user } = useContext(AppContext)
+  const { user, token } = useContext(AppContext)
   const location = useLocation()
 
-  return user.id ? children : <Navigate to="/sign-in" state={{ from: location }} />
+  return user?.id && token ? (
+    children
+  ) : (
+    <Navigate to="/sign-in" state={{ from: location }} />
+  )
 }
 
 export default PrivateRoute
