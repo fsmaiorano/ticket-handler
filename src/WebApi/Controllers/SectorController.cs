@@ -60,5 +60,29 @@ namespace WebApi.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("holder/{holderId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SectorDto>>> GetSectorsByHolderId(Guid holderId)
+        {
+            var getSectorsByHolderIdResponse = await Mediator.Send(new GetSectorsByHolderIdQuery { HolderId = holderId });
+
+            if (!getSectorsByHolderIdResponse.Success)
+                return BadRequest(getSectorsByHolderIdResponse.Message);
+
+            var sectorDtos = new List<SectorDto>();
+
+            foreach (var sector in getSectorsByHolderIdResponse.Sectors)
+            {
+                sectorDtos.Add(new SectorDto
+                {
+                    Name = sector.Name,
+                    HolderId = sector.HolderId,
+                    Users = sector.Users
+                });
+            }
+
+            return Ok(sectorDtos);
+        }
     }
 }
