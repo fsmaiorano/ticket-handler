@@ -21,7 +21,7 @@ public record CreateTicketCommand : IRequest<CreateTicketResponse>
 
 public class CreateTicketResponse : BaseResponse
 {
-    public TicketEntity? Ticket { get; set; }
+    public TicketDto? Ticket { get; set; }
 }
 
 public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataContext context) : IRequestHandler<CreateTicketCommand, CreateTicketResponse>
@@ -63,7 +63,17 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
 
             response.Success = true;
             response.Message = "Ticket created";
-            response.Ticket = ticket;
+            response.Ticket = new TicketDto
+            {
+                Id = ticket.Id,
+                Title = ticket.Title,
+                Content = ticket.Content,
+                Status = ticket.Status,
+                Priority = ticket.Priority,
+                HolderId = ticket.HolderId,
+                SectorId = ticket.SectorId,
+                AssigneeId = ticket.AssigneeId
+            };
         }
         catch (Exception ex)
         {

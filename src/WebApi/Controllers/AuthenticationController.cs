@@ -17,6 +17,14 @@ public class AuthenticationController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<SignInResponse>> Post(SignInCommand command)
     {
-       return await Mediator.Send(command);
+        var signInResponse = await Mediator.Send(command);
+
+        if (signInResponse.User is null)
+            return NotFound();
+
+        if (!signInResponse.Success)
+            return BadRequest(signInResponse.Message);
+        
+        return Ok(signInResponse);
     }
 }

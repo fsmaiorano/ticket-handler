@@ -11,16 +11,16 @@ public record CreateAnswerCommand : IRequest<CreateAnswerResponse>
 {
     public required string Content { get; set; }
     public required Guid TicketId { get; set; }
-    public TicketEntity? Ticket { get; set; }
+    public TicketDto? Ticket { get; set; }
     public required Guid UserId { get; set; }
-    public UserEntity? User { get; set; }
+    public UserDto? User { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
 }
 
 public class CreateAnswerResponse : BaseResponse
 {
-    public AnswerEntity? Answer { get; set; }
+    public AnswerDto? Answer { get; set; }
 }
 
 public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataContext context) : IRequestHandler<CreateAnswerCommand, CreateAnswerResponse>
@@ -60,7 +60,18 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
 
             response.Success = true;
             response.Message = "Answer created";
-            response.Answer = answer;
+            response.Answer = new AnswerDto
+            {
+                Id = answer.Id,
+                Content = answer.Content,
+                TicketId = answer.TicketId,
+                UserId = answer.UserId,
+                HolderId = answer.HolderId,
+                SectorId = answer.SectorId,
+                CreatedAt = answer.CreatedAt,
+                UpdatedAt = answer.UpdatedAt,
+                IsActive = answer.IsActive
+            };
         }
         catch (Exception ex)
         {

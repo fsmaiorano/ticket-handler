@@ -20,7 +20,7 @@ public record CreateUserCommand : IRequest<CreateUserResponse>
 
 public class CreateUserResponse : BaseResponse
 {
-    public UserEntity? User { get; set; }
+    public UserDto? User { get; set; }
 }
 
 public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext context) : IRequestHandler<CreateUserCommand, CreateUserResponse>
@@ -83,7 +83,13 @@ public class CreateUserHandler(ILogger<CreateUserHandler> logger, IDataContext c
 
             response.Success = true;
             response.Message = "User created";
-            response.User = createdUser;
+            response.User = new UserDto
+            {
+                Id = createdUser.Id,
+                Name = createdUser.Name,
+                Email = createdUser.Email,
+                Role = createdUser.Role
+            };
         }
         catch (Exception ex)
         {

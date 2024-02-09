@@ -14,7 +14,7 @@ public record GetAnswerByIdQuery : IRequest<GetAnswerByIdResponse>
 
 public class GetAnswerByIdResponse : BaseResponse
 {
-    public AnswerEntity? Answer { get; set; }
+    public AnswerDto? Answer { get; set; }
 }
 
 public class GetAnswerByIdHandler(ILogger<GetAnswerByIdHandler> logger, IDataContext context) : IRequestHandler<GetAnswerByIdQuery, GetAnswerByIdResponse>
@@ -42,7 +42,14 @@ public class GetAnswerByIdHandler(ILogger<GetAnswerByIdHandler> logger, IDataCon
 
             response.Success = true;
             response.Message = "Answer found";
-            response.Answer = answer;
+            response.Answer = new AnswerDto
+            {
+                Content = answer.Content,
+                TicketId = answer.TicketId,
+                UserId = answer.UserId,
+                HolderId = answer.HolderId,
+                SectorId = answer.SectorId
+            };
         }
         catch (Exception ex)
         {

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ public class SignInResponse : BaseResponse
 {
     public string? RedirectUrl { get; set; }
     public string? Token { get; set; }
+    public UserDto? User { get; set; }
 }
 
 public class SignInCommandHandler(ILogger<SignInCommandHandler> logger, IDataContext context) : IRequestHandler<SignInCommand, SignInResponse>
@@ -55,6 +57,13 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> logger, IDataCon
             response.Message = "User signed in";
             response.RedirectUrl = "/";
             response.Token = "JWT Token";
+            response.User = new UserDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            };
         }
         catch (Exception ex)
         {

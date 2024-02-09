@@ -4,7 +4,6 @@ using Application.UseCases.Holder.Commands.CreateHolder;
 using Application.UseCases.Holder.Commands.DeleteHolder;
 using Application.UseCases.User.Commands.CreateUser;
 using Domain.Constants;
-using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -20,8 +19,8 @@ public record SignUpCommand : IRequest<SignUpResponse>
 
 public class SignUpResponse : BaseResponse
 {
-    public UserEntity? CreatedUser { get; set; }
-    public HolderEntity? CreatedHolder { get; set; }
+    public UserDto? CreatedUser { get; set; }
+    public HolderDto? CreatedHolder { get; set; }
 }
 
 public class SignUpHandler(ILogger<SignUpHandler> logger, IDataContext context, IMediator mediator) : IRequestHandler<SignUpCommand, SignUpResponse>
@@ -78,8 +77,18 @@ public class SignUpHandler(ILogger<SignUpHandler> logger, IDataContext context, 
 
             response.Success = true;
             response.Message = "User and holder created";
-            response.CreatedUser = createdUser.User;
-            response.CreatedHolder = createdHolder.Holder;
+            response.CreatedUser = new UserDto
+            {
+                Id = createdUser.User.Id,
+                Name = createdUser.User.Name,
+                Email = createdUser.User.Email,
+                Role = createdUser.User.Role
+            };
+
+            response.CreatedHolder = new HolderDto
+            {
+                Name = createdHolder.Holder.Name
+            };
         }
         catch (Exception ex)
         {

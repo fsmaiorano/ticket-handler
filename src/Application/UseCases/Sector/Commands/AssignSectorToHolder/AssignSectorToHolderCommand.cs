@@ -14,8 +14,8 @@ public record AssignSectorToHolderCommand : IRequest<AssignSectorToHolderRespons
 
 public class AssignSectorToHolderResponse : BaseResponse
 {
-    public HolderEntity? Holder { get; set; }
-    public List<SectorEntity>? Sectors { get; set; }
+    public HolderDto? Holder { get; set; }
+    public List<SectorDto>? Sectors { get; set; }
 }
 
 public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> logger, IDataContext context) : IRequestHandler<AssignSectorToHolderCommand, AssignSectorToHolderResponse>
@@ -60,8 +60,18 @@ public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> lo
             }
 
             response.Success = true;
-            response.Holder = holder;
-            response.Sectors = sectors;
+            response.Sectors = sectors.Select(s => new SectorDto
+            {
+                Id = s.Id,
+                Name = s.Name
+            }).ToList();
+
+            response.Holder = new HolderDto
+            {
+                Id = holder.Id,
+                Name = holder.Name,
+                Sectors = holder.Sectors
+            };
         }
         catch (Exception ex)
         {

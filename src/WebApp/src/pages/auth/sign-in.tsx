@@ -21,7 +21,7 @@ type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
   const [searchParams] = useSearchParams()
-  const { userHandler, tokenHandler } = useContext(AppContext)
+  const { userHandler, tokenHandler, user } = useContext(AppContext)
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
     defaultValues: {
@@ -42,6 +42,10 @@ export function SignIn() {
       if (response) {
         userHandler(response.user)
         tokenHandler(response.token)
+        debugger
+
+        console.log('user', user)
+
         window.location.href = response.redirectUrl
       } else {
         toast.success('We send you an email with a link to sign in')

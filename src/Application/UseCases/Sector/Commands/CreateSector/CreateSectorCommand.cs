@@ -16,7 +16,7 @@ public record CreateSectorCommand : IRequest<CreateSectorResponse>
 
 public class CreateSectorResponse : BaseResponse
 {
-    public SectorEntity? Sector { get; set; }
+    public SectorDto? Sector { get; set; }
 }
 
 public class CreateSectorHandler(ILogger<CreateSectorHandler> logger, IDataContext context) : IRequestHandler<CreateSectorCommand, CreateSectorResponse>
@@ -63,7 +63,11 @@ public class CreateSectorHandler(ILogger<CreateSectorHandler> logger, IDataConte
 
             response.Success = true;
             response.Message = "Sector created";
-            response.Sector = createdSector;
+            response.Sector = new SectorDto
+            {
+                Id = createdSector.Id,
+                Name = createdSector.Name
+            };
         }
         catch (Exception ex)
         {

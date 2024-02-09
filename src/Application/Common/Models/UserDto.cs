@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Application.Common.Models;
 
-public class UserDto
+public class UserDto : BaseDto
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }

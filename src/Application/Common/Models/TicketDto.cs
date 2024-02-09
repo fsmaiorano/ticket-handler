@@ -2,7 +2,7 @@
 
 namespace Application.Common.Models;
 
-public class TicketDto
+public class TicketDto : BaseDto
 {
     public string? Title { get; set; }
     public string? Content { get; set; }

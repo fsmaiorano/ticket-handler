@@ -15,7 +15,7 @@ public record CreateHolderCommand : IRequest<CreateHolderResponse>
 
 public class CreateHolderResponse : BaseResponse
 {
-    public HolderEntity? Holder { get; set; }
+    public HolderDto? Holder { get; set; }
 }
 
 public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataContext context) : IRequestHandler<CreateHolderCommand, CreateHolderResponse>
@@ -52,8 +52,19 @@ public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataConte
 
             var createdHolder = await _context.Holders.FindAsync([holder.Id], cancellationToken);
 
+            if (createdHolder is null)
+            {
+                _logger.LogWarning("CreateHolderCommand: Error creating holder");
+                response.Message = "Error creating holder";
+                return response;
+            }
+
             response.Success = true;
-            response.Holder = createdHolder;
+            response.Holder = new HolderDto
+            {
+                Name = createdHolder.Name,
+                Sectors = createdHolder.Sectors
+            };
         }
         catch (Exception ex)
         {
