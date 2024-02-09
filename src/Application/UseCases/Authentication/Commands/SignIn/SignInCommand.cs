@@ -62,7 +62,9 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> logger, IDataCon
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Role = user.Role
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                IsActive = user.IsActive
             };
         }
         catch (Exception ex)

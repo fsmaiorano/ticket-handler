@@ -1,8 +1,10 @@
 import { UserRoles } from './user-roles'
 
 export interface User {
+  id: string
   name: string
   email: string
   role: UserRoles
-  token: string
+  createdAt: string
+  isActive: boolean
 }

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -20,17 +20,22 @@ const signInForm = z.object({
 type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
-  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  // const [searchParams] = useSearchParams()
   const { userHandler, tokenHandler, user } = useContext(AppContext)
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
     defaultValues: {
-      email: searchParams.get('email') ?? '',
-      password: searchParams.get('password') ?? '',
+      // email: searchParams.get('email') ?? '',
+      // password: searchParams.get('password') ?? '',
     },
   })
 
   const { mutateAsync: authenticate } = useMutation({ mutationFn: signIn })
+
+  if (user.id) {
+    navigate('/')
+  }
 
   async function handleSignIn(data: SignInForm) {
     try {
@@ -42,11 +47,12 @@ export function SignIn() {
       if (response) {
         userHandler(response.user)
         tokenHandler(response.token)
-        debugger
+        navigate(response.redirectUrl, {
+          replace: true,
+          state: { from: '/' },
+        })
 
-        console.log('user', user)
-
-        window.location.href = response.redirectUrl
+        // window.location.href = response.redirectUrl
       } else {
         toast.success('We send you an email with a link to sign in')
       }
