@@ -78,11 +78,21 @@ export function SignIn() {
           <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" {...register('email')} value="admin@tickethandler.com" />
+              <Input
+                id="email"
+                type="email"
+                {...register('email')}
+                value="admin@tickethandler.com"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Password</Label>
-              <Input id="password" type="password" {...register('password')} value="admin" />
+              <Input
+                id="password"
+                type="password"
+                {...register('password')}
+                value="admin"
+              />
             </div>
             <Button
               disabled={formState.isSubmitting}

@@ -8,4 +8,9 @@ public class SectorDto : BaseDto
     public Guid? HolderId { get; set; }
     public HolderEntity? HolderEntity { get; set; }
     public List<UserEntity>? Users { get; set; }
+
+    public SectorDto()
+    {
+        Users = [];
+    }
 }

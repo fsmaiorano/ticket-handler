@@ -1,19 +1,18 @@
 import { api } from '@/lib/axios'
 
-export interface RegisterHolderRequest {
-    holderName: string
-    fullName: string
-    password: string
-    email: string
+export interface GetSectorsParams {
+  holderId: string
 }
 
-export async function get({
-    holderName,
-    fullName,
-    password,
-    email,
-}: RegisterHolderRequest) {
-    await api.post('/api/authentication/signup', { holderName, fullName, password, email })
+export interface GetSectorResponse {
+  id: string
+  name: string
+  holderId: string
 }
 
-
+export async function getSectors({ holderId }: GetSectorsParams) {
+  const response = await api.get<GetSectorResponse>(
+    `/api/Sector/holder/${holderId}`,
+  )
+  return response.data
+}

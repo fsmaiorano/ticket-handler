@@ -72,14 +72,17 @@ namespace WebApi.Controllers
 
             var sectorDtos = new List<SectorDto>();
 
-            foreach (var sector in getSectorsByHolderIdResponse.Sectors)
+            if (getSectorsByHolderIdResponse.Sectors is not null && getSectorsByHolderIdResponse.Sectors.Any())
             {
-                sectorDtos.Add(new SectorDto
+                foreach (var sector in getSectorsByHolderIdResponse.Sectors)
                 {
-                    Name = sector.Name,
-                    HolderId = sector.HolderId,
-                    Users = sector.Users
-                });
+                    sectorDtos.Add(new SectorDto
+                    {
+                        Name = sector.Name,
+                        HolderId = sector.HolderId,
+                        Users = sector.Users
+                    });
+                }
             }
 
             return Ok(sectorDtos);

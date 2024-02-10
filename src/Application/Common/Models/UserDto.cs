@@ -13,6 +13,8 @@ public class UserDto : BaseDto
 
     [JsonPropertyName("password")]
     public string? Password { get; set; }
+    [JsonPropertyName("holderId")]
+    public Guid HolderId { get; set; }
 
     [JsonPropertyName("role")]
     public UserRoles Role { get; set;}

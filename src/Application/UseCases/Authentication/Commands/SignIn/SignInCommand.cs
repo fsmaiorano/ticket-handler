@@ -62,6 +62,7 @@ public class SignInHandler(ILogger<SignInHandler> logger, IDataContext context) 
                 Name = user.Name,
                 Email = user.Email,
                 Role = user.Role,
+                HolderId = user.HolderId,
                 CreatedAt = user.CreatedAt,
                 IsActive = user.IsActive
             };

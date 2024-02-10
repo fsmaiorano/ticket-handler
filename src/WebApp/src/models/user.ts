@@ -5,6 +5,7 @@ export interface User {
   name: string
   email: string
   role: UserRoles
+  holderId: string
   createdAt: string
   isActive: boolean
 }
