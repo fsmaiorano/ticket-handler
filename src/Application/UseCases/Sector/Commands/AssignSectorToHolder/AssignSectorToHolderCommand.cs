@@ -1,6 +1,5 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -70,7 +69,11 @@ public class AssignSectorToHolderHandler(ILogger<AssignSectorToHolderHandler> lo
             {
                 Id = holder.Id,
                 Name = holder.Name,
-                Sectors = holder.Sectors
+                Sectors = holder.Sectors?.Select(s => new SectorDto
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList()
             };
         }
         catch (Exception ex)

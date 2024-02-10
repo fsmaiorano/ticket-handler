@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,7 @@ public record GetHolderByIdQuery : IRequest<GetHolderByIdResponse>
 
 public class GetHolderByIdResponse : BaseResponse
 {
-    public HolderEntity? Holder { get; set; }
+    public HolderDto? Holder { get; set; }
 }
 
 public class GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataContext context) : IRequestHandler<GetHolderByIdQuery, GetHolderByIdResponse>
@@ -43,7 +42,17 @@ public class GetHolderByIdHandler(ILogger<GetHolderByIdHandler> logger, IDataCon
             }
 
             response.Success = true;
-            response.Holder = holder;
+            response.Message = "Holder found";
+            response.Holder = new HolderDto
+            {
+                Id = holder.Id,
+                Name = holder.Name,
+                Sectors = holder.Sectors?.Select(s => new SectorDto
+                               {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList()
+            };
         }
         catch (Exception ex)
         {

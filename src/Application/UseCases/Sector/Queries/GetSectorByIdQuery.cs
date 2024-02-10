@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,7 @@ public record GetSectorByIdQuery : IRequest<GetSectorByIdResponse>
 
 public class GetSectorByIdResponse : BaseResponse
 {
-    public SectorEntity? Sector { get; set; }
+    public SectorDto? Sector { get; set; }
 }
 
 public class GetSectorByIdHandler(ILogger<GetSectorByIdHandler> logger, IDataContext context) : IRequestHandler<GetSectorByIdQuery, GetSectorByIdResponse>
@@ -41,7 +40,12 @@ public class GetSectorByIdHandler(ILogger<GetSectorByIdHandler> logger, IDataCon
             }
 
             response.Success = true;
-            response.Sector = sector;
+            response.Message = "Sector found";
+            response.Sector = new SectorDto
+            {
+                Id = sector.Id,
+                Name = sector.Name
+            };
         }
         catch (Exception ex)
         {

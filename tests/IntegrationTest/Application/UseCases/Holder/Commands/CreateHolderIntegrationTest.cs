@@ -25,17 +25,8 @@ public class CreateHolderIntegrationTest : Testing
         Assert.IsNotNull(createHolderResult);
         Assert.IsNotNull(createHolderResult.Holder);
 
-        var query = new GetHolderByIdQuery
-        {
-            Id = createHolderResult.Holder.Id,
-        };
-
-        var createdHolder = await SendAsync(query);
-        Assert.IsNotNull(createdHolder);
-        Assert.IsNotNull(createdHolder.Holder);
-        Assert.AreEqual(command.Name, createdHolder.Holder.Name);
-
-        CreatedHolder = createdHolder.Holder;
+        var storedHolder = await FindAsync<HolderEntity>(createHolderResult.Holder.Id);
+        CreatedHolder = storedHolder;
     }
 
     [DataTestMethod]

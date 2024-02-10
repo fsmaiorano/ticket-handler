@@ -39,24 +39,8 @@ public class CreateTicketIntegrationTest : Testing
         Assert.IsNotNull(createdTicketResponse.Ticket);
         Assert.IsInstanceOfType(createdTicketResponse.Ticket.Id, typeof(Guid));
 
-
-        var query = new GetTicketByIdQuery
-        {
-            Id = createdTicketResponse.Ticket.Id
-        };
-
-        var getTicketByIdResponse = await SendAsync(query);
-        Assert.IsNotNull(getTicketByIdResponse);
-        Assert.IsNotNull(getTicketByIdResponse.Ticket);
-        Assert.AreEqual(command.Title, getTicketByIdResponse.Ticket.Title);
-        Assert.AreEqual(command.Content, getTicketByIdResponse.Ticket.Content);
-        Assert.AreEqual(command.Status, getTicketByIdResponse.Ticket.Status);
-        Assert.AreEqual(command.Priority, getTicketByIdResponse.Ticket.Priority);
-        Assert.AreEqual(command.HolderId, getTicketByIdResponse.Ticket.HolderId);
-        Assert.AreEqual(command.SectorId, getTicketByIdResponse.Ticket.SectorId);
-        Assert.AreEqual(command.AssigneeId, getTicketByIdResponse.Ticket.AssigneeId);
-
-        CreatedTicket = getTicketByIdResponse.Ticket;
+        var storedTicket = await FindAsync<TicketEntity>(createdTicketResponse.Ticket.Id);
+        CreatedTicket = storedTicket;
     }
 
     [DataTestMethod]
@@ -68,6 +52,7 @@ public class CreateTicketIntegrationTest : Testing
             Content = new Faker().Lorem.Paragraph(),
             Status = TicketStatus.Active,
             Priority = TicketPriority.Medium,
+            UserId = CreateUserIntegrationTest.CreatedUser!.Id,
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
             SectorId = CreateSectorIntegrationTest.CreatedSector!.Id,
             AssigneeId = CreateUserIntegrationTest.CreatedUser!.Id

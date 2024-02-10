@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,7 @@ public record GetTicketByIdQuery : IRequest<GetTicketByIdResponse>
 
 public class GetTicketByIdResponse : BaseResponse
 {
-    public TicketEntity? Ticket { get; set; }
+    public TicketDto? Ticket { get; set; }
 }
 
 public class GetTicketByIdHandler(ILogger<GetTicketByIdHandler> logger, IDataContext context) : IRequestHandler<GetTicketByIdQuery, GetTicketByIdResponse>
@@ -36,10 +35,21 @@ public class GetTicketByIdHandler(ILogger<GetTicketByIdHandler> logger, IDataCon
             {
                 _logger.LogWarning("GetTicketById: Ticket not");
                 response.Message = "Ticket not found";
+
+                return response;
             }
 
             response.Success = true;
-            response.Ticket = ticket;
+            response.Message = "Ticket found";
+            response.Ticket = new TicketDto
+            {
+                Id = ticket.Id,
+                Title = ticket.Title,
+                Content = ticket.Content,
+                UserId = ticket.UserId,
+                HolderId = ticket.HolderId,
+                SectorId = ticket.SectorId
+            };
         }
         catch (Exception ex)
         {

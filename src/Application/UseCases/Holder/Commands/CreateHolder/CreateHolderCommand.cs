@@ -62,8 +62,13 @@ public class CreateHolderHandler(ILogger<CreateHolderHandler> logger, IDataConte
             response.Success = true;
             response.Holder = new HolderDto
             {
+                Id = createdHolder.Id,
                 Name = createdHolder.Name,
-                Sectors = createdHolder.Sectors
+                Sectors = createdHolder.Sectors?.Select(s => new SectorDto
+                               {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList()
             };
         }
         catch (Exception ex)

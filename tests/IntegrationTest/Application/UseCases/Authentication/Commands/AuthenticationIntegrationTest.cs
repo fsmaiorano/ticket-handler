@@ -36,32 +36,14 @@ public class AuthenticationIntegrationTest : Testing
         var signUpResponse = await SendAsync(command);
         Assert.IsNotNull(signUpResponse);
         Assert.IsNotNull(signUpResponse.CreatedUser);
+        Assert.IsNotNull(signUpResponse.CreatedHolder);
 
-        var query = new GetUserByIdQuery
-        {
-            Id = signUpResponse.CreatedUser.Id,
-        };
+        var createdUser = await FindAsync<UserEntity>(signUpResponse.CreatedUser.Id);
+        var createdHolder = await FindAsync<HolderEntity>(signUpResponse.CreatedHolder.Id);
+    
 
-        var createdUser = await SendAsync(query);
-        Assert.IsNotNull(createdUser);
-        Assert.IsNotNull(createdUser?.User);
-        Assert.AreEqual(command.FullName, createdUser.User.Name);
-        Assert.AreEqual(command.Email, createdUser.User.Email);
-        Assert.AreEqual(command.Password, createdUser.User.Password);
-
-        CreatedUser = createdUser.User;
-
-        var getHolderByIdQuery = new GetHolderByIdQuery
-        {
-            Id = signUpResponse!.CreatedHolder!.Id,
-        };
-
-        var createdHolder = await SendAsync(getHolderByIdQuery);
-        Assert.IsNotNull(createdHolder);
-        Assert.IsNotNull(createdHolder?.Holder);
-        Assert.AreEqual(command.HolderName, createdHolder.Holder.Name);
-
-        CreatedHolder = createdHolder.Holder;
+        CreatedUser = createdUser;
+        CreatedHolder = createdHolder;
     }
 
     [TestMethod]

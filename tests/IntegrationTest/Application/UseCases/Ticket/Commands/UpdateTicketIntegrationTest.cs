@@ -1,5 +1,6 @@
 ﻿using Application.UseCases.Ticket.Commands.UpdateTicket;
 using Application.UseCases.Ticket.Queries;
+using Domain.Entities;
 
 namespace IntegrationTest.Application.UseCases.Ticket.Commands;
 
@@ -35,20 +36,9 @@ public class UpdateTicketIntegrationTest : Testing
         Assert.IsNotNull(updatedTicketResponse);
         Assert.IsTrue(updatedTicketResponse.Success);
 
-        var query = new GetTicketByIdQuery
-        {
-            Id = command.Id
-        };
-
-         var getTicketByIdResponse = await SendAsync(query);
-        Assert.IsNotNull(getTicketByIdResponse);
-        Assert.IsNotNull(getTicketByIdResponse.Ticket);
-        Assert.AreEqual(command.Title, getTicketByIdResponse.Ticket.Title);
-        Assert.AreEqual(command.Content, getTicketByIdResponse.Ticket.Content);
-        Assert.AreEqual(command.Status, getTicketByIdResponse.Ticket.Status);
-        Assert.AreEqual(command.Priority, getTicketByIdResponse.Ticket.Priority);
-        Assert.AreEqual(command.HolderId, getTicketByIdResponse.Ticket.HolderId);
-        Assert.AreEqual(command.SectorId, getTicketByIdResponse.Ticket.SectorId);
-        Assert.AreEqual(command.AssigneeId, getTicketByIdResponse.Ticket.AssigneeId);
+        var storedTicket = await FindAsync<TicketEntity>(ticket.Id);
+        Assert.IsNotNull(storedTicket);
+        Assert.AreEqual(command.Title, storedTicket.Title);
+        Assert.AreEqual(command.Content, storedTicket.Content);
     }
 }

@@ -14,6 +14,7 @@ public record CreateTicketCommand : IRequest<CreateTicketResponse>
     public required string Content { get; set; }
     public required TicketStatus Status { get; set; }
     public required TicketPriority Priority { get; set; }
+    public required Guid UserId { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
     public required Guid AssigneeId { get; set; }
@@ -43,6 +44,7 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
                 Content = request.Content,
                 Status = request.Status,
                 Priority = request.Priority,
+                UserId = request.UserId,
                 HolderId = request.HolderId,
                 SectorId = request.SectorId,
                 AssigneeId = request.AssigneeId
@@ -70,6 +72,7 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
                 Content = ticket.Content,
                 Status = ticket.Status,
                 Priority = ticket.Priority,
+                UserId = ticket.UserId,
                 HolderId = ticket.HolderId,
                 SectorId = ticket.SectorId,
                 AssigneeId = ticket.AssigneeId

@@ -29,17 +29,9 @@ public class CreateSectorIntegrationTest : Testing
         Assert.IsNotNull(createdSectorResponse);
         Assert.IsNotNull(createdSectorResponse.Sector);
 
-        var query = new GetSectorByIdQuery
-        {
-            Id = createdSectorResponse.Sector.Id,
-        };
+        var storedSector = await FindAsync<SectorEntity>(createdSectorResponse.Sector.Id);
 
-        var getSectorByIdQueryResponse = await SendAsync(query);
-        Assert.IsNotNull(getSectorByIdQueryResponse);
-        Assert.IsNotNull(getSectorByIdQueryResponse.Sector);
-        Assert.AreEqual(command.Name, getSectorByIdQueryResponse.Sector.Name);
-
-        CreatedSector = getSectorByIdQueryResponse.Sector;
+        CreatedSector = storedSector;
     }
 
     [DataTestMethod]

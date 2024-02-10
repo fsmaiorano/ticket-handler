@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -44,6 +43,7 @@ public class GetAnswerByIdHandler(ILogger<GetAnswerByIdHandler> logger, IDataCon
             response.Message = "Answer found";
             response.Answer = new AnswerDto
             {
+                Id = answer.Id,
                 Content = answer.Content,
                 TicketId = answer.TicketId,
                 UserId = answer.UserId,

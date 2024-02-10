@@ -40,17 +40,9 @@ public class CreateAnswerIntegrationTest : Testing
         var createdAnswer = await SendAsync(command);
         Assert.IsNotNull(createdAnswer);
         Assert.IsNotNull(createdAnswer.Answer);
-
-        var query = new GetAnswerByIdQuery
-        {
-            Id = createdAnswer.Answer.Id,
-        };
-      
-        var getAnswerByIdResponse = await SendAsync(query);
-        Assert.IsNotNull(getAnswerByIdResponse);
-        Assert.IsTrue(getAnswerByIdResponse.Success);
-
-        CreatedAnswer = getAnswerByIdResponse.Answer;
+        
+        var storedAnswer = await FindAsync<AnswerEntity>(createdAnswer.Answer.Id);
+        CreatedAnswer = storedAnswer;
     }
 
     [DataTestMethod]
