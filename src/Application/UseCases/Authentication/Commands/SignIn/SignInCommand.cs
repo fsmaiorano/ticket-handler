@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,10 +19,10 @@ public class SignInResponse : BaseResponse
     public UserDto? User { get; set; }
 }
 
-public class SignInCommandHandler(ILogger<SignInCommandHandler> logger, IDataContext context) : IRequestHandler<SignInCommand, SignInResponse>
+public class SignInHandler(ILogger<SignInHandler> logger, IDataContext context) : IRequestHandler<SignInCommand, SignInResponse>
 {
     private readonly IDataContext _context = context;
-    private readonly ILogger<SignInCommandHandler> _logger = logger;
+    private readonly ILogger<SignInHandler> _logger = logger;
 
     public async Task<SignInResponse> Handle(SignInCommand request, CancellationToken cancellationToken)
     {

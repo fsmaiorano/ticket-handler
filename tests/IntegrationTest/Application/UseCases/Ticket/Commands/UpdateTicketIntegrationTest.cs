@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Ticket.Commands.UpdateTicket;
-using Application.UseCases.Ticket.Queries;
 using Domain.Entities;
 
 namespace IntegrationTest.Application.UseCases.Ticket.Commands;

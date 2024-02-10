@@ -72,45 +72,42 @@ public class DataContext : DbContext, IDataContext
                 var solutionPath = GetSolutionPath();
 
                 var connectionString = string.Empty;
-                if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DefaultConnection")))
-                {
-                    Console.WriteLine($"Using appsettings.json to get connection string");
-                    var builder = new ConfigurationBuilder()
-                        .SetBasePath(solutionPath.FullName)
-                        .AddJsonFile("src/WebApi/appsettings.json", optional: false)
-                        .Build();
+                // if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DefaultConnection")))
+                // {
+                Console.WriteLine($"Using appsettings.json to get connection string");
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(solutionPath.FullName)
+                    .AddJsonFile("src/WebApi/appsettings.json", optional: false)
+                    .Build();
 
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        Environment.SetEnvironmentVariable("ContainerConnection", builder.GetConnectionString("ContainerConnection"));
-                        connectionString = builder.GetConnectionString("ContainerConnection");
-                    }
-                    else
-                    {
-                        Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
-                        connectionString = builder.GetConnectionString("DefaultConnection");
-                    }
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Environment.SetEnvironmentVariable("ContainerConnection", builder.GetConnectionString("ContainerConnection"));
+                    connectionString = builder.GetConnectionString("ContainerConnection");
                 }
                 else
                 {
-                    Console.WriteLine($"Using Environment Variable to get connection string");
-
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        connectionString = "Server=db,1433;Database=tickethandler;User=sa;Password=Your_password123;MultipleActiveResultSets=true";
-                        Environment.SetEnvironmentVariable("ContainerConnection", connectionString);
-                    }
-                    else
-                    {
-                        connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-                        Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
-                    }
-
-                    // connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-                    // Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
-
-                    Console.WriteLine($"Connection string: {connectionString}");
+                    Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
+                    connectionString = builder.GetConnectionString("DefaultConnection");
                 }
+                // }
+                // else
+                // {
+                //     Console.WriteLine($"Using Environment Variable to get connection string");
+
+                //     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                //     {
+                //         connectionString = "Server=db,1433;Database=tickethandler;User=sa;Password=Your_password123;MultipleActiveResultSets=true";
+                //         Environment.SetEnvironmentVariable("ContainerConnection", connectionString);
+                //     }
+                //     else
+                //     {
+                //         connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=tickethandler;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+                //         Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
+                //     }
+
+                //     Console.WriteLine($"Connection string: {connectionString}");
+                // }
 
                 Console.WriteLine($"Connection string to be used: {connectionString}");
                 optionsBuilder.UseSqlServer(connectionString,
