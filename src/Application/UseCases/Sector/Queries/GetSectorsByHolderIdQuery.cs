@@ -27,13 +27,13 @@ public class GetSectorsByHolderIdHandler(ILogger<GetSectorsByHolderIdHandler> lo
 
         try
         {
-            _logger.LogInformation("GetSectorsByHolderIdQuery.Handle");
+            _logger.LogInformation("GetSectorsByHolderId: {@Request}", request);
 
             var sectors = await _context.Sectors.Where(x => x.HolderId == request.HolderId).ToListAsync(cancellationToken);
 
             if (sectors is null)
             {
-                _logger.LogWarning("GetSectorsByHolderIdQuery.Handle: Sectors not found");
+                _logger.LogWarning("GetSectorsByHolderId: Sectors not found");
                 response.Message = "Sectors not found";
 
                 return response;
@@ -44,12 +44,16 @@ public class GetSectorsByHolderIdHandler(ILogger<GetSectorsByHolderIdHandler> lo
             response.Sectors = sectors.Select(s => new SectorDto
             {
                 Id = s.Id,
-                Name = s.Name
+                Name = s.Name,
+                HolderId = s.HolderId,
+                IsActive = s.IsActive,
+                CreatedAt = s.CreatedAt,
+                UpdatedAt = s.UpdatedAt
             }).ToList();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GetSectorsByHolderIdQuery.Handle");
+            _logger.LogError(ex, "GetSectorsByHolderId: {@Request}", request);
             response.Message = ex.Message;
         }
 

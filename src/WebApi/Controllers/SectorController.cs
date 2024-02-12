@@ -32,7 +32,6 @@ namespace WebApi.Controllers
             {
                 Name = getSectorByIdResponse.Sector.Name,
                 HolderId = getSectorByIdResponse.Sector.HolderId,
-                Users = getSectorByIdResponse.Sector.Users
             };
 
             return Ok(sectorDto);
@@ -78,9 +77,12 @@ namespace WebApi.Controllers
                 {
                     sectorDtos.Add(new SectorDto
                     {
+                        Id = sector.Id,
                         Name = sector.Name,
                         HolderId = sector.HolderId,
-                        Users = sector.Users
+                        IsActive = sector.IsActive,
+                        CreatedAt = sector.CreatedAt,
+                        UpdatedAt = sector.UpdatedAt
                     });
                 }
             }

@@ -1,6 +1,8 @@
 export interface Sector {
   id: string
   name: string
-  createdAt: string
+  holderId: string
   isActive: boolean
+  createdAt: string
+  updatedAt: string
 }

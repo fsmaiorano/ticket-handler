@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet-async'
 import { CreateTicket } from './create-ticket'
 
 export function Tickets() {
-  const { user } = useContext(AppContext)
+  const { user, holder, sectors, sectorsHandler } = useContext(AppContext)
 
   const holderId = user.holderId
 
@@ -19,12 +19,12 @@ export function Tickets() {
 
   useEffect(() => {
     const fetchSectors = async () => {
-      const sectors = await getSectors({ holderId: holderId })
-      console.log(sectors)
+      const getSectorsResponse = await getSectors({ holderId: holderId })
+      sectorsHandler(getSectorsResponse)
     }
 
     fetchSectors()
-  }, [holderId])
+  }, [holder, sectorsHandler, holderId])
 
   return (
     <>
@@ -43,6 +43,17 @@ export function Tickets() {
             <CreateTicket />
           </DialogContent>
         </Dialog>
+
+        {holder &&
+          sectors?.map((sector) => (
+            <div key={sector.id} className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold">{sector.name}</h2>
+                <p>{sector.id}</p>
+              </div>
+              <Button variant={'outline'}>View</Button>
+            </div>
+          ))}
       </div>
     </>
   )
