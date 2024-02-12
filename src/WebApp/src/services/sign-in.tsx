@@ -7,8 +7,10 @@ export interface SignInRequest {
 }
 
 export interface SignInResponse {
-  token: string
+  success: boolean
+  message: string
   redirectUrl: string
+  token: string
   user: User
 }
 

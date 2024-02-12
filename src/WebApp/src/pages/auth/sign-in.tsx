@@ -22,7 +22,7 @@ type SignInForm = z.infer<typeof signInForm>
 export function SignIn() {
   const navigate = useNavigate()
   // const [searchParams] = useSearchParams()
-  const { userHandler, tokenHandler, user } = useContext(AppContext)
+  const { userHandler, tokenHandler, user, holder } = useContext(AppContext)
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
     defaultValues: {
@@ -44,18 +44,20 @@ export function SignIn() {
         password: data.password,
       })
 
-      if (response) {
+      if (response.success) {
         userHandler(response.user)
         tokenHandler(response.token)
         navigate(response.redirectUrl, {
           replace: true,
           state: { from: '/' },
         })
-
         // window.location.href = response.redirectUrl
       } else {
-        toast.success('We send you an email with a link to sign in')
+        toast.error('Something went wrong')
       }
+      // else {
+      //   toast.success('We send you an email with a link to sign in')
+      // }
     } catch {
       toast.error('Something went wrong')
     }

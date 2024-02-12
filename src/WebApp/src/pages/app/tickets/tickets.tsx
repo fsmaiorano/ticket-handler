@@ -24,7 +24,7 @@ export function Tickets() {
     }
 
     fetchSectors()
-  }, [holder, sectorsHandler, holderId])
+  }, [holderId, sectorsHandler])
 
   return (
     <>
