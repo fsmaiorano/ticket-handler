@@ -22,7 +22,7 @@ type SignInForm = z.infer<typeof signInForm>
 export function SignIn() {
   const navigate = useNavigate()
   // const [searchParams] = useSearchParams()
-  const { userHandler, tokenHandler, user, holder } = useContext(AppContext)
+  const { userHandler, tokenHandler, user } = useContext(AppContext)
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
     defaultValues: {

@@ -2,29 +2,31 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { AppContext } from '@/contexts/app-context'
 import { getSectors } from '@/services/get-sectors'
-import { useContext, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { CreateTicket } from './create-ticket'
 
 export function Tickets() {
-  const { user, holder, sectors, sectorsHandler } = useContext(AppContext)
+  const { user, sectors, sectorsHandler } = useContext(AppContext)
 
-  const holderId = user.holderId
+  useQuery({
+    queryKey: ['sectors'],
+    queryFn: () =>
+      getSectors({ holderId: user.holderId }).then((res) => {
+        sectorsHandler(res)
+      }),
+    staleTime: Infinity,
+  })
 
-  // const { data: result } = useQuery({
-  //   queryKey: ['sectors'],
-  //   queryFn: () => getSectors({ holderId: user.id }),
-  //   staleTime: Infinity,
-  // })
+  //   useEffect(() => {
+  //     const fetchSectors = async () => {
+  //       const getSectorsResponse = await getSectors({ holderId: user.holderId })
+  //       sectorsHandler(getSectorsResponse)
+  //     }
 
-  useEffect(() => {
-    const fetchSectors = async () => {
-      const getSectorsResponse = await getSectors({ holderId: holderId })
-      sectorsHandler(getSectorsResponse)
-    }
-
-    fetchSectors()
-  }, [holderId, sectorsHandler])
+  //     fetchSectors()
+  //   }, [user.holderId])
 
   return (
     <>
@@ -44,7 +46,7 @@ export function Tickets() {
           </DialogContent>
         </Dialog>
 
-        {holder &&
+        {sectors &&
           sectors?.map((sector) => (
             <div key={sector.id} className="flex items-center justify-between">
               <div>
