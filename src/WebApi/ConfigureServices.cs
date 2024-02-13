@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Text.Json.Serialization;
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Services;
 using ZymLabs.NSwag.FluentValidation;
@@ -9,6 +10,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddWebApiServices(this IServiceCollection services)
     {
+        services.AddRouting(options => options.LowercaseUrls = true);
+        services.Configure<JsonOptions>(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
