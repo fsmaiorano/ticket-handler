@@ -35,6 +35,7 @@ public class GetTicketQueriesIntegrationTest : Testing
 
         var query = new GetTicketsBySectorIdQuery
         {
+            HolderId = CreateTicketIntegrationTest.CreatedTicket!.HolderId,
             SectorId = CreateTicketIntegrationTest.CreatedTicket!.SectorId,
         };
 

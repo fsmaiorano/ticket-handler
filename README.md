@@ -2,19 +2,15 @@
 
 ### Roadmap
 
-- [ ] Create a ticket
-- [ ] Delete a ticket
-- [ ] Update a ticket
-- [ ] Get all tickets
-- [ ] Get a ticket by id
-- [ ] Get all tickets by user id
-- [ ] Get all tickets by user id and status
+- [x] Create basic crud operations
+- [x] Create basic authentication
+- [ ] Implement JWT
 
-- [ ] Create a user
-- [ ] Delete a user
-- [ ] Update a user
-- [ ] Get all users
-- [ ] Get a user by id
+- [ ] Get tickets by holder
+- [ ] Get tickets by assignee
+- [ ] Get tickets by sector
+- [ ] Get tickets by holder
+- [ ] Get tickets by status
 
 ### Commands
 

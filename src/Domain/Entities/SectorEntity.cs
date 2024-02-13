@@ -8,6 +8,7 @@ public class SectorEntity : BaseEntity
     public required Guid HolderId { get; set; }
     public HolderEntity? HolderEntity { get; set; }
     public List<UserEntity>? Users { get; set; }
+    public virtual List<TicketEntity>? Tickets { get; set; }
 
     public SectorEntity()
     {

@@ -36,11 +36,88 @@ namespace WebApi.Controllers
                 Priority = getTicketByIdResponse.Ticket.Priority,
                 HolderId = getTicketByIdResponse.Ticket.HolderId,
                 SectorId = getTicketByIdResponse.Ticket.SectorId,
-                AssigneeId = getTicketByIdResponse.Ticket.AssigneeId
+                AssigneeId = getTicketByIdResponse.Ticket.AssigneeId,
+                UserId = getTicketByIdResponse.Ticket.UserId,
+                CreatedAt = getTicketByIdResponse.Ticket.CreatedAt,
+                UpdatedAt = getTicketByIdResponse.Ticket.UpdatedAt,
             };
 
             return Ok(ticketDto);
         }
+
+        [HttpGet("holder/{holderId}/sector/{sectorId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SectorDto>>> GetTicketsBySectorId(Guid holderId, Guid sectorId)
+        {
+            var getTicketsBySectorIdResponse = await Mediator.Send(new GetTicketsBySectorIdQuery { HolderId = holderId, SectorId = sectorId });
+
+            if (!getTicketsBySectorIdResponse.Success)
+                return BadRequest(getTicketsBySectorIdResponse.Message);
+
+            var ticketDtos = new List<TicketDto>();
+
+            if (getTicketsBySectorIdResponse.Tickets is not null && getTicketsBySectorIdResponse.Tickets.Any())
+            {
+                foreach (var ticket in getTicketsBySectorIdResponse.Tickets)
+                {
+                    var ticketDto = new TicketDto
+                    {
+                        Title = ticket.Title,
+                        Content = ticket.Content,
+                        Status = ticket.Status,
+                        Priority = ticket.Priority,
+                        HolderId = ticket.HolderId,
+                        SectorId = ticket.SectorId,
+                        AssigneeId = ticket.AssigneeId,
+                        UserId = ticket.UserId,
+                        CreatedAt = ticket.CreatedAt,
+                        UpdatedAt = ticket.UpdatedAt
+                    };
+
+                    ticketDtos.Add(ticketDto);
+                }
+            }
+
+            return Ok(ticketDtos);
+        }
+
+
+        [HttpGet("holder/{holderId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SectorDto>>> GetTicketsByHolderId(Guid holderId)
+        {
+            var getTicketsByHolderIdResponse = await Mediator.Send(new GetTicketsByHolderIdQuery { HolderId = holderId });
+
+            if (!getTicketsByHolderIdResponse.Success)
+                return BadRequest(getTicketsByHolderIdResponse.Message);
+
+            var ticketDtos = new List<TicketDto>();
+
+            if (getTicketsByHolderIdResponse.Tickets is not null && getTicketsByHolderIdResponse.Tickets.Any())
+            {
+                foreach (var ticket in getTicketsByHolderIdResponse.Tickets)
+                {
+                    var ticketDto = new TicketDto
+                    {
+                        Title = ticket.Title,
+                        Content = ticket.Content,
+                        Status = ticket.Status,
+                        Priority = ticket.Priority,
+                        HolderId = ticket.HolderId,
+                        SectorId = ticket.SectorId,
+                        AssigneeId = ticket.AssigneeId,
+                        UserId = ticket.UserId,
+                        CreatedAt = ticket.CreatedAt,
+                        UpdatedAt = ticket.UpdatedAt
+                    };
+
+                    ticketDtos.Add(ticketDto);
+                }
+            }
+
+            return Ok(ticketDtos);
+        }
+
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

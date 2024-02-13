@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240204192703_Init")]
+    [Migration("20240213140638_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -131,43 +131,70 @@ namespace Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
 
-                    b.Property<Guid?>("AssigneeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("AssigneeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("assignee_id");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnName("content");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("HolderId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("holder_id");
 
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<int>("Priority")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("int")
+                        .HasColumnName("priority");
 
-                    b.Property<Guid?>("SectorId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("SectorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("sector_id");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Tickets");
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("HolderId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("SectorId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserEntity", b =>
@@ -249,6 +276,41 @@ namespace Infrastructure.Migrations
                     b.Navigation("HolderEntity");
                 });
 
+            modelBuilder.Entity("Domain.Entities.TicketEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.UserEntity", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.HolderEntity", "Holder")
+                        .WithMany("Tickets")
+                        .HasForeignKey("HolderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.SectorEntity", "Sector")
+                        .WithMany("Tickets")
+                        .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.UserEntity", "User")
+                        .WithMany("Tickets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("Holder");
+
+                    b.Navigation("Sector");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.UserEntity", b =>
                 {
                     b.HasOne("Domain.Entities.HolderEntity", "Holder")
@@ -280,6 +342,18 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.HolderEntity", b =>
                 {
                     b.Navigation("Sectors");
+
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SectorEntity", b =>
+                {
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

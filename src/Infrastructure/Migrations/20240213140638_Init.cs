@@ -46,27 +46,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tickets",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Priority = table.Column<int>(type: "int", nullable: false),
-                    HolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SectorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AssigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tickets", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sectors",
                 columns: table => new
                 {
@@ -114,6 +93,49 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tickets",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    status = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    priority = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    holder_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    sector_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    assignee_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tickets", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Holders_holder_id",
+                        column: x => x.holder_id,
+                        principalTable: "Holders",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Tickets_Sectors_sector_id",
+                        column: x => x.sector_id,
+                        principalTable: "Sectors",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Tickets_Users_assignee_id",
+                        column: x => x.assignee_id,
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "Users",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserSectors",
                 columns: table => new
                 {
@@ -149,6 +171,31 @@ namespace Infrastructure.Migrations
                 name: "IX_Sectors_id",
                 table: "Sectors",
                 column: "id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_assignee_id",
+                table: "Tickets",
+                column: "assignee_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_holder_id",
+                table: "Tickets",
+                column: "holder_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_id",
+                table: "Tickets",
+                column: "id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_sector_id",
+                table: "Tickets",
+                column: "sector_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_user_id",
+                table: "Tickets",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_HolderId",

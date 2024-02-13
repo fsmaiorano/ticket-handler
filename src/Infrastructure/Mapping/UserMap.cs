@@ -17,6 +17,8 @@ namespace Infrastructure.Mapping
             builder.Property(p => p.Name).HasColumnName("name").IsRequired().HasMaxLength(100);
             builder.Property(p => p.Email).HasColumnName("email").IsRequired().HasMaxLength(100);
             builder.Property(p => p.Password).HasColumnName("password").IsRequired().HasMaxLength(100);
+
+            builder.HasMany(p => p.Tickets).WithOne(p => p.User).HasForeignKey(p => p.UserId);
         }
     }
 }

@@ -12,6 +12,7 @@ public class UserEntity : BaseEntity
     public Guid HolderId { get; set; }
     public HolderEntity? Holder { get; set; }
     public List<SectorEntity>? Sectors { get; set; }
+    public virtual List<TicketEntity>? Tickets { get; set; }
 
     public UserEntity()
     {

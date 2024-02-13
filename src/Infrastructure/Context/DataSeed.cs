@@ -68,6 +68,36 @@ namespace Infrastructure.Context
                 await context.Users.AddRangeAsync(users);
                 await context.SaveChangesAsync();
             }
+
+            if (!context.Tickets.Any())
+            {
+                var tickets = new List<TicketEntity>
+                {
+                    new() {
+                        Title = "Ticket 1",
+                        Content = "Content 1",
+                        Status = TicketStatus.Open,
+                        Priority = TicketPriority.Low,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                    },
+                    new() {
+                        Title = "Ticket 2",
+                        Content = "Content 2",
+                        Status = TicketStatus.Open,
+                        Priority = TicketPriority.Low,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    }
+                };
+
+                await context.Tickets.AddRangeAsync(tickets);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

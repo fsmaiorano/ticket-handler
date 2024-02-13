@@ -8,7 +8,8 @@ namespace Application.UseCases.Ticket.Queries;
 
 public record GetTicketsBySectorIdQuery : IRequest<GetTicketsBySectorIdResponse>
 {
-    public Guid SectorId { get; set; }
+    public required Guid HolderId { get; set; }
+    public required Guid SectorId { get; set; }
 }
 
 public class GetTicketsBySectorIdResponse : BaseResponse
@@ -29,7 +30,7 @@ public class GetTicketBySectorHandler(ILogger<GetTicketByIdHandler> logger, IDat
         {
             _logger.LogInformation("GetTicketsBySectorId: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.SectorId == request.SectorId).ToListAsync(cancellationToken);
+            var tickets = await _context.Tickets.Where(x => x.SectorId == request.SectorId && x.HolderId == request.HolderId).ToListAsync(cancellationToken);
 
             if (tickets is null)
             {
