@@ -42,4 +42,20 @@ public class GetTicketQueriesIntegrationTest : Testing
         Assert.IsNotNull(getTicketByIdResponse);
         Assert.IsTrue(getTicketByIdResponse.Success);
     }
+
+    [TestMethod]
+    public async Task GetTicketsByHolderIdQuery()
+    {
+        var createTicketIntegrationTest = new CreateTicketIntegrationTest();
+        _ = createTicketIntegrationTest.CreateTicket();
+
+        var query = new GetTicketsByHolderIdQuery
+        {
+            HolderId = CreateTicketIntegrationTest.CreatedTicket!.HolderId,
+        };
+
+        var getTicketByIdResponse = await SendAsync(query);
+        Assert.IsNotNull(getTicketByIdResponse);
+        Assert.IsTrue(getTicketByIdResponse.Success);
+    }
 }
