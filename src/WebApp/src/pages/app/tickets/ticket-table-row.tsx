@@ -2,11 +2,12 @@ import { DialogTrigger } from '@radix-ui/react-dialog'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowRight, Search, X } from 'lucide-react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Dialog } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
+import { AppContext } from '@/contexts/app-context'
 import { Ticket } from '@/models/ticket'
 import { TicketStatus } from '@/models/ticket-status'
 
@@ -16,6 +17,7 @@ export interface TicketTableRowProps {
 
 export function TicketTableRow({ ticket }: TicketTableRowProps) {
   const [isSetDetailsOpen, setDetailsOpen] = useState(false)
+  const { sectors } = useContext(AppContext)
   //   const queryClient = useQueryClient()
 
   //   function updateTicketStatusOnCache(ticketId: string, status: TicketStatus) {
@@ -73,6 +75,11 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
   //       },
   //     })
 
+  function handleSector(sectorId: string) {
+    const sector = sectors.find((s) => s.id === sectorId)
+    return sector?.name || 'Sector not found'
+  }
+
   return (
     <TableRow>
       <TableCell>
@@ -87,7 +94,7 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">
-        {ticket.id}
+        {handleSector(ticket.sectorId)}
       </TableCell>
       <TableCell className="text-muted-foreground">
         {formatDistanceToNow(ticket.createdAt, {

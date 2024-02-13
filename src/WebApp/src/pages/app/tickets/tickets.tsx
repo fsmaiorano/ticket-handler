@@ -75,13 +75,11 @@ export function Tickets() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[64px]"></TableHead>
-                <TableHead className="w-[140px]">Id</TableHead>
-                <TableHead className="w-[180px]">Order in</TableHead>
+                <TableHead className="w-[340px]">Sector</TableHead>
+                <TableHead className="w-[420px]">Title</TableHead>
+                <TableHead className="w-[140px]">Created in</TableHead>
+                <TableHead className="w-[140px]">Priority</TableHead>
                 <TableHead className="w-[140px]">Status</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead className="w-[140px]">Total</TableHead>
-                <TableHead className="w-[164px]"></TableHead>
-                <TableHead className="w-[132px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
