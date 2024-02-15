@@ -18,7 +18,7 @@ import { TicketTableFilter } from './ticket-table-filter'
 import { TicketTableRow } from './ticket-table-row'
 
 export function Tickets() {
-  const { user, sectors, sectorsHandler } = useContext(AppContext)
+  const { user, sectorsHandler } = useContext(AppContext)
 
   useQuery({
     queryKey: ['sectors'],
@@ -99,7 +99,7 @@ export function Tickets() {
           </Table>
         </div>
 
-        {sectors &&
+        {/* {sectors &&
           sectors?.map((sector) => (
             <div key={sector.id} className="flex items-center justify-between">
               <div>
@@ -108,7 +108,7 @@ export function Tickets() {
               </div>
               <Button variant={'outline'}>View</Button>
             </div>
-          ))}
+          ))} */}
       </div>
     </>
   )
