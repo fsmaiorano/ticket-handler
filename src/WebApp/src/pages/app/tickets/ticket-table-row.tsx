@@ -4,6 +4,7 @@ import { ptBR } from 'date-fns/locale'
 import { ArrowRight, Search } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
 
+import { TicketPriority } from '@/components/ticket-priority'
 import { Button } from '@/components/ui/button'
 import { Dialog } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -11,6 +12,7 @@ import { AppContext } from '@/contexts/app-context'
 import { Sector } from '@/models/sector'
 import { Ticket } from '@/models/ticket'
 import { TicketStatus } from '@/models/ticket-status'
+import { TicketDetail } from './ticket-detail'
 
 export interface TicketTableRowProps {
   ticket: Ticket
@@ -94,7 +96,7 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
               <span className="sr-only">Ticket detail</span>
             </Button>
           </DialogTrigger>
-          {/* <TicketDetails ticketId={ticket.ticketId} open={isSetDetailsOpen} /> */}
+          <TicketDetail ticketId={ticket.id} open={isSetDetailsOpen} />
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">
@@ -110,7 +112,7 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
         })}
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">
-        {ticket.priority}
+        <TicketPriority priority={ticket.priority} />
       </TableCell>
       <TableCell>
         {ticket.status === TicketStatus.Open && (

@@ -30,6 +30,7 @@ namespace WebApi.Controllers
 
             var ticketDto = new TicketDto
             {
+                Id = getTicketByIdResponse.Ticket.Id,
                 Title = getTicketByIdResponse.Ticket.Title,
                 Content = getTicketByIdResponse.Ticket.Content,
                 Status = getTicketByIdResponse.Ticket.Status,
@@ -62,6 +63,7 @@ namespace WebApi.Controllers
                 {
                     var ticketDto = new TicketDto
                     {
+                        Id = ticket.Id,
                         Title = ticket.Title,
                         Content = ticket.Content,
                         Status = ticket.Status,
@@ -99,6 +101,7 @@ namespace WebApi.Controllers
                 {
                     var ticketDto = new TicketDto
                     {
+                        Id = ticket.Id,
                         Title = ticket.Title,
                         Content = ticket.Content,
                         Status = ticket.Status,

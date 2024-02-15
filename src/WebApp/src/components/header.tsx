@@ -1,4 +1,4 @@
-import { Home, Inbox, UtensilsCrossed } from 'lucide-react'
+import { Archive, Home, Inbox } from 'lucide-react'
 
 import { NavLink } from './nav-link'
 import { ThemeToggle } from './theme/theme-toggle'
@@ -18,7 +18,7 @@ export function Header() {
         </nav>
         <nav className="flex items-center space-x-4 lg:space-x-6">
           <NavLink to="/tickets">
-            <UtensilsCrossed className="h-4 w-4" />
+            <Archive className="h-4 w-4" />
             Tickets
           </NavLink>
         </nav>
