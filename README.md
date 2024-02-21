@@ -12,12 +12,21 @@
 - [ ] Get tickets by assignee
 - [ ] Get tickets by sector
 - [ ] Get tickets by user
+- [ ] Get tickets by status
+- [ ] Get tickets by priority
+
 - [ ] Filter tickets by status
 - [ ] Filter tickets by priority
 - [ ] Filter tickets by date
 - [ ] Filter tickets by status
 - [ ] Filter tickets by priority
 - [ ] Filter tickets by assignee
+- [ ] Filter tickets by sector
+- [ ] Filter tickets by user
+
+- [ ] Assign ticket to user
+
+- [ ] Create comment on ticket
 
 ### Commands
 
