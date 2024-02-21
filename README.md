@@ -1,5 +1,23 @@
 # TicketHandler
 
+### Description
+This project is a ticket handler system, where you can create tickets, assign them to a user, and add comments to the ticket.
+
+### Technologies
+- .NET Core 8
+- Entity Framework Core
+- SQL Server
+- Redis
+- Docker
+- Docker Compose
+- MsTest
+- Moq
+- FluentAssertions
+- Swagger
+- MediatR
+- AutoMapper
+- Serilog
+
 ### Roadmap
 
 - [x] Crud Holders, Sectors, Users and Tickets
@@ -8,9 +26,9 @@
 - [x] Create basic authentication
 - [ ] Implement JWT
 
-- [ ] Get tickets by holder
-- [ ] Get tickets by assignee
-- [ ] Get tickets by sector
+- [x] Get tickets by holder
+- [x] Get tickets by assignee
+- [x] Get tickets by sector
 - [ ] Get tickets by user
 - [ ] Get tickets by status
 - [ ] Get tickets by priority
@@ -27,6 +45,10 @@
 - [ ] Assign ticket to user
 
 - [ ] Create comment on ticket
+
+- [ ] Create Guid to trace User session requests
+- [ ] Create handler to write integration tests in database to help populate data
+- [ ] Create another container with redis to store logs
 
 ### Commands
 
