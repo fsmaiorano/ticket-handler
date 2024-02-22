@@ -16,16 +16,10 @@ public class GetTicketsByStatusResponse : BaseResponse
     public List<TicketDto>? Tickets { get; set; }
 }
 
-public class GetTicketByStatusHandler : IRequestHandler<GetTicketsByStatusQuery, GetTicketsByStatusResponse>
+public class GetTicketByStatusHandler(ILogger<GetTicketByStatusHandler> logger, IDataContext context) : IRequestHandler<GetTicketsByStatusQuery, GetTicketsByStatusResponse>
 {
-    private readonly IDataContext _context;
-    private readonly ILogger<GetTicketByStatusHandler> _logger;
-
-    public GetTicketByStatusHandler(ILogger<GetTicketByStatusHandler> logger, IDataContext context)
-    {
-        _context = context;
-        _logger = logger;
-    }
+    private readonly IDataContext _context = context;
+    private readonly ILogger<GetTicketByStatusHandler> _logger = logger;
 
     public async Task<GetTicketsByStatusResponse> Handle(GetTicketsByStatusQuery request, CancellationToken cancellationToken)
     {
