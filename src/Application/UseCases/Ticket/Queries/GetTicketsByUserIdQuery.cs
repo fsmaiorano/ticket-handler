@@ -6,35 +6,34 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
 
-public record GetTicketsBySectorIdQuery : IRequest<GetTicketsBySectorIdResponse>
+public record GetTicketsByUserIdQuery : IRequest<GetTicketsByUserIdResponse>
 {
-    public required Guid HolderId { get; set; }
-    public required Guid SectorId { get; set; }
+    public required Guid UserId { get; set; }
 }
 
-public class GetTicketsBySectorIdResponse : BaseResponse
+public class GetTicketsByUserIdResponse : BaseResponse
 {
     public List<TicketDto>? Tickets { get; set; }
 }
 
-public class GetTicketBySectorIdHandler(ILogger<GetTicketByIdHandler> logger, IDataContext context) : IRequestHandler<GetTicketsBySectorIdQuery, GetTicketsBySectorIdResponse>
+public class GetTicketByUserIdHandler(ILogger<GetTicketByIdHandler> logger, IDataContext context) : IRequestHandler<GetTicketsByUserIdQuery, GetTicketsByUserIdResponse>
 {
     private readonly IDataContext _context = context;
     private readonly ILogger<GetTicketByIdHandler> _logger = logger;
 
-    public async Task<GetTicketsBySectorIdResponse> Handle(GetTicketsBySectorIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetTicketsByUserIdResponse> Handle(GetTicketsByUserIdQuery request, CancellationToken cancellationToken)
     {
-        var response = new GetTicketsBySectorIdResponse();
+        var response = new GetTicketsByUserIdResponse();
 
         try
         {
-            _logger.LogInformation("GetTicketsBySectorId: {@Request}", request);
+            _logger.LogInformation("GetTicketsByUserId: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.SectorId == request.SectorId && x.HolderId == request.HolderId).ToListAsync(cancellationToken);
+            var tickets = await _context.Tickets.Where(x => x.UserId == request.UserId).ToListAsync(cancellationToken);
 
             if (tickets is null)
             {
-                _logger.LogWarning("GetTicketsBySectorId: Tickets not");
+                _logger.LogWarning("GetTicketsByUserId: Tickets not");
                 response.Message = "Tickets not found";
 
                 return response;
@@ -54,7 +53,7 @@ public class GetTicketBySectorIdHandler(ILogger<GetTicketByIdHandler> logger, ID
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GetTicketsBySectorId: {@Request}", request);
+            _logger.LogError(ex, "GetTicketsByUserId: {@Request}", request);
             response.Message = ex.Message;
         }
 

@@ -29,7 +29,7 @@ This project is a ticket handler system, where you can create tickets, assign th
 - [x] Get tickets by holder
 - [x] Get tickets by assignee
 - [x] Get tickets by sector
-- [ ] Get tickets by user
+- [x] Get tickets by user
 - [ ] Get tickets by status
 - [ ] Get tickets by priority
 
