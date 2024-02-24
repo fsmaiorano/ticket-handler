@@ -25,7 +25,7 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
 
             if (failures.Count != 0)
             {
-                Console.WriteLine($"Validation failed for {typeof(TRequest).Name}");
+                Console.WriteLine($"Validation failed for {typeof(TRequest).Name} - {failures.Count} errors - {string.Join(", ", failures.Select(f => f.ErrorMessage))}");
                 throw new Exceptions.ValidationException(failures);
             }
         }

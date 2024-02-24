@@ -68,7 +68,7 @@ public class GetTicketQueriesIntegrationTest : Testing
 
         var query = new GetTicketsByAssigneeIdQuery
         {
-            AssigneeId = CreateTicketIntegrationTest.CreatedTicket!.AssigneeId,
+            AssigneeId = (Guid)CreateTicketIntegrationTest.CreatedTicket!.AssigneeId!,
         };
 
         var getTicketByIdResponse = await SendAsync(query);

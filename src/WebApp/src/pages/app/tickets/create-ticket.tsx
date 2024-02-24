@@ -18,8 +18,12 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { AppContext } from '@/contexts/app-context'
 import { TicketPriority } from '@/models/ticket-priority'
+import { TicketStatus } from '@/models/ticket-status'
+import { createTicket } from '@/services/create-ticket'
+import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 const createTicketForm = z.object({
@@ -32,7 +36,7 @@ const createTicketForm = z.object({
 type CreateTicketForm = z.infer<typeof createTicketForm>
 
 export function CreateTicket() {
-  const { sectors } = useContext(AppContext)
+  const { sectors, user, holder } = useContext(AppContext)
 
   const { handleSubmit, register, formState, control } =
     useForm<CreateTicketForm>({
@@ -42,30 +46,34 @@ export function CreateTicket() {
       },
     })
 
+  const { mutateAsync: createTicketFn } = useMutation({
+    mutationFn: createTicket,
+  })
+
   async function handleCreateTicket(data: CreateTicketForm) {
     console.log(data)
-    // try {
-    //   const response = await authenticate({
-    //     email: data.email,
-    //     password: data.password,
-    //   })
-    //   if (response.success) {
-    //     userHandler(response.user)
-    //     tokenHandler(response.token)
-    //     navigate(response.redirectUrl, {
-    //       replace: true,
-    //       state: { from: '/' },
-    //     })
-    //     // window.location.href = response.redirectUrl
-    //   } else {
-    //     toast.error('Something went wrong')
-    //   }
-    //   // else {
-    //   //   toast.success('We send you an email with a link to sign in')
-    //   // }
-    // } catch {
-    //   toast.error('Something went wrong')
-    // }
+
+    try {
+      const request = {
+        title: data.subject,
+        content: data.content,
+        priority: TicketPriority[data.priority as keyof typeof TicketPriority],
+        sectorId: data.sectorId,
+        userId: user.id,
+        holderId: holder.id,
+        status: TicketStatus.Open,
+      }
+
+      const response = await createTicketFn(request)
+
+      if (response.success) {
+        toast.success('Ticket created successfully')
+      } else {
+        toast.error('Something went wrong')
+      }
+    } catch {
+      toast.error('Something went wrong')
+    }
   }
 
   return (

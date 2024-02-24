@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AppContext } from '@/contexts/app-context'
+import { getHolder } from '@/services/get-holder'
 import { signIn } from '@/services/sign-in'
 import { useContext } from 'react'
 
@@ -22,7 +23,8 @@ type SignInForm = z.infer<typeof signInForm>
 export function SignIn() {
   const navigate = useNavigate()
   // const [searchParams] = useSearchParams()
-  const { userHandler, tokenHandler, user } = useContext(AppContext)
+  const { userHandler, tokenHandler, holderHandler, user } =
+    useContext(AppContext)
 
   const { handleSubmit, register, formState } = useForm<SignInForm>({
     defaultValues: {
@@ -32,6 +34,7 @@ export function SignIn() {
   })
 
   const { mutateAsync: authenticate } = useMutation({ mutationFn: signIn })
+  const { mutateAsync: getHolderFn } = useMutation({ mutationFn: getHolder })
 
   if (user.id) {
     navigate('/')
@@ -45,13 +48,27 @@ export function SignIn() {
       })
 
       if (response.success) {
-        userHandler(response.user)
-        tokenHandler(response.token)
-        navigate(response.redirectUrl, {
-          replace: true,
-          state: { from: '/' },
+        const holder = await getHolderFn({
+          holderId: response.user.holderId,
         })
-        // window.location.href = response.redirectUrl
+
+        if (holder) {
+          
+          console.log(`holder ${holder}`)
+          console.log(`user ${response.user}`)
+          console.log(`token ${response.token}`)
+
+          userHandler(response.user)
+          holderHandler(holder)
+          tokenHandler(response.token)
+          navigate(response.redirectUrl, {
+            replace: true,
+            state: { from: '/' },
+          })
+          // window.location.href = response.redirectUrl
+        } else {
+          toast.error('Something went wrong')
+        }
       } else {
         toast.error('Something went wrong')
       }

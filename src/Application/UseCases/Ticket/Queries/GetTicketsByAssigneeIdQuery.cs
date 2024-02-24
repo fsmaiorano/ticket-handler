@@ -2,7 +2,6 @@
 using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
@@ -11,7 +10,7 @@ public record GetTicketsByAssigneeIdQuery : IRequest<GetTicketsByAssigneeIdRespo
 {
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
-    public Guid AssigneeId { get; set; }
+    public required Guid AssigneeId { get; set; }
 }
 
 public class GetTicketsByAssigneeIdResponse : PaginatedBaseResponse

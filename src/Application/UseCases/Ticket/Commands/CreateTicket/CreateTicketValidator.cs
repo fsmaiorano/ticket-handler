@@ -18,10 +18,6 @@ public class CreateTicketValidator : AbstractValidator<CreateTicketCommand>
             .MinimumLength(3)
             .MaximumLength(1000);
 
-        RuleFor(x => x.Status)
-            .NotEmpty()
-            .NotNull();
-
         RuleFor(x => x.Priority)
             .NotEmpty()
             .NotNull();
@@ -31,10 +27,6 @@ public class CreateTicketValidator : AbstractValidator<CreateTicketCommand>
             .NotNull();
 
         RuleFor(x => x.SectorId)
-            .NotEmpty()
-            .NotNull();
-
-        RuleFor(x => x.AssigneeId)
             .NotEmpty()
             .NotNull();
     }

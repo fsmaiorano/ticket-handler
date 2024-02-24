@@ -11,5 +11,5 @@ public class TicketDto : BaseDto
     public Guid UserId { get; set; }
     public Guid HolderId { get; set; }
     public Guid SectorId { get; set; }
-    public Guid AssigneeId { get; set; }
+    public Guid? AssigneeId { get; set; }
 }

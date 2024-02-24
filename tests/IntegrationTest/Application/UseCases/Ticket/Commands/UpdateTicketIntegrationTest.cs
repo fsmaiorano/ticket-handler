@@ -25,10 +25,12 @@ public class UpdateTicketIntegrationTest : Testing
             Content = "Updated Content",
             HolderId = ticket.HolderId,
             SectorId = ticket.SectorId,
-            AssigneeId = ticket.AssigneeId,
             Priority = ticket.Priority,
             Status = ticket.Status
         };
+
+        if (ticket.AssigneeId != null)
+            command.AssigneeId = (Guid)ticket.AssigneeId;
 
         var updatedTicketResponse = await SendAsync(command);
 

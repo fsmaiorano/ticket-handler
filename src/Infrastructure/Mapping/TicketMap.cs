@@ -21,7 +21,7 @@ namespace Infrastructure.Mapping
             builder.Property(p => p.UserId).HasColumnName("user_id").IsRequired();
             builder.Property(p => p.HolderId).HasColumnName("holder_id").IsRequired();
             builder.Property(p => p.SectorId).HasColumnName("sector_id").IsRequired();
-            builder.Property(p => p.AssigneeId).HasColumnName("assignee_id").IsRequired();
+            builder.Property(p => p.AssigneeId).HasColumnName("assignee_id");
 
             builder.HasOne(p => p.User).WithMany(p => p.Tickets).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(p => p.Holder).WithMany(p => p.Tickets).HasForeignKey(p => p.HolderId).OnDelete(DeleteBehavior.NoAction);

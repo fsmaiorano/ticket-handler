@@ -17,7 +17,7 @@ public record CreateTicketCommand : IRequest<CreateTicketResponse>
     public required Guid UserId { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
-    public required Guid AssigneeId { get; set; }
+    public Guid AssigneeId { get; set; }
 }
 
 public class CreateTicketResponse : BaseResponse
@@ -47,8 +47,10 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
                 UserId = request.UserId,
                 HolderId = request.HolderId,
                 SectorId = request.SectorId,
-                AssigneeId = request.AssigneeId
             };
+
+            if (request.AssigneeId != Guid.Empty)
+                ticket.AssigneeId = request.AssigneeId;
 
             var ticketExists = await _context.Tickets.AnyAsync(x => x.Title == request.Title, cancellationToken);
 
@@ -75,8 +77,10 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
                 UserId = ticket.UserId,
                 HolderId = ticket.HolderId,
                 SectorId = ticket.SectorId,
-                AssigneeId = ticket.AssigneeId
             };
+
+            if (ticket.AssigneeId != Guid.Empty)
+                response.Ticket.AssigneeId = ticket.AssigneeId;
         }
         catch (Exception ex)
         {

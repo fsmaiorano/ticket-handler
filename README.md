@@ -1,9 +1,31 @@
 # TicketHandler
 
 ### Description
+
 This project is a ticket handler system, where you can create tickets, assign them to a user, and add comments to the ticket.
 
+### How to run
+
+Before running the project, you need to create a database and run the migrations.
+
+```bash
+docker-compose up
+```
+
+After that, you can run the project.
+
+```bash
+dotnet run
+```
+
+### How to test
+
+```bash
+dotnet test
+```
+
 ### Technologies
+
 - .NET Core 8
 - Entity Framework Core
 - SQL Server
@@ -46,18 +68,22 @@ This project is a ticket handler system, where you can create tickets, assign th
 
 - [ ] Assign ticket to user
 
-- [ ] Create comment on ticket
+- [x] Create comment on ticket
 
 - [ ] Create Guid to trace User session requests
 - [ ] Create handler to write integration tests in database to help populate data
 - [ ] Create another container with redis to store logs
+
+### To Refactor
+
+- [ ] Ticket Status and Priority should be an enum and stored in the database
 
 ### Commands
 
 ### Create migration
 
 ```bash
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add MigrationName
 ```
 
 ### Update database

@@ -38,6 +38,13 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
         if (!context.ModelState.IsValid)
         {
+            if (context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+            {
+                context.Result = new BadRequestObjectResult(context.ModelState);
+                context.ExceptionHandled = true;
+                return;
+            }
+
             HandleInvalidModelStateException(context);
             return;
         }
@@ -55,6 +62,12 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.Result = new BadRequestObjectResult(details);
 
         context.ExceptionHandled = true;
+
+        if (context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+        {
+            details.Title = exception.Message;
+            details.Detail = exception.StackTrace;
+        }
     }
 
     private void HandleInvalidModelStateException(ExceptionContext context)
@@ -67,6 +80,12 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.Result = new BadRequestObjectResult(details);
 
         context.ExceptionHandled = true;
+
+        if (context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+        {
+            details.Title = "One or more validation errors occurred.";
+            details.Detail = "See the errors property for more details.";
+        }
     }
 
     private void HandleNotFoundException(ExceptionContext context)
@@ -83,6 +102,11 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.Result = new NotFoundObjectResult(details);
 
         context.ExceptionHandled = true;
+
+        if (context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+        {
+            details.Detail = exception.StackTrace;
+        }
     }
 
     private void HandleUnauthorizedAccessException(ExceptionContext context)
@@ -100,6 +124,11 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         };
 
         context.ExceptionHandled = true;
+
+        if (context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+        {
+            details.Detail = context.Exception.StackTrace;
+        }
     }
 
     private void HandleForbiddenAccessException(ExceptionContext context)
@@ -117,5 +146,10 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         };
 
         context.ExceptionHandled = true;
+
+        if (context.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+        {
+            details.Detail = context.Exception.StackTrace;
+        }
     }
 }

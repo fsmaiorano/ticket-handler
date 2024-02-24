@@ -16,7 +16,7 @@ public record UpdateTicketCommand : IRequest<UpdateTicketResponse>
     public TicketPriority? Priority { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
-    public required Guid AssigneeId { get; set; }
+    public Guid AssigneeId { get; set; }
 }
 
 public class UpdateTicketResponse : BaseResponse

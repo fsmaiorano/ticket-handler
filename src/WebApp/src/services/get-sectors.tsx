@@ -4,7 +4,7 @@ export interface GetSectorsParams {
   holderId: string
 }
 
-export interface GetSectorResponse {
+export interface GetSectorsResponse {
   id: string
   name: string
   holderId: string
@@ -14,7 +14,7 @@ export interface GetSectorResponse {
 }
 
 export async function getSectors({ holderId }: GetSectorsParams) {
-  const response = await api.get<GetSectorResponse[]>(
+  const response = await api.get<GetSectorsResponse[]>(
     `/api/Sector/holder/${holderId}`,
   )
 

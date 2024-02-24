@@ -30,6 +30,7 @@ namespace WebApi.Controllers
 
             var holderDto = new HolderDto
             {
+                Id = getHolderByIdResponse.Holder.Id,
                 Name = getHolderByIdResponse.Holder.Name,
                 Sectors = getHolderByIdResponse.Holder.Sectors
             };

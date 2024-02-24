@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240213140638_Init")]
+    [Migration("20240224165615_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -135,7 +135,7 @@ namespace Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
 
-                    b.Property<Guid>("AssigneeId")
+                    b.Property<Guid?>("AssigneeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("assignee_id");
 
@@ -280,9 +280,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.UserEntity", "Assignee")
                         .WithMany()
-                        .HasForeignKey("AssigneeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AssigneeId");
 
                     b.HasOne("Domain.Entities.HolderEntity", "Holder")
                         .WithMany("Tickets")

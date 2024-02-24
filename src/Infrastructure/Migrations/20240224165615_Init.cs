@@ -104,7 +104,7 @@ namespace Infrastructure.Migrations
                     user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     holder_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     sector_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    assignee_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    assignee_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: true)
@@ -126,8 +126,7 @@ namespace Infrastructure.Migrations
                         name: "FK_Tickets_Users_assignee_id",
                         column: x => x.assignee_id,
                         principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Tickets_Users_user_id",
                         column: x => x.user_id,
