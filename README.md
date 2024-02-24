@@ -42,6 +42,8 @@ dotnet test
 
 ### Roadmap
 
+## Backend
+
 - [x] Crud Holders, Sectors, Users and Tickets
 - [x] Create Entity Framework Mapping and Context
 - [x] Apply InMemoryDatabase for testing
@@ -57,6 +59,16 @@ dotnet test
 
 - [x] Get Answers of an ticket
 
+- [ ] Assign ticket to user
+
+- [x] Create comment on ticket
+
+- [ ] Create Guid to trace User session requests
+- [ ] Create handler to write integration tests in database to help populate data
+- [ ] Create another container with redis to store logs
+
+## Frontend
+
 - [ ] Filter tickets by status
 - [ ] Filter tickets by priority
 - [ ] Filter tickets by date
@@ -65,14 +77,6 @@ dotnet test
 - [ ] Filter tickets by assignee
 - [ ] Filter tickets by sector
 - [ ] Filter tickets by user
-
-- [ ] Assign ticket to user
-
-- [x] Create comment on ticket
-
-- [ ] Create Guid to trace User session requests
-- [ ] Create handler to write integration tests in database to help populate data
-- [ ] Create another container with redis to store logs
 
 ### To Refactor
 
