@@ -1,17 +1,19 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
 
 public record GetTicketsByStatusQuery : IRequest<GetTicketsByStatusResponse>
 {
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 10;
     public required string Status { get; set; }
 }
 
-public class GetTicketsByStatusResponse : BaseResponse
+public class GetTicketsByStatusResponse : PaginatedBaseResponse
 {
     public List<TicketDto>? Tickets { get; set; }
 }
@@ -29,7 +31,8 @@ public class GetTicketByStatusHandler(ILogger<GetTicketByStatusHandler> logger, 
         {
             _logger.LogInformation("GetTicketsByStatus: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.Status.ToString() == request.Status).ToListAsync(cancellationToken);
+            var tickets = await _context.Tickets.Where(x => x.Status.ToString() == request.Status)
+                                                .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
             {
@@ -41,7 +44,9 @@ public class GetTicketByStatusHandler(ILogger<GetTicketByStatusHandler> logger, 
 
             response.Success = true;
             response.Message = "Tickets found";
-            response.Tickets = tickets.Select(x => new TicketDto
+            response.PageNumber = tickets.PageNumber;
+            response.TotalPages = tickets.TotalPages;
+            response.Tickets = tickets.Items.Select(x => new TicketDto
             {
                 Id = x.Id,
                 Title = x.Title,

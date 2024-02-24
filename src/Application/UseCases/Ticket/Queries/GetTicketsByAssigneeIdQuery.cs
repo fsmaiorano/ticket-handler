@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace Application.UseCases.Ticket.Queries;
 
 public record GetTicketsByAssigneeIdQuery : IRequest<GetTicketsByAssigneeIdResponse>
 {
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 10;
     public Guid AssigneeId { get; set; }
 }
 
-public class GetTicketsByAssigneeIdResponse : BaseResponse
+public class GetTicketsByAssigneeIdResponse : PaginatedBaseResponse
 {
     public List<TicketDto>? Tickets { get; set; }
 }
@@ -35,7 +38,8 @@ public class GetTicketsByAssigneeIdHandler : IRequestHandler<GetTicketsByAssigne
         {
             _logger.LogInformation("GetTicketsByAssigneeId: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.AssigneeId == request.AssigneeId).ToListAsync(cancellationToken);
+            var tickets = await _context.Tickets.Where(x => x.AssigneeId == request.AssigneeId)
+                                                .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
             {
@@ -47,7 +51,9 @@ public class GetTicketsByAssigneeIdHandler : IRequestHandler<GetTicketsByAssigne
 
             response.Success = true;
             response.Message = "Tickets found";
-            response.Tickets = tickets.Select(x => new TicketDto
+            response.PageNumber = tickets.PageNumber;
+            response.TotalPages = tickets.TotalPages;
+            response.Tickets = tickets.Items.Select(x => new TicketDto
             {
                 Id = x.Id,
                 Title = x.Title,

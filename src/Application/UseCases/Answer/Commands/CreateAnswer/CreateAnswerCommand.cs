@@ -45,16 +45,16 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
                 SectorId = request.SectorId
             };
 
-            var asnwerExists = await _context.Answers.AnyAsync(x => x.TicketId == request.TicketId, cancellationToken);
+            var ticketExists = await _context.Tickets.AnyAsync(x => x.Id == request.TicketId, cancellationToken);
 
-            if (asnwerExists)
+            if (!ticketExists)
             {
-                _logger.LogWarning("CreateAnswerCommand: Answer already exists");
-                response.Message = "Answer already exists";
+                _logger.LogWarning("CreateAnswerCommand: Ticket not found");
+                response.Message = "Ticket not found";
 
                 return response;
             }
-
+         
             await _context.Answers.AddAsync(answer, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 

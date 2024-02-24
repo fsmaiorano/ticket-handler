@@ -33,6 +33,8 @@ This project is a ticket handler system, where you can create tickets, assign th
 - [x] Get tickets by status - need rewrite
 - [x] Get tickets by priority - need rewrite
 
+- [x] Get Answers of an ticket
+
 - [ ] Filter tickets by status
 - [ ] Filter tickets by priority
 - [ ] Filter tickets by date

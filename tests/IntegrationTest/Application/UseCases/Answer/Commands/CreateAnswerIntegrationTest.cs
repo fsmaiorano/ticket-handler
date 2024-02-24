@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Answer.Commands.CreateAnswer;
-using Application.UseCases.Answer.Queries;
 using Bogus;
 using Domain.Entities;
 using IntegrationTest.Application.UseCases.Holder.Commands;
@@ -40,9 +39,34 @@ public class CreateAnswerIntegrationTest : Testing
         var createdAnswer = await SendAsync(command);
         Assert.IsNotNull(createdAnswer);
         Assert.IsNotNull(createdAnswer.Answer);
-        
+
         var storedAnswer = await FindAsync<AnswerEntity>(createdAnswer.Answer.Id);
         CreatedAnswer = storedAnswer;
+    }
+
+    [TestMethod]
+    public async Task CreateALotOfAnswers()
+    {
+        var createHolderIntegrationTest = new CreateHolderIntegrationTest();
+        _ = createHolderIntegrationTest.CreateHolder();
+
+        var createSectorIntegrationTest = new CreateSectorIntegrationTest();
+        _ = createSectorIntegrationTest.CreateSector();
+
+        var createUserIntegrationTest = new CreateUserIntegrationTest();
+        _ = createUserIntegrationTest.CreateUser();
+
+        var createTicketIntegrationTest = new CreateTicketIntegrationTest();
+        _ = createTicketIntegrationTest.CreateTicket();
+
+        for (var i = 1; i <= 7; i++)
+        {
+            var command = CreateAnswerCommandFactory();
+            _ = await SendAsync(command);
+        }
+
+        var storedTickets = await CountAsync<AnswerEntity>();
+        Assert.AreEqual(7, storedTickets);
     }
 
     [DataTestMethod]

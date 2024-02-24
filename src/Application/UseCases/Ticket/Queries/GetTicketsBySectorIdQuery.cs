@@ -1,18 +1,20 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
 
 public record GetTicketsBySectorIdQuery : IRequest<GetTicketsBySectorIdResponse>
 {
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 10;
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
 }
 
-public class GetTicketsBySectorIdResponse : BaseResponse
+public class GetTicketsBySectorIdResponse : PaginatedBaseResponse
 {
     public List<TicketDto>? Tickets { get; set; }
 }
@@ -30,7 +32,8 @@ public class GetTicketBySectorIdHandler(ILogger<GetTicketByIdHandler> logger, ID
         {
             _logger.LogInformation("GetTicketsBySectorId: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.SectorId == request.SectorId && x.HolderId == request.HolderId).ToListAsync(cancellationToken);
+            var tickets = await _context.Tickets.Where(x => x.SectorId == request.SectorId && x.HolderId == request.HolderId)
+                                                .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
             {
@@ -42,7 +45,9 @@ public class GetTicketBySectorIdHandler(ILogger<GetTicketByIdHandler> logger, ID
 
             response.Success = true;
             response.Message = "Tickets found";
-            response.Tickets = tickets.Select(x => new TicketDto
+            response.PageNumber = tickets.PageNumber;
+            response.TotalPages = tickets.TotalPages;
+            response.Tickets = tickets.Items.Select(x => new TicketDto
             {
                 Id = x.Id,
                 Title = x.Title,
