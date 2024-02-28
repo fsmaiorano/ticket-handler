@@ -55,7 +55,6 @@ public class CreateTicketIntegrationTest : Testing
             UserId = CreateUserIntegrationTest.CreatedUser!.Id,
             HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
             SectorId = CreateSectorIntegrationTest.CreatedSector!.Id,
-            AssigneeId = CreateUserIntegrationTest.CreatedUser!.Id
         };
 
         return command;
