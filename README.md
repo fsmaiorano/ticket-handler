@@ -59,7 +59,7 @@ dotnet test
 
 - [x] Get Answers of an ticket
 
-- [ ] Assign ticket to user
+- [x] Assign ticket to user
 
 - [x] Create comment on ticket
 
