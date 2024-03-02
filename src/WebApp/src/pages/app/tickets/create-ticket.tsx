@@ -36,7 +36,11 @@ const createTicketForm = z.object({
 
 type CreateTicketForm = z.infer<typeof createTicketForm>
 
-export function CreateTicket() {
+interface CreateTicketProps {
+  hasNewTicket: () => void
+}
+
+export function CreateTicket({ hasNewTicket }: CreateTicketProps) {
   const { sectors, user, holder } = useContext(AppContext)
 
   const { handleSubmit, register, formState, control } =
@@ -70,6 +74,7 @@ export function CreateTicket() {
       if (response.success) {
         toast.success('Ticket created successfully')
         document.getElementById('create-ticket-cancel')?.click()
+        hasNewTicket()
       } else {
         toast.error('Something went wrong')
       }

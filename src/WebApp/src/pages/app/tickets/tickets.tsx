@@ -10,7 +10,7 @@ import {
 import { AppContext } from '@/contexts/app-context'
 import { getSectors } from '@/services/get-sectors'
 import { getTickets } from '@/services/get-tickets'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { CreateTicket } from './create-ticket'
@@ -19,6 +19,7 @@ import { TicketTableRow } from './ticket-table-row'
 
 export function Tickets() {
   const { user, sectorsHandler } = useContext(AppContext)
+  const queryClient = useQueryClient()
 
   useQuery({
     queryKey: ['sectors'],
@@ -41,6 +42,10 @@ export function Tickets() {
       }),
     staleTime: Infinity,
   })
+
+  const reloadTickets = () => {
+    queryClient.invalidateQueries({queryKey: ['tickets']});
+  }
 
   //   useEffect(() => {
   //     const fetchSectors = async () => {
@@ -65,7 +70,7 @@ export function Tickets() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <CreateTicket />
+            <CreateTicket hasNewTicket={reloadTickets} />
           </DialogContent>
         </Dialog>
 
