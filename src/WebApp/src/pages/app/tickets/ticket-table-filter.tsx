@@ -7,18 +7,18 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 
 import { TicketPriority } from '@/models/ticket-priority'
 
 const orderFilterSchema = z.object({
-  ticketId: z.string().optional(),
-  customerName: z.string().optional(),
+  sector: z.string().optional(),
+  title: z.string().optional(),
   status: z.string().optional(),
 })
 
@@ -26,33 +26,34 @@ type OrderFilterSchema = z.infer<typeof orderFilterSchema>
 
 export function TicketTableFilter() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const ticketId = searchParams.get('ticketId')
-  const customerName = searchParams.get('customerName')
+  const sector = searchParams.get('sector')
+  const title = searchParams.get('title')
   const status = searchParams.get('status')
 
   const { register, handleSubmit, control, reset } = useForm<OrderFilterSchema>(
     {
       resolver: zodResolver(orderFilterSchema),
       defaultValues: {
-        ticketId: ticketId ?? '',
-        customerName: customerName ?? '',
+        sector: sector ?? '',
+        title: title ?? '',
         status: status ?? 'all',
       },
     },
   )
 
-  function handleFilter({ ticketId, customerName, status }: OrderFilterSchema) {
+  function handleFilter({ sector, title, status }: OrderFilterSchema) {
+    console.log(sector, title, status);
     setSearchParams((state) => {
-      if (ticketId) {
-        state.set('ticketId', ticketId.trim())
+      if (sector) {
+        state.set('sector', sector.trim())
       } else {
-        state.delete('ticketId')
+        state.delete('sector')
       }
 
-      if (customerName) {
-        state.set('customerName', customerName.trim())
+      if (title) {
+        state.set('title', title.trim())
       } else {
-        state.delete('customerName')
+        state.delete('title')
       }
 
       if (status) {
@@ -68,16 +69,16 @@ export function TicketTableFilter() {
 
   function handleClearFilters() {
     setSearchParams((state) => {
-      state.delete('ticketId')
-      state.delete('customerName')
+      state.delete('sector')
+      state.delete('title')
       state.delete('status')
       state.set('page', '1')
       return state
     })
 
     reset({
-      ticketId: '',
-      customerName: '',
+      sector: '',
+      title: '',
       status: 'all',
     })
   }
@@ -91,13 +92,13 @@ export function TicketTableFilter() {
         <span className="text-sm font-semibold">Filters:</span>
         <Input
           className="h-8 w-auto"
-          placeholder="Ticket ID"
-          {...register('ticketId')}
+          placeholder="Sector"
+          {...register('sector')}
         />
         <Input
           className="h-8 w-[320px]"
-          placeholder="Client name"
-          {...register('customerName')}
+          placeholder="Title"
+          {...register('title')}
         />
         <Controller
           name="status"

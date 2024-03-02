@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import {
@@ -13,13 +14,18 @@ import { getTickets } from '@/services/get-tickets'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 import { CreateTicket } from './create-ticket'
 import { TicketTableFilter } from './ticket-table-filter'
 import { TicketTableRow } from './ticket-table-row'
 
 export function Tickets() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user, sectorsHandler } = useContext(AppContext)
   const queryClient = useQueryClient()
+
+  let totalPages = 0
 
   useQuery({
     queryKey: ['sectors'],
@@ -37,14 +43,26 @@ export function Tickets() {
     queryFn: () =>
       getTickets({ holderId: user.holderId }).then((res) => {
         console.log(res)
-
-        return res
+        totalPages = res.totalPages
+        return res.items
       }),
     staleTime: Infinity,
   })
 
   const reloadTickets = () => {
-    queryClient.invalidateQueries({queryKey: ['tickets']});
+    queryClient.invalidateQueries({ queryKey: ['tickets'] })
+  }
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page - 1)
+    .parse(searchParams.get('page') ?? '1')
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set('page', String(pageIndex + 1))
+      return state
+    })
   }
 
   //   useEffect(() => {
@@ -61,7 +79,6 @@ export function Tickets() {
       <Helmet title="Tickets" />
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Tickets</h1>
-        <p>{user.name}</p>
 
         <Dialog>
           <DialogTrigger asChild>
@@ -103,17 +120,14 @@ export function Tickets() {
             </TableBody>
           </Table>
         </div>
-
-        {/* {sectors &&
-          sectors?.map((sector) => (
-            <div key={sector.id} className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold">{sector.name}</h2>
-                <p>{sector.id}</p>
-              </div>
-              <Button variant={'outline'}>View</Button>
-            </div>
-          ))} */}
+        {result && (
+          <Pagination
+            pageCount={totalPages}
+            pageIndex={pageIndex}
+            perPage={10}
+            onPageChange={handlePaginate}
+          />
+        )}
       </div>
     </>
   )

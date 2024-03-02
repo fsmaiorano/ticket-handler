@@ -5,8 +5,17 @@ export interface GetTicketsParams {
   holderId: string
 }
 
-export async function getTickets({ holderId }: GetTicketsParams) {
-  const response = await api.get<Ticket[]>(`/api/ticket/holder/${holderId}`)
+interface GetTicketsResponse {
+  success: boolean
+  message: string
+  pageNumber: number
+  totalPages: number
+  items: Ticket[]
+}
 
+export async function getTickets({ holderId }: GetTicketsParams) {
+  const response = await api.get<GetTicketsResponse>(
+    `/api/ticket/holder/${holderId}`,
+  )
   return response.data
 }

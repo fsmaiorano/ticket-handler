@@ -118,7 +118,14 @@ namespace WebApi.Controllers
                 }
             }
 
-            return Ok(ticketDtos);
+            var paginatedDto = new PaginatedDto<TicketDto>
+            {
+                PageNumber = getTicketsByHolderIdResponse.PageNumber,
+                TotalPages = getTicketsByHolderIdResponse.TotalPages,
+                Items = ticketDtos
+            };
+
+            return Ok(paginatedDto);
         }
 
 
