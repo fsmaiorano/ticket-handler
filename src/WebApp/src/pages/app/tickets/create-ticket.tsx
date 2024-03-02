@@ -4,6 +4,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -68,6 +69,7 @@ export function CreateTicket() {
 
       if (response.success) {
         toast.success('Ticket created successfully')
+        document.getElementById('create-ticket-cancel')?.click()
       } else {
         toast.error('Something went wrong')
       }
@@ -170,8 +172,13 @@ export function CreateTicket() {
         </DialogDescription>
       </DialogHeader>
       <DialogFooter>
+        <DialogTrigger asChild>
+          <Button variant="outline" id="create-ticket-cancel">
+            Cancel
+          </Button>
+        </DialogTrigger>
         <Button disabled={formState.isSubmitting} type="submit">
-          Confirm
+          Save
         </Button>
       </DialogFooter>
     </form>
