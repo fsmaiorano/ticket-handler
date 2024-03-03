@@ -86,9 +86,9 @@ namespace WebApi.Controllers
 
         [HttpGet("holder/{holderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SectorDto>>> GetTicketsByHolderId(Guid holderId)
+        public async Task<ActionResult<IEnumerable<SectorDto>>> GetTicketsByHolderId(Guid holderId, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var getTicketsByHolderIdResponse = await Mediator.Send(new GetTicketsByHolderIdQuery { HolderId = holderId });
+            var getTicketsByHolderIdResponse = await Mediator.Send(new GetTicketsByHolderIdQuery { HolderId = holderId, PageNumber = page, PageSize = pageSize });
 
             if (!getTicketsByHolderIdResponse.Success)
                 return BadRequest(getTicketsByHolderIdResponse.Message);

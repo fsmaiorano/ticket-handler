@@ -3,6 +3,8 @@ import { Ticket } from '@/models/ticket'
 
 export interface GetTicketsParams {
   holderId: string
+  page?: number
+  pageSize?: number
 }
 
 interface GetTicketsResponse {
@@ -13,9 +15,17 @@ interface GetTicketsResponse {
   items: Ticket[]
 }
 
-export async function getTickets({ holderId }: GetTicketsParams) {
+export async function getTickets({
+  holderId,
+  page,
+  pageSize,
+}: GetTicketsParams) {
+  if (!page || page < 1) {
+    page = 1
+  }
+
   const response = await api.get<GetTicketsResponse>(
-    `/api/ticket/holder/${holderId}`,
+    `/api/ticket/holder/${holderId}?page=${page}&pageSize=${pageSize}`,
   )
   return response.data
 }

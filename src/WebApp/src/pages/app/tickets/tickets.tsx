@@ -12,6 +12,7 @@ import { AppContext } from '@/contexts/app-context'
 import { getSectors } from '@/services/get-sectors'
 import { getTickets } from '@/services/get-tickets'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { RefreshCcw } from 'lucide-react'
 import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
@@ -25,44 +26,53 @@ export function Tickets() {
   const { user, sectorsHandler } = useContext(AppContext)
   const queryClient = useQueryClient()
 
-  let totalPages = 0
+  const pageSize = 10
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page)
+    .parse(searchParams.get('page') ?? '1')
 
   useQuery({
     queryKey: ['sectors'],
     queryFn: () =>
       getSectors({ holderId: user.holderId }).then((res) => {
         sectorsHandler(res)
-
         return res
       }),
     staleTime: Infinity,
   })
 
+  console.log(pageIndex)
+
   const { data: result, isLoading: isLoadingTickets } = useQuery({
-    queryKey: ['tickets'],
+    queryKey: ['tickets', pageIndex],
     queryFn: () =>
-      getTickets({ holderId: user.holderId }).then((res) => {
-        console.log(res)
-        totalPages = res.totalPages
-        return res.items
+      getTickets({
+        holderId: user.holderId,
+        page: pageIndex,
+        pageSize: pageSize,
+      }).then((res) => {
+        return res
       }),
     staleTime: Infinity,
   })
 
-  const reloadTickets = () => {
-    queryClient.invalidateQueries({ queryKey: ['tickets'] })
+  function reloadTickets() {
+    queryClient.invalidateQueries({ queryKey: ['tickets', pageIndex] })
   }
-
-  const pageIndex = z.coerce
-    .number()
-    .transform((page) => page - 1)
-    .parse(searchParams.get('page') ?? '1')
 
   function handlePaginate(pageIndex: number) {
     setSearchParams((state) => {
-      state.set('page', String(pageIndex + 1))
+      state.set('page', String(pageIndex))
       return state
     })
+
+    reloadTickets()
+  }
+
+  const handleRefreshTickets = () => {
+    reloadTickets()
   }
 
   //   useEffect(() => {
@@ -80,6 +90,13 @@ export function Tickets() {
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Tickets</h1>
 
+        <Button
+          className="rotate absolute right-36 top-20"
+          variant={'outline'}
+          onClick={handleRefreshTickets}
+        >
+          <RefreshCcw />
+        </Button>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="absolute right-6 top-20" variant={'outline'}>
@@ -107,7 +124,7 @@ export function Tickets() {
             <TableBody>
               {isLoadingTickets && <p>Loading...</p>}
               {result &&
-                result.map((ticket) => {
+                result.items.map((ticket) => {
                   return (
                     <TicketTableRow
                       key={ticket.id}
@@ -122,9 +139,9 @@ export function Tickets() {
         </div>
         {result && (
           <Pagination
-            pageCount={totalPages}
             pageIndex={pageIndex}
-            perPage={10}
+            pageCount={result.totalPages}
+            perPage={pageSize}
             onPageChange={handlePaginate}
           />
         )}
