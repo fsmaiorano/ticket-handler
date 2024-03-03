@@ -56,6 +56,7 @@ dotnet test
 - [x] Get tickets by user
 - [x] Get tickets by status - need rewrite
 - [x] Get tickets by priority - need rewrite
+- [ ] Get tickets by date - Ordery by creation date
 
 - [x] Get Answers of an ticket
 
@@ -77,6 +78,8 @@ dotnet test
 - [ ] Filter tickets by assignee
 - [ ] Filter tickets by sector
 - [ ] Filter tickets by user
+
+- [ ] Implement skeleton loading
 
 ### To Refactor
 
