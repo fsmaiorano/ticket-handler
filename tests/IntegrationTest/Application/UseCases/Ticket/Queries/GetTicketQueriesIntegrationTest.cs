@@ -1,4 +1,6 @@
-﻿using Application.UseCases.Ticket.Queries;
+﻿using System.Security.Cryptography;
+using Application.UseCases.Ticket.Queries;
+using IntegrationTest.Application.UseCases.Holder.Commands;
 using IntegrationTest.Application.UseCases.Ticket.Commands;
 
 namespace IntegrationTest.Application.UseCases.Ticket.Queries;
@@ -48,11 +50,13 @@ public class GetTicketQueriesIntegrationTest : Testing
     public async Task GetTicketsByHolderIdQuery()
     {
         var createTicketIntegrationTest = new CreateTicketIntegrationTest();
-        _ = createTicketIntegrationTest.CreateTicket();
+        _ = createTicketIntegrationTest.CreateTicketMany();
 
         var query = new GetTicketsByHolderIdQuery
         {
-            HolderId = CreateTicketIntegrationTest.CreatedTicket!.HolderId,
+            HolderId = CreateHolderIntegrationTest.CreatedHolder!.Id,
+            PageNumber = 1,
+            PageSize = 20,
         };
 
         var getTicketByIdResponse = await SendAsync(query);

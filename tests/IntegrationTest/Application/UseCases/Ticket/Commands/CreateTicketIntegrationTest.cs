@@ -43,6 +43,28 @@ public class CreateTicketIntegrationTest : Testing
         CreatedTicket = storedTicket;
     }
 
+    [TestMethod]
+    public async Task CreateTicketMany()
+    {
+        var createHolderIntegrationTest = new CreateHolderIntegrationTest();
+        _ = createHolderIntegrationTest.CreateHolder();
+
+        var createSectorIntegrationTest = new CreateSectorIntegrationTest();
+        _ = createSectorIntegrationTest.CreateSector();
+
+        var createUserIntegrationTest = new CreateUserIntegrationTest();
+        _ = createUserIntegrationTest.CreateUser();
+
+        for (var i = 0; i < 150; i++)
+        {
+            var command = CreateTicketCommandFactory();
+            var createdTicketResponse = await SendAsync(command);
+            Assert.IsNotNull(createdTicketResponse);
+            Assert.IsNotNull(createdTicketResponse.Ticket);
+            Assert.IsInstanceOfType(createdTicketResponse.Ticket.Id, typeof(Guid));
+        }
+    }
+
     [DataTestMethod]
     public static CreateTicketCommand CreateTicketCommandFactory()
     {

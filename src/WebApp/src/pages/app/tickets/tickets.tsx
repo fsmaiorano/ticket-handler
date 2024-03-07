@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import {
@@ -10,37 +11,69 @@ import {
 import { AppContext } from '@/contexts/app-context'
 import { getSectors } from '@/services/get-sectors'
 import { getTickets } from '@/services/get-tickets'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { RefreshCcw } from 'lucide-react'
 import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 import { CreateTicket } from './create-ticket'
 import { TicketTableFilter } from './ticket-table-filter'
 import { TicketTableRow } from './ticket-table-row'
 
 export function Tickets() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user, sectorsHandler } = useContext(AppContext)
+  const queryClient = useQueryClient()
+
+  const pageSize = 10
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page)
+    .parse(searchParams.get('page') ?? '1')
 
   useQuery({
     queryKey: ['sectors'],
     queryFn: () =>
       getSectors({ holderId: user.holderId }).then((res) => {
         sectorsHandler(res)
-
         return res
       }),
     staleTime: Infinity,
   })
+
+  console.log(pageIndex)
 
   const { data: result, isLoading: isLoadingTickets } = useQuery({
-    queryKey: ['tickets'],
+    queryKey: ['tickets', pageIndex],
     queryFn: () =>
-      getTickets({ holderId: user.holderId }).then((res) => {
-        console.log(res)
-
+      getTickets({
+        holderId: user.holderId,
+        page: pageIndex,
+        pageSize: pageSize,
+      }).then((res) => {
         return res
       }),
     staleTime: Infinity,
   })
+
+  function reloadTickets() {
+    queryClient.invalidateQueries({ queryKey: ['tickets', pageIndex] })
+  }
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set('page', String(pageIndex))
+      return state
+    })
+
+    reloadTickets()
+  }
+
+  const handleRefreshTickets = () => {
+    reloadTickets()
+  }
 
   //   useEffect(() => {
   //     const fetchSectors = async () => {
@@ -56,8 +89,14 @@ export function Tickets() {
       <Helmet title="Tickets" />
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Tickets</h1>
-        <p>{user.name}</p>
 
+        <Button
+          className="rotate absolute right-36 top-20"
+          variant={'outline'}
+          onClick={handleRefreshTickets}
+        >
+          <RefreshCcw />
+        </Button>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="absolute right-6 top-20" variant={'outline'}>
@@ -65,7 +104,7 @@ export function Tickets() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <CreateTicket />
+            <CreateTicket hasNewTicket={reloadTickets} />
           </DialogContent>
         </Dialog>
 
@@ -85,7 +124,7 @@ export function Tickets() {
             <TableBody>
               {isLoadingTickets && <p>Loading...</p>}
               {result &&
-                result.map((ticket) => {
+                result.items.map((ticket) => {
                   return (
                     <TicketTableRow
                       key={ticket.id}
@@ -98,17 +137,14 @@ export function Tickets() {
             </TableBody>
           </Table>
         </div>
-
-        {/* {sectors &&
-          sectors?.map((sector) => (
-            <div key={sector.id} className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold">{sector.name}</h2>
-                <p>{sector.id}</p>
-              </div>
-              <Button variant={'outline'}>View</Button>
-            </div>
-          ))} */}
+        {result && (
+          <Pagination
+            pageIndex={pageIndex}
+            pageCount={result.totalPages}
+            perPage={pageSize}
+            onPageChange={handlePaginate}
+          />
+        )}
       </div>
     </>
   )
