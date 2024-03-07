@@ -39,6 +39,32 @@ public class GetTicketByIdHandler(ILogger<GetTicketByIdHandler> logger, IDataCon
                 return response;
             }
 
+            var status = await _context.Statuses
+                .Where(x => x.Id == ticket.StatusId)
+                .Select(x => x.Code)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (status is null)
+            {
+                _logger.LogWarning("GetTicketById: Status not found");
+                response.Message = "Status not found";
+
+                return response;
+            }
+
+            var priority = await _context.Priorities
+                .Where(x => x.Id == ticket.PriorityId)
+                .Select(x => x.Code)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (priority is null)
+            {
+                _logger.LogWarning("GetTicketById: Priority not found");
+                response.Message = "Priority not found";
+
+                return response;
+            }
+
             response.Success = true;
             response.Message = "Ticket found";
             response.Ticket = new TicketDto
@@ -46,6 +72,8 @@ public class GetTicketByIdHandler(ILogger<GetTicketByIdHandler> logger, IDataCon
                 Id = ticket.Id,
                 Title = ticket.Title,
                 Content = ticket.Content,
+                Status = status,
+                Priority = priority,
                 UserId = ticket.UserId,
                 HolderId = ticket.HolderId,
                 SectorId = ticket.SectorId

@@ -38,17 +38,13 @@ public class DataContext : DbContext, IDataContext
         // _configuration = configuration;
     }
 
-    //public DbSet<PokemonEntity> Pokemons => Set<PokemonEntity>();
-    //public DbSet<AbilityEntity> Abilities => Set<AbilityEntity>();
-    //public DbSet<MoveEntity> Moves => Set<MoveEntity>();
-    //public DbSet<TypeEntity> Types => Set<TypeEntity>();
-    //public DbSet<SpriteEntity> Sprites => Set<SpriteEntity>();
-    //public DbSet<PokemonDetailEntity> Details => Set<PokemonDetailEntity>();
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<HolderEntity> Holders => Set<HolderEntity>();
     public DbSet<SectorEntity> Sectors => Set<SectorEntity>();
     public DbSet<TicketEntity> Tickets => Set<TicketEntity>();
     public DbSet<AnswerEntity> Answers => Set<AnswerEntity>();
+    public DbSet<StatusEntity> Statuses => Set<StatusEntity>();
+    public DbSet<PriorityEntity> Priorities => Set<PriorityEntity>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -140,7 +136,7 @@ public class DataContext : DbContext, IDataContext
     {
         var directory = new DirectoryInfo(
             currentPath ?? Directory.GetCurrentDirectory());
-        while (directory != null && !directory.GetFiles("*.sln").Any())
+        while (directory != null && directory.GetFiles("*.sln").Length == 0)
         {
             directory = directory.Parent;
         }

@@ -10,6 +10,8 @@ public interface IDataContext
     DbSet<SectorEntity> Sectors { get; }
     DbSet<TicketEntity> Tickets { get; }
     DbSet<AnswerEntity> Answers { get; }
+    DbSet<StatusEntity> Statuses { get; }
+    DbSet<PriorityEntity> Priorities { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

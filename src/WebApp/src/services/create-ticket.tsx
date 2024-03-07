@@ -4,8 +4,8 @@ import { Ticket } from '@/models/ticket'
 export interface CreateTicketRequest {
   title: string
   content: string
-  status: number
-  priority: number
+  status: string
+  priority: string
   userId: string
   holderId: string
   sectorId: string

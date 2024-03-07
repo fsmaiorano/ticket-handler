@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Constants;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +11,8 @@ public record CreateTicketCommand : IRequest<CreateTicketResponse>
 {
     public required string Title { get; set; }
     public required string Content { get; set; }
-    public required TicketStatus Status { get; set; }
-    public required TicketPriority Priority { get; set; }
+    public required string Status { get; set; }
+    public required string Priority { get; set; }
     public required Guid UserId { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
@@ -38,12 +37,22 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
         {
             _logger.LogInformation("CreateTicketCommand: {@Request}", request);
 
-            var ticket = new TicketEntity
+            var statusId = await _context.Statuses
+                .Where(x => x.Code == request.Status)
+                .Select(x => x.Id)  
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var priorityId = await _context.Priorities
+                .Where(x => x.Code == request.Priority)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var ticket = new TicketEntity()
             {
                 Title = request.Title,
                 Content = request.Content,
-                Status = request.Status,
-                Priority = request.Priority,
+                StatusId = statusId,
+                PriorityId = priorityId,
                 UserId = request.UserId,
                 HolderId = request.HolderId,
                 SectorId = request.SectorId,
@@ -72,8 +81,8 @@ public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataConte
                 Id = ticket.Id,
                 Title = ticket.Title,
                 Content = ticket.Content,
-                Status = ticket.Status,
-                Priority = ticket.Priority,
+                Status = request.Status,
+                Priority = request.Priority,
                 UserId = ticket.UserId,
                 HolderId = ticket.HolderId,
                 SectorId = ticket.SectorId,

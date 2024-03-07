@@ -62,11 +62,11 @@ export function CreateTicket({ hasNewTicket }: CreateTicketProps) {
       const request = {
         title: data.subject,
         content: data.content,
-        priority: TicketPriority[data.priority as keyof typeof TicketPriority],
+        priority: data.priority,
         sectorId: data.sectorId,
         userId: user.id,
         holderId: holder.id,
-        status: TicketStatus.Open,
+        status: TicketStatus.Open.toString(),
       }
 
       const response = await createTicketFn(request)

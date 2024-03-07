@@ -2,6 +2,7 @@
 using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
@@ -38,7 +39,13 @@ public class GetTicketsByAssigneeIdHandler : IRequestHandler<GetTicketsByAssigne
             _logger.LogInformation("GetTicketsByAssigneeId: {@Request}", request);
 
             var tickets = await _context.Tickets.Where(x => x.AssigneeId == request.AssigneeId)
-                                                .PaginatedListAsync(request.PageNumber, request.PageSize);
+                                    .Include(x => x.Status)
+                                    .Include(x => x.Priority)
+                                    .Include(x => x.User)
+                                    .Include(x => x.Holder)
+                                    .Include(x => x.Sector)
+                                    .AsNoTracking()
+                                    .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
             {
@@ -57,6 +64,8 @@ public class GetTicketsByAssigneeIdHandler : IRequestHandler<GetTicketsByAssigne
                 Id = x.Id,
                 Title = x.Title,
                 Content = x.Content,
+                Status = x.Status!.Code,
+                Priority = x.Priority!.Code,
                 UserId = x.UserId,
                 HolderId = x.HolderId,
                 SectorId = x.SectorId

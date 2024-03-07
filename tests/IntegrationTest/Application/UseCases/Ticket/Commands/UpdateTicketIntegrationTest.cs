@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Ticket.Commands.UpdateTicket;
+using Domain.Constants;
 using Domain.Entities;
 
 namespace IntegrationTest.Application.UseCases.Ticket.Commands;
@@ -25,8 +26,8 @@ public class UpdateTicketIntegrationTest : Testing
             Content = "Updated Content",
             HolderId = ticket.HolderId,
             SectorId = ticket.SectorId,
-            Priority = ticket.Priority,
-            Status = ticket.Status
+            Status = TicketStatus.Open.ToString(),
+            Priority = TicketPriority.Low.ToString(),
         };
 
         if (ticket.AssigneeId != null)
