@@ -20,15 +20,13 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { AppContext } from '@/contexts/app-context'
 import { TicketPriority } from '@/models/ticket-priority'
-import { TicketStatus } from '@/models/ticket-status'
-import { createTicket } from '@/services/create-ticket'
 import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { getTicket } from '@/services/get-ticket'
+import { updateTicket } from '@/services/update-ticket'
 import { useQuery } from '@tanstack/react-query'
 
 export interface TicketDetailProps {
@@ -36,21 +34,18 @@ export interface TicketDetailProps {
   open: boolean
 }
 
-const createTicketForm = z.object({
+const updateTicketForm = z.object({
   subject: z.string(),
   content: z.string(),
   priority: z.string(),
   sectorId: z.string(),
 })
 
-type CreateTicketForm = z.infer<typeof createTicketForm>
-
-interface CreateTicketProps {
-  hasNewTicket: () => void
-}
+type UpdateTicketForm = z.infer<typeof updateTicketForm>
 
 export function TicketDetail({ ticketId, open }: TicketDetailProps) {
-  const { sectors, user, holder } = useContext(AppContext)
+  const { sectors } = useContext(AppContext)
+
   const { data: ticket } = useQuery({
     queryKey: ['ticket', ticketId],
     queryFn: () => getTicket({ ticketId }),
@@ -58,56 +53,65 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
   })
 
   const { handleSubmit, register, formState, control } =
-    useForm<CreateTicketForm>({
+    useForm<UpdateTicketForm>({
       defaultValues: {
         // email: searchParams.get('email') ?? '',
         // password: searchParams.get('password') ?? '',
+        // subject: ticket?.title ?? '',
+        // content: ticket?.content ?? '',
+        // priority: ticket?.priority.toString() ?? '',
+        // sectorId: ticket?.sectorId ?? '',
       },
     })
 
-  const { mutateAsync: createTicketFn } = useMutation({
-    mutationFn: createTicket,
+  const { mutateAsync: updateTicketFn } = useMutation({
+    mutationFn: updateTicket,
   })
 
-  async function handleCreateTicket(data: CreateTicketForm) {
+  async function handleUpdateTicket(data: UpdateTicketForm) {
     console.log(data)
 
-    try {
-      const request = {
-        title: data.subject,
-        content: data.content,
-        priority: TicketPriority[data.priority as keyof typeof TicketPriority],
-        sectorId: data.sectorId,
-        userId: user.id,
-        holderId: holder.id,
-        status: TicketStatus.Open,
-      }
+    // try {
+    //   const request = {
+    //     title: data.subject,
+    //     content: data.content,
+    //     priority: TicketPriority[data.priority as keyof typeof TicketPriority],
+    //     sectorId: data.sectorId,
+    //     userId: user.id,
+    //     holderId: holder.id,
+    //     status: TicketStatus.Open,
+    //   }
 
-      const response = await createTicketFn(request)
+    //   const response = await updateTicketFn(request)
 
-      if (response.success) {
-        toast.success('Ticket created successfully')
-        document.getElementById('create-ticket-cancel')?.click()
-      } else {
-        toast.error('Something went wrong')
-      }
-    } catch {
-      toast.error('Something went wrong')
-    }
+    //   if (response.success) {
+    //     toast.success('Ticket updated successfully')
+    //     document.getElementById('update-ticket-cancel')?.click()
+    //   } else {
+    //     toast.error('Something went wrong')
+    //   }
+    // } catch {
+    //   toast.error('Something went wrong')
+    // }
   }
 
   return (
     <>
-      <DialogContent>
-        <form onSubmit={handleSubmit(handleCreateTicket)} className="space-y-4">
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit(handleUpdateTicket)} className="space-y-4">
           <DialogHeader>
-            <DialogTitle>Create Ticket</DialogTitle>
+            <DialogTitle>Ticket</DialogTitle>
             <DialogDescription>
               <div className="mt-5 space-y-3">
                 <Label className="left" htmlFor="subject">
                   Subject
                 </Label>
-                <Input id="subject" type="text" {...register('subject')} />
+                <Input
+                  id="subject"
+                  type="text"
+                  {...register('subject')}
+                  value={ticket?.title}
+                />
               </div>
               <div className="flex flex-row justify-between">
                 <div className="mt-5 space-y-3">
@@ -115,6 +119,7 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
                   <Controller
                     name="priority"
                     control={control}
+                    defaultValue={ticket?.priority.toString()} 
                     render={({
                       field: { name, onChange, value, disabled },
                     }) => {
@@ -129,7 +134,7 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
                             <SelectValue placeholder="Select the priority" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectGroup>
+                            <SelectGroup defaultValue={ticket?.priority}>
                               {Object.keys(TicketPriority)
                                 .filter((value) => isNaN(Number(value)))
                                 .map((priority) => {
@@ -155,6 +160,7 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
                   <Controller
                     name="sectorId"
                     control={control}
+                    defaultValue={ticket?.sectorId.toString()} 
                     render={({
                       field: { name, onChange, value, disabled },
                     }) => {
@@ -197,7 +203,7 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
           </DialogHeader>
           <DialogFooter>
             <DialogTrigger asChild>
-              <Button variant="outline" id="create-ticket-cancel">
+              <Button variant="outline" id="update-ticket-cancel">
                 Cancel
               </Button>
             </DialogTrigger>
