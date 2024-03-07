@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Mapping;
 using Application.Common.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
@@ -30,7 +31,9 @@ public class GetTicketByPriorityHandler(ILogger<GetTicketByPriorityHandler> logg
         {
             _logger.LogInformation("GetTicketsByPriority: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.Priority.ToString() == request.Priority)
+            var tickets = await _context.Tickets.Where(x => x.Priority!.ToString() == request.Priority)
+                                                .Include(x => x.Status)
+                                                .Include(x => x.Priority)
                                                 .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
@@ -50,6 +53,8 @@ public class GetTicketByPriorityHandler(ILogger<GetTicketByPriorityHandler> logg
                 Id = x.Id,
                 Title = x.Title,
                 Content = x.Content,
+                Status = x.Status!.Code,
+                Priority = x.Priority!.Code,
                 UserId = x.UserId,
                 HolderId = x.HolderId,
                 SectorId = x.SectorId

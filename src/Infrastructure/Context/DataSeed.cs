@@ -9,33 +9,83 @@ namespace Infrastructure.Context
     {
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetRequiredService<DataContext>();
-
-            if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            try
             {
-                context.Database.Migrate();
-            }
 
-            var storedHolders = context.Holders.ToList();
-            var storedSectors = context.Sectors.ToList();
-            var storedUsers = context.Users.ToList();
+                var context = serviceProvider.GetRequiredService<DataContext>();
 
-            if (!storedHolders.Where(x => x.Name == "Holder").Any())
-            {
-                var holders = new List<HolderEntity>
+                if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+                {
+                    context.Database.Migrate();
+                }
+
+                var storedHolders = context.Holders.ToList();
+                var storedSectors = context.Sectors.ToList();
+                var storedUsers = context.Users.ToList();
+                var storedTickets = context.Tickets.ToList();
+                var storedStatuses = context.Statuses.ToList();
+                var storedPriorities = context.Priorities.ToList();
+
+                if (!context.Statuses.Any())
+                {
+                    var statuses = new List<StatusEntity>
+                {
+                    new() {
+                        Code = "Open",
+                        Description = "Open"
+                    },
+                    new() {
+                        Code = "Active",
+                        Description = "Active"
+                    },
+                    new() {
+                        Code = "Closed",
+                        Description = "Closed"
+                    }
+                };
+
+                    await context.Statuses.AddRangeAsync(statuses);
+                    await context.SaveChangesAsync();
+                }
+
+                if (!context.Priorities.Any())
+                {
+                    var priorities = new List<PriorityEntity>
+                {
+                    new() {
+                        Code = "Low",
+                        Description = "Low"
+                    },
+                    new() {
+                        Code = "Medium",
+                        Description = "Medium"
+                    },
+                    new() {
+                        Code = "High",
+                        Description = "High"
+                    }
+                };
+
+                    await context.Priorities.AddRangeAsync(priorities);
+                    await context.SaveChangesAsync();
+                }
+
+                if (!storedHolders.Where(x => x.Name == "Holder").Any())
+                {
+                    var holders = new List<HolderEntity>
                 {
                     new() {
                         Name = "Holder",
                     }
                 };
 
-                await context.Holders.AddRangeAsync(holders);
-                await context.SaveChangesAsync();
-            }
+                    await context.Holders.AddRangeAsync(holders);
+                    await context.SaveChangesAsync();
+                }
 
-            if (!storedSectors.Where(x => x.Name == "Office 1").Any() || !storedSectors.Where(x => x.Name == "Office 2").Any())
-            {
-                var sectors = new List<SectorEntity>
+                if (!storedSectors.Where(x => x.Name == "Office 1").Any() || !storedSectors.Where(x => x.Name == "Office 2").Any())
+                {
+                    var sectors = new List<SectorEntity>
                 {
                     new() {
                         Name = "Office 1",
@@ -47,13 +97,13 @@ namespace Infrastructure.Context
                     }
                 };
 
-                await context.Sectors.AddRangeAsync(sectors);
-                await context.SaveChangesAsync();
-            }
+                    await context.Sectors.AddRangeAsync(sectors);
+                    await context.SaveChangesAsync();
+                }
 
-            if (!storedUsers.Where(x => x.Name == "Admin").Any())
-            {
-                var users = new List<UserEntity>
+                if (!storedUsers.Where(x => x.Name == "Admin").Any())
+                {
+                    var users = new List<UserEntity>
                 {
                     new() {
                         Name = "Admin",
@@ -65,19 +115,22 @@ namespace Infrastructure.Context
                     }
                 };
 
-                await context.Users.AddRangeAsync(users);
-                await context.SaveChangesAsync();
-            }
+                    await context.Users.AddRangeAsync(users);
+                    await context.SaveChangesAsync();
+                }
 
-            if (!context.Tickets.Any())
-            {
-                var tickets = new List<TicketEntity>
+                var statusOpen = context.Statuses.FirstOrDefault(x => x.Code == "Open");
+                var priorityLow = context.Priorities.FirstOrDefault(x => x.Code == "Low");
+
+                if (!context.Tickets.Any())
+                {
+                    var tickets = new List<TicketEntity>
                 {
                     new() {
                         Title = "Ticket 1",
                         Content = "Content 1",
-                        Status = TicketStatus.Open,
-                        Priority = TicketPriority.Low,
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
@@ -86,8 +139,8 @@ namespace Infrastructure.Context
                     new() {
                         Title = "Ticket 2",
                         Content = "Content 2",
-                        Status = TicketStatus.Open,
-                        Priority = TicketPriority.Low,
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
@@ -95,8 +148,13 @@ namespace Infrastructure.Context
                     }
                 };
 
-                await context.Tickets.AddRangeAsync(tickets);
-                await context.SaveChangesAsync();
+                    await context.Tickets.AddRangeAsync(tickets);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }

@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240224165615_Init")]
+    [Migration("20240307195551_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -92,6 +92,42 @@ namespace Infrastructure.Migrations
                     b.ToTable("Holders", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.PriorityEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("description");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("Priorities", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.SectorEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -127,6 +163,42 @@ namespace Infrastructure.Migrations
                     b.ToTable("Sectors", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.StatusEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("description");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("Statuses", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.TicketEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -155,18 +227,18 @@ namespace Infrastructure.Migrations
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Priority")
+                    b.Property<Guid>("PriorityId")
                         .HasMaxLength(100)
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("priority");
 
                     b.Property<Guid>("SectorId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("sector_id");
 
-                    b.Property<int>("Status")
+                    b.Property<Guid>("StatusId")
                         .HasMaxLength(100)
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("status");
 
                     b.Property<string>("Title")
@@ -190,7 +262,11 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("Id");
 
+                    b.HasIndex("PriorityId");
+
                     b.HasIndex("SectorId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -288,9 +364,21 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.PriorityEntity", "Priority")
+                        .WithMany("Tickets")
+                        .HasForeignKey("PriorityId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.SectorEntity", "Sector")
                         .WithMany("Tickets")
                         .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.StatusEntity", "Status")
+                        .WithMany("Tickets")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -304,7 +392,11 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Holder");
 
+                    b.Navigation("Priority");
+
                     b.Navigation("Sector");
+
+                    b.Navigation("Status");
 
                     b.Navigation("User");
                 });
@@ -344,7 +436,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Tickets");
                 });
 
+            modelBuilder.Entity("Domain.Entities.PriorityEntity", b =>
+                {
+                    b.Navigation("Tickets");
+                });
+
             modelBuilder.Entity("Domain.Entities.SectorEntity", b =>
+                {
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Domain.Entities.StatusEntity", b =>
                 {
                     b.Navigation("Tickets");
                 });

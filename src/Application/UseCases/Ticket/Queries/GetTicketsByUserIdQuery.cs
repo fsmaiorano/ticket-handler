@@ -2,6 +2,7 @@
 using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
@@ -32,6 +33,8 @@ public class GetTicketByUserIdHandler(ILogger<GetTicketByIdHandler> logger, IDat
             _logger.LogInformation("GetTicketsByUserId: {@Request}", request);
 
             var tickets = await _context.Tickets.Where(x => x.UserId == request.UserId)
+                                                .Include(x => x.Status)
+                                                .Include(x => x.Priority)
                                                 .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
@@ -42,6 +45,7 @@ public class GetTicketByUserIdHandler(ILogger<GetTicketByIdHandler> logger, IDat
                 return response;
             }
 
+
             response.Success = true;
             response.Message = "Tickets found";
             response.Tickets = tickets.Items.Select(x => new TicketDto
@@ -49,6 +53,8 @@ public class GetTicketByUserIdHandler(ILogger<GetTicketByIdHandler> logger, IDat
                 Id = x.Id,
                 Title = x.Title,
                 Content = x.Content,
+                Status = x.Status!.Code,
+                Priority = x.Priority!.Code,
                 UserId = x.UserId,
                 HolderId = x.HolderId,
                 SectorId = x.SectorId

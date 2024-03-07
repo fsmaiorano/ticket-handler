@@ -26,7 +26,8 @@ public class Testing
         _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
 
         using var scope = _scopeFactory.CreateScope();
-        //_authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+
+        SeedData().Wait();
     }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
@@ -121,4 +122,60 @@ public class Testing
     //    using var client = await CreateHttpClient();
     //    return await client.GetAsync(url);
     //}
+
+    private static async Task SeedData()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var status = new Domain.Entities.StatusEntity
+        {
+            Code = "Open",
+            Description = "Open"
+        };
+
+        context.Statuses.Add(status);
+
+        status = new Domain.Entities.StatusEntity
+        {
+            Code = "Closed",
+            Description = "Closed"
+        };
+
+        context.Statuses.Add(status);
+
+        status = new Domain.Entities.StatusEntity
+        {
+            Code = "Active",
+            Description = "Active"
+        };
+
+        context.Statuses.Add(status);
+
+        var priority = new Domain.Entities.PriorityEntity
+        {
+            Code = "Low",
+            Description = "Low"
+        };
+
+        context.Priorities.Add(priority);
+
+        priority = new Domain.Entities.PriorityEntity
+        {
+            Code = "Medium",
+            Description = "Medium"
+        };
+
+        context.Priorities.Add(priority);
+
+        priority = new Domain.Entities.PriorityEntity
+        {
+            Code = "High",
+            Description = "High"
+        };
+
+        context.Priorities.Add(priority);
+
+        context.SaveChanges();
+    }
 }

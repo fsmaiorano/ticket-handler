@@ -2,6 +2,7 @@
 using Application.Common.Mapping;
 using Application.Common.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Ticket.Queries;
@@ -31,7 +32,9 @@ public class GetTicketByStatusHandler(ILogger<GetTicketByStatusHandler> logger, 
         {
             _logger.LogInformation("GetTicketsByStatus: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.Status.ToString() == request.Status)
+            var tickets = await _context.Tickets.Where(x => x.Status!.ToString() == request.Status)
+                                                .Include(x => x.Status)
+                                                .Include(x => x.Priority)
                                                 .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
