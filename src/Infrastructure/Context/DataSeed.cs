@@ -145,7 +145,147 @@ namespace Infrastructure.Context
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
                         UserId = context.Users.FirstOrDefault()!.Id
-                    }
+                    },
+                    new() {
+                        Title = "Ticket 3",
+                        Content = "Content 3",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 4",
+                        Content = "Content 4",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 5",
+                        Content = "Content 5",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 6",
+                        Content = "Content 6",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 7",
+                        Content = "Content 7",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 8",
+                        Content = "Content 8",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 9",
+                        Content = "Content 9",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 10",
+                        Content = "Content 10",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 11",
+                        Content = "Content 11",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 12",
+                        Content = "Content 12",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 13",
+                        Content = "Content 13",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 14",
+                        Content = "Content 14",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 15",
+                        Content = "Content 15",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Title = "Ticket 16",
+                        Content = "Content 16",
+                        StatusId = statusOpen!.Id,
+                        PriorityId = priorityLow!.Id,
+                        AssigneeId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id
+                    },
                 };
 
                     await context.Tickets.AddRangeAsync(tickets);
