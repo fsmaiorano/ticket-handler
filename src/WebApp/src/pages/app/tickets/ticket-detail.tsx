@@ -27,10 +27,11 @@ import { z } from 'zod'
 
 import { Ticket } from '@/models/ticket'
 import { updateTicket } from '@/services/update-ticket'
+import { toast } from 'sonner'
 
 export interface TicketDetailProps {
   ticket: Ticket
-  open: boolean
+  hasUpdateTicket: () => void
 }
 
 const updateTicketForm = z.object({
@@ -42,8 +43,8 @@ const updateTicketForm = z.object({
 
 type UpdateTicketForm = z.infer<typeof updateTicketForm>
 
-export function TicketDetail({ ticket, open }: TicketDetailProps) {
-  const { sectors } = useContext(AppContext)
+export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
+  const { sectors, user, holder } = useContext(AppContext)
 
   // const { data: ticket } = useQuery({
   //   queryKey: ['ticket', ticketId, open],
@@ -54,12 +55,8 @@ export function TicketDetail({ ticket, open }: TicketDetailProps) {
   const { handleSubmit, register, formState, control } =
     useForm<UpdateTicketForm>({
       defaultValues: {
-        // email: searchParams.get('email') ?? '',
-        // password: searchParams.get('password') ?? '',
         subject: ticket?.title ?? '',
         content: ticket?.content ?? '',
-        // priority: ticket?.priority.toString() ?? '',
-        // sectorId: ticket?.sectorId ?? '',
       },
     })
 
@@ -70,28 +67,30 @@ export function TicketDetail({ ticket, open }: TicketDetailProps) {
   async function handleUpdateTicket(data: UpdateTicketForm) {
     console.log(data)
 
-    // try {
-    //   const request = {
-    //     title: data.subject,
-    //     content: data.content,
-    //     priority: TicketPriority[data.priority as keyof typeof TicketPriority],
-    //     sectorId: data.sectorId,
-    //     userId: user.id,
-    //     holderId: holder.id,
-    //     status: TicketStatus.Open,
-    //   }
+    try {
+      const request = {
+        id: ticket.id,
+        title: data.subject,
+        content: data.content,
+        priority: data.priority,
+        sectorId: data.sectorId,
+        userId: user.id,
+        holderId: holder.id,
+        status: ticket.status,
+      }
 
-    //   const response = await updateTicketFn(request)
+      const response = await updateTicketFn(request)
 
-    //   if (response.success) {
-    //     toast.success('Ticket updated successfully')
-    //     document.getElementById('update-ticket-cancel')?.click()
-    //   } else {
-    //     toast.error('Something went wrong')
-    //   }
-    // } catch {
-    //   toast.error('Something went wrong')
-    // }
+      if (response.status === 204) {
+        toast.success('Ticket updated successfully')
+        document.getElementById('update-ticket-cancel')?.click()
+        hasUpdateTicket()
+      } else {
+        toast.error('Something went wrong')
+      }
+    } catch {
+      toast.error('Something went wrong')
+    }
   }
 
   return (
@@ -105,11 +104,7 @@ export function TicketDetail({ ticket, open }: TicketDetailProps) {
                 <Label className="left" htmlFor="subject">
                   Subject
                 </Label>
-                <Input
-                  id="subject"
-                  type="text"
-                  {...register('subject')}
-                />
+                <Input id="subject" type="text" {...register('subject')} />
               </div>
               <div className="flex flex-row justify-between">
                 <div className="mt-5 space-y-3">

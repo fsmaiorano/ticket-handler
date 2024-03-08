@@ -128,6 +128,7 @@ export function Tickets() {
                   return (
                     <TicketTableRow
                       key={ticket.id}
+                      reloadTicketList={reloadTickets}
                       ticket={{
                         ...ticket,
                       }}

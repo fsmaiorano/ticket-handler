@@ -16,9 +16,10 @@ import { TicketDetail } from './ticket-detail'
 
 export interface TicketTableRowProps {
   ticket: Ticket
+  reloadTicketList: () => void
 }
 
-export function TicketTableRow({ ticket }: TicketTableRowProps) {
+export function TicketTableRow({ ticket, reloadTicketList}: TicketTableRowProps) {
   const [isSetDetailsOpen, setDetailsOpen] = useState(false)
   const { sectors } = useContext(AppContext)
   const [selectedSector, setSelectedSector] = useState<Sector>()
@@ -86,6 +87,10 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
   //       },
   //     })
 
+  const handleRefreshTickets = () => {
+    reloadTicketList();
+  }
+
   return (
     <TableRow>
       <TableCell>
@@ -96,7 +101,7 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
               <span className="sr-only">Ticket detail</span>
             </Button>
           </DialogTrigger>
-          <TicketDetail ticket={ticket} open={isSetDetailsOpen} />
+          <TicketDetail ticket={ticket} hasUpdateTicket={handleRefreshTickets}/>
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">
