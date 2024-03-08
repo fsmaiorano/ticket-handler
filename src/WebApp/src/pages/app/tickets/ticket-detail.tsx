@@ -46,12 +46,6 @@ type UpdateTicketForm = z.infer<typeof updateTicketForm>
 export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
   const { sectors, user, holder } = useContext(AppContext)
 
-  // const { data: ticket } = useQuery({
-  //   queryKey: ['ticket', ticketId, open],
-  //   queryFn: () => getTicket({ ticketId }),
-  //   enabled: open,
-  // })
-
   const { handleSubmit, register, formState, control } =
     useForm<UpdateTicketForm>({
       defaultValues: {

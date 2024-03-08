@@ -45,10 +45,7 @@ export function CreateTicket({ hasNewTicket }: CreateTicketProps) {
 
   const { handleSubmit, register, formState, control } =
     useForm<CreateTicketForm>({
-      defaultValues: {
-        // email: searchParams.get('email') ?? '',
-        // password: searchParams.get('password') ?? '',
-      },
+      defaultValues: {},
     })
 
   const { mutateAsync: createTicketFn } = useMutation({

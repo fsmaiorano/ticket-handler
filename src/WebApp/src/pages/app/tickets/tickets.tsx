@@ -75,15 +75,6 @@ export function Tickets() {
     reloadTickets()
   }
 
-  //   useEffect(() => {
-  //     const fetchSectors = async () => {
-  //       const getSectorsResponse = await getSectors({ holderId: user.holderId })
-  //       sectorsHandler(getSectorsResponse)
-  //     }
-
-  //     fetchSectors()
-  //   }, [user.holderId])
-
   return (
     <>
       <Helmet title="Tickets" />
