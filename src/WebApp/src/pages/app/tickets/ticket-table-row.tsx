@@ -96,7 +96,7 @@ export function TicketTableRow({ ticket }: TicketTableRowProps) {
               <span className="sr-only">Ticket detail</span>
             </Button>
           </DialogTrigger>
-          <TicketDetail ticketId={ticket.id} open={isSetDetailsOpen} />
+          <TicketDetail ticket={ticket} open={isSetDetailsOpen} />
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">

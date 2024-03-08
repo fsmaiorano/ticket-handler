@@ -25,12 +25,11 @@ import { useContext } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { getTicket } from '@/services/get-ticket'
+import { Ticket } from '@/models/ticket'
 import { updateTicket } from '@/services/update-ticket'
-import { useQuery } from '@tanstack/react-query'
 
 export interface TicketDetailProps {
-  ticketId: string
+  ticket: Ticket
   open: boolean
 }
 
@@ -43,22 +42,22 @@ const updateTicketForm = z.object({
 
 type UpdateTicketForm = z.infer<typeof updateTicketForm>
 
-export function TicketDetail({ ticketId, open }: TicketDetailProps) {
+export function TicketDetail({ ticket, open }: TicketDetailProps) {
   const { sectors } = useContext(AppContext)
 
-  const { data: ticket } = useQuery({
-    queryKey: ['ticket', ticketId],
-    queryFn: () => getTicket({ ticketId }),
-    enabled: open,
-  })
+  // const { data: ticket } = useQuery({
+  //   queryKey: ['ticket', ticketId, open],
+  //   queryFn: () => getTicket({ ticketId }),
+  //   enabled: open,
+  // })
 
   const { handleSubmit, register, formState, control } =
     useForm<UpdateTicketForm>({
       defaultValues: {
         // email: searchParams.get('email') ?? '',
         // password: searchParams.get('password') ?? '',
-        // subject: ticket?.title ?? '',
-        // content: ticket?.content ?? '',
+        subject: ticket?.title ?? '',
+        content: ticket?.content ?? '',
         // priority: ticket?.priority.toString() ?? '',
         // sectorId: ticket?.sectorId ?? '',
       },
@@ -110,7 +109,6 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
                   id="subject"
                   type="text"
                   {...register('subject')}
-                  value={ticket?.title}
                 />
               </div>
               <div className="flex flex-row justify-between">
@@ -119,7 +117,7 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
                   <Controller
                     name="priority"
                     control={control}
-                    defaultValue={ticket?.priority.toString()} 
+                    defaultValue={ticket?.priority.toString()}
                     render={({
                       field: { name, onChange, value, disabled },
                     }) => {
@@ -160,7 +158,7 @@ export function TicketDetail({ ticketId, open }: TicketDetailProps) {
                   <Controller
                     name="sectorId"
                     control={control}
-                    defaultValue={ticket?.sectorId.toString()} 
+                    defaultValue={ticket?.sectorId.toString()}
                     render={({
                       field: { name, onChange, value, disabled },
                     }) => {
