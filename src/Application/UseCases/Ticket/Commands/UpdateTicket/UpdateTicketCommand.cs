@@ -45,13 +45,67 @@ public class UpdateTicketCommandHandler(ILogger<UpdateTicketCommandHandler> logg
                 response.Message = "Ticket not found";
 
                 return response;
-            }   
+            }
 
             if (request.Title != null)
                 ticket.Title = request.Title;
 
             if (request.Content != null)
                 ticket.Content = request.Content;
+
+            if (request.HolderId != Guid.Empty)
+            {
+                var holder = await _context.Holders
+                    .Where(x => x.Id == request.HolderId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (holder is null)
+                {
+                    _logger.LogWarning("UpdateTicketCommand: Holder not found");
+                    response.Message = "Holder not found";
+
+                    return response;
+                }
+
+                if (holder.Id != ticket.HolderId)
+                    ticket.HolderId = holder.Id;
+            }
+
+            if (request.SectorId != Guid.Empty)
+            {
+                var sector = await _context.Sectors
+                    .Where(x => x.Id == request.SectorId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (sector is null)
+                {
+                    _logger.LogWarning("UpdateTicketCommand: Sector not found");
+                    response.Message = "Sector not found";
+
+                    return response;
+                }
+
+                if (sector.Id != ticket.SectorId)
+                    ticket.SectorId = sector.Id;
+            }
+
+            if (request.AssigneeId != Guid.Empty)
+            {
+                var assignee = await _context.Users
+                    .Where(x => x.Id == request.AssigneeId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (assignee is null)
+                {
+                    _logger.LogWarning("UpdateTicketCommand: Assignee not found");
+                    response.Message = "Assignee not found";
+
+                    return response;
+                }
+
+                if (assignee.Id != ticket.AssigneeId)
+                    ticket.AssigneeId = assignee.Id;
+            }
 
             if (request.Status != null)
             {
@@ -86,7 +140,6 @@ public class UpdateTicketCommandHandler(ILogger<UpdateTicketCommandHandler> logg
 
                 ticket.PriorityId = priority.Id;
             }
-
 
             await _context.SaveChangesAsync(cancellationToken);
 

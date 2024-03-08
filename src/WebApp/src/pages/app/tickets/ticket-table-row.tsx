@@ -23,7 +23,6 @@ export function TicketTableRow({ ticket, reloadTicketList}: TicketTableRowProps)
   const [isSetDetailsOpen, setDetailsOpen] = useState(false)
   const { sectors } = useContext(AppContext)
   const [selectedSector, setSelectedSector] = useState<Sector>()
-  //   const queryClient = useQueryClient()
 
   useEffect(() => {
     if (ticket.sectorId) {
