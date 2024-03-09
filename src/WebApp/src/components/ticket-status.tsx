@@ -1,27 +1,27 @@
-export type TicketStatus = 'open' | 'active' | 'closed'
+import { TicketStatus as ImportedTicketStatus } from '@/models/ticket-status'
 
-interface TicketStatusPros {
-  status: TicketStatus
+interface TicketStatusProps {
+  status: ImportedTicketStatus
 }
 
-const ticketStatusMap: Record<TicketStatus, string> = {
-  open: 'Open',
-  active: 'Active',
-  closed: 'Closed',
+const ticketStatusMap: Record<ImportedTicketStatus, string> = {
+  [ImportedTicketStatus.Open]: 'Open',
+  [ImportedTicketStatus.Closed]: 'Closed',
+  [ImportedTicketStatus.Active]: 'Active',
 }
 
-export function TicketStatus({ status }: TicketStatusPros) {
+export function TicketStatus({ status }: TicketStatusProps) {
   return (
     <div className="flex items-center gap-2">
-      {status === 'closed' && (
+      {status === ImportedTicketStatus.Closed && (
         <span className="h-2 w-2 rounded-full bg-rose-500" />
       )}
 
-      {status === 'open' && (
+      {status === ImportedTicketStatus.Open && (
         <span className="h-2 w-2 rounded-full bg-emerald-500" />
       )}
 
-      {['active'].includes(status) && (
+      {status === ImportedTicketStatus.Active && (
         <span className="h-2 w-2 rounded-full bg-amber-500" />
       )}
 
