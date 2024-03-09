@@ -135,6 +135,7 @@ namespace Infrastructure.Context
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
                         UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-1)
                     },
                     new() {
                         Title = "Ticket 2",
@@ -144,7 +145,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-1)
                     },
                     new() {
                         Title = "Ticket 3",
@@ -154,7 +156,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-2)
                     },
                     new() {
                         Title = "Ticket 4",
@@ -164,7 +167,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-10)
                     },
                     new() {
                         Title = "Ticket 5",
@@ -174,7 +178,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-12)
                     },
                     new() {
                         Title = "Ticket 6",
@@ -184,7 +189,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-25)
                     },
                     new() {
                         Title = "Ticket 7",
@@ -194,7 +200,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-2)
                     },
                     new() {
                         Title = "Ticket 8",
@@ -204,7 +211,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now
                     },
                     new() {
                         Title = "Ticket 9",
@@ -214,7 +222,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now
                     },
                     new() {
                         Title = "Ticket 10",
@@ -224,7 +233,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-110)
                     },
                     new() {
                         Title = "Ticket 11",
@@ -234,7 +244,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-12)
                     },
                     new() {
                         Title = "Ticket 12",
@@ -244,7 +255,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-3)
                     },
                     new() {
                         Title = "Ticket 13",
@@ -254,7 +266,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-30)
                     },
                     new() {
                         Title = "Ticket 14",
@@ -264,7 +277,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-1)
                     },
                     new() {
                         Title = "Ticket 15",
@@ -274,7 +288,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-6)
                     },
                     new() {
                         Title = "Ticket 16",
@@ -284,7 +299,8 @@ namespace Infrastructure.Context
                         AssigneeId = context.Users.FirstOrDefault()!.Id,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         SectorId = context.Sectors.FirstOrDefault()!.Id,
-                        UserId = context.Users.FirstOrDefault()!.Id
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        CreatedAt = DateTime.Now.AddDays(-9)
                     },
                 };
 
