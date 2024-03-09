@@ -40,7 +40,7 @@ export function TicketTableFilter() {
     {
       resolver: zodResolver(orderFilterSchema),
       defaultValues: {
-        sector: sector ?? '',
+        sector: sector ?? 'all',
         title: title ?? '',
         status: status ?? 'all',
         priority: priority ?? 'all',
@@ -90,9 +90,10 @@ export function TicketTableFilter() {
     })
 
     reset({
-      sector: '',
+      sector: 'all',
       title: '',
       status: 'all',
+      priority: 'all',
     })
   }
 
