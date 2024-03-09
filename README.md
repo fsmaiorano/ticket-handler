@@ -3,6 +3,9 @@
 ### Description
 
 This project is a ticket handler system, where you can create tickets, assign them to a user, and add comments to the ticket.
+I'm working on this project to improve my skills in .NET Core and to learn new technologies.
+
+### Features
 
 ### How to run
 
@@ -44,9 +47,15 @@ dotnet test
 
 ## Backend
 
+- [ ] Assign ticket to a user
+- [ ] Add comments to a ticket
+
 ## Frontend
 
 - [ ] Implement skeleton loading
+- [ ] Assign ticket to a user
+- [ ] Add comments to a ticket
+
 
 ### To Refactor
 

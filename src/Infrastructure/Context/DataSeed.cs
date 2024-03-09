@@ -94,7 +94,7 @@ namespace Infrastructure.Context
                     new() {
                         Name = "Office 2",
                         HolderId = context.Holders.FirstOrDefault()!.Id
-                    }
+                    },
                 };
 
                     await context.Sectors.AddRangeAsync(sectors);
@@ -110,6 +110,30 @@ namespace Infrastructure.Context
                         Email = "admin@tickethandler.com",
                         Password = "admin",
                         Role = UserRoles.Administrator,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        Sectors = [.. context.Sectors]
+                    },
+                    new() {
+                        Name = "Technician",
+                        Email = "tech@tickethandler.com",
+                        Password = "tech",
+                        Role = UserRoles.Technician,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        Sectors = [.. context.Sectors]
+                    },
+                          new() {
+                        Name = "Technician2",
+                        Email = "tech2@tickethandler.com",
+                        Password = "tech2",
+                        Role = UserRoles.Technician,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        Sectors = [.. context.Sectors]
+                    },
+                    new() {
+                        Name = "Operator",
+                        Email = "op@tickethandler.com",
+                        Password = "op",
+                        Role = UserRoles.Operator,
                         HolderId = context.Holders.FirstOrDefault()!.Id,
                         Sectors = [.. context.Sectors]
                     }
