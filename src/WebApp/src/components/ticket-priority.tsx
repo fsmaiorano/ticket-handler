@@ -17,11 +17,11 @@ export function TicketPriority({ priority }: TicketPriorityProps) {
         <span className="h-2 w-2 rounded-full bg-rose-500" />
       )}
 
-      {priority === ImportedTicketPriority.Medium && (
+      {priority === ImportedTicketPriority.Low && (
         <span className="h-2 w-2 rounded-full bg-emerald-500" />
       )}
 
-      {priority === ImportedTicketPriority.Low && (
+      {priority === ImportedTicketPriority.Medium && (
         <span className="h-2 w-2 rounded-full bg-amber-500" />
       )}
 

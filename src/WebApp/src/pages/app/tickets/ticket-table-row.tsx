@@ -19,7 +19,10 @@ export interface TicketTableRowProps {
   reloadTicketList: () => void
 }
 
-export function TicketTableRow({ ticket, reloadTicketList}: TicketTableRowProps) {
+export function TicketTableRow({
+  ticket,
+  reloadTicketList,
+}: TicketTableRowProps) {
   const [isSetDetailsOpen, setDetailsOpen] = useState(false)
   const { sectors } = useContext(AppContext)
   const [selectedSector, setSelectedSector] = useState<Sector>()
@@ -87,7 +90,7 @@ export function TicketTableRow({ ticket, reloadTicketList}: TicketTableRowProps)
   //     })
 
   const handleRefreshTickets = () => {
-    reloadTicketList();
+    reloadTicketList()
   }
 
   return (
@@ -100,7 +103,10 @@ export function TicketTableRow({ ticket, reloadTicketList}: TicketTableRowProps)
               <span className="sr-only">Ticket detail</span>
             </Button>
           </DialogTrigger>
-          <TicketDetail ticket={ticket} hasUpdateTicket={handleRefreshTickets}/>
+          <TicketDetail
+            ticket={ticket}
+            hasUpdateTicket={handleRefreshTickets}
+          />
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">

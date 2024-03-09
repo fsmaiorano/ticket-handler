@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Application.Common.Mapping;
 using Application.Common.Models;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,10 @@ public record GetTicketsByHolderIdQuery : IRequest<GetTicketsByHolderIdResponse>
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
     public Guid HolderId { get; set; }
+    public string? Sector { get; set; }
+    public string? Status { get; set; }
+    public string? Title { get; set; }
+    public string? Priority { get; set; }
 }
 
 public class GetTicketsByHolderIdResponse : PaginatedBaseResponse
@@ -33,12 +38,29 @@ public class GetTicketByHolderHandler(ILogger<GetTicketByIdHandler> logger, IDat
         {
             _logger.LogInformation("GetTicketsByHolderId: {@Request}", request);
 
-            var tickets = await _context.Tickets.Where(x => x.HolderId == request.HolderId)
-                                                .Include(x => x.Status)
-                                                .Include(x => x.Priority)
-                                                .PaginatedListAsync(request.PageNumber, request.PageSize);
+            IQueryable<TicketEntity> tickets = _context.Tickets
+                                               .Where(x => x.HolderId == request.HolderId)
+                                               .Include(x => x.Status)
+                                               .Include(x => x.Priority)
+                                               .Include(x => x.Sector)
+                                               .Include(x => x.User);
 
-            if (tickets is null)
+            if (!string.IsNullOrEmpty(request.Title))
+                tickets = tickets.Where(x => EF.Functions.Like(x.Title, $"%{request.Title}%"));
+
+            if (!string.IsNullOrEmpty(request.Sector) && !request.Sector.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+                tickets = tickets.Where(x => EF.Functions.Like(x.Sector!.Name, request.Sector));
+
+
+            if (!string.IsNullOrEmpty(request.Status) && !request.Status.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+                tickets = tickets.Where(x => EF.Functions.Like(x.Status!.Code, request.Status));
+
+            if (!string.IsNullOrEmpty(request.Priority) && !request.Priority.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+                tickets = tickets.Where(x => EF.Functions.Like(x.Priority!.Code, request.Priority));
+
+            var paginatedList = await PaginatedList<TicketEntity>.CreateAsync(tickets, request.PageNumber, request.PageSize);
+
+            if (paginatedList is null)
             {
                 _logger.LogWarning("GetTicketsByHolderId: Tickets not");
                 response.Message = "Tickets not found";
@@ -48,9 +70,9 @@ public class GetTicketByHolderHandler(ILogger<GetTicketByIdHandler> logger, IDat
 
             response.Success = true;
             response.Message = "Tickets found";
-            response.PageNumber = tickets.PageNumber;
-            response.TotalPages = tickets.TotalPages;
-            response.Tickets = tickets.Items.Select(x => new TicketDto
+            response.PageNumber = paginatedList.PageNumber;
+            response.TotalPages = paginatedList.TotalPages;
+            response.Tickets = paginatedList.Items.Select(x => new TicketDto
             {
                 Id = x.Id,
                 Title = x.Title,
