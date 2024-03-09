@@ -44,40 +44,7 @@ dotnet test
 
 ## Backend
 
-- [x] Crud Holders, Sectors, Users and Tickets
-- [x] Create Entity Framework Mapping and Context
-- [x] Apply InMemoryDatabase for testing
-- [x] Create basic authentication
-- [ ] Implement JWT
-
-- [x] Get tickets by holder
-- [x] Get tickets by assignee
-- [x] Get tickets by sector
-- [x] Get tickets by user
-- [x] Get tickets by status - need rewrite
-- [x] Get tickets by priority - need rewrite
-- [ ] Get tickets by date - Ordery by creation date
-
-- [x] Get Answers of an ticket
-
-- [x] Assign ticket to user
-
-- [x] Create comment on ticket
-
-- [ ] Create Guid to trace User session requests
-- [ ] Create handler to write integration tests in database to help populate data
-- [ ] Create another container with redis to store logs
-
 ## Frontend
-
-- [ ] Filter tickets by status
-- [ ] Filter tickets by priority
-- [ ] Filter tickets by date
-- [ ] Filter tickets by status
-- [ ] Filter tickets by priority
-- [ ] Filter tickets by assignee
-- [ ] Filter tickets by sector
-- [ ] Filter tickets by user
 
 - [ ] Implement skeleton loading
 
