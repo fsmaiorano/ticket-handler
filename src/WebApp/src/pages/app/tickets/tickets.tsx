@@ -24,6 +24,10 @@ import { TicketTableRow } from './ticket-table-row'
 export function Tickets() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user, sectorsHandler } = useContext(AppContext)
+  const sector = searchParams.get('sector')
+  const title = searchParams.get('title')
+  const status = searchParams.get('status')
+  const priority = searchParams.get('priority')
   const queryClient = useQueryClient()
 
   const pageSize = 10
@@ -46,10 +50,14 @@ export function Tickets() {
   console.log(pageIndex)
 
   const { data: result, isLoading: isLoadingTickets } = useQuery({
-    queryKey: ['tickets', pageIndex],
+    queryKey: ['tickets', pageIndex, sector, title, status, priority],
     queryFn: () =>
       getTickets({
         holderId: user.holderId,
+        sector: sector ?? undefined,
+        title: title ?? undefined,
+        status: status ?? undefined,
+        priority: priority ?? undefined,
         page: pageIndex,
         pageSize: pageSize,
       }).then((res) => {
@@ -105,10 +113,10 @@ export function Tickets() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[64px]"></TableHead>
-                <TableHead className="">Sector</TableHead>
-                <TableHead className="">Title</TableHead>
-                <TableHead className="w-[120px]">Created in</TableHead>
-                <TableHead className="w-[120px]">Priority</TableHead>
+                <TableHead className="w-[400px]">Sector</TableHead>
+                <TableHead className="w-[400px]">Title</TableHead>
+                <TableHead className="w-[180px]">Created in</TableHead>
+                <TableHead className="w-[100px]">Priority</TableHead>
                 <TableHead className="w-[120px]">Status</TableHead>
               </TableRow>
             </TableHeader>

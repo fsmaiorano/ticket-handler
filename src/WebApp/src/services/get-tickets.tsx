@@ -3,6 +3,10 @@ import { Ticket } from '@/models/ticket'
 
 export interface GetTicketsParams {
   holderId: string
+  sector?: string
+  title?: string
+  status?: string
+  priority?: string
   page?: number
   pageSize?: number
 }
@@ -17,6 +21,10 @@ interface GetTicketsResponse {
 
 export async function getTickets({
   holderId,
+  sector,
+  title,
+  status,
+  priority,
   page,
   pageSize,
 }: GetTicketsParams) {
@@ -24,8 +32,14 @@ export async function getTickets({
     page = 1
   }
 
-  const response = await api.get<GetTicketsResponse>(
-    `/api/ticket/holder/${holderId}?page=${page}&pageSize=${pageSize}`,
-  )
+  const url = `/api/ticket/holder/${holderId}?sector=${sector ?? ''}
+  &title=${title ?? ''}
+  &status=${status ?? ''}
+  &priority=${priority ?? ''}
+  &page=${page}
+  &pageSize=${pageSize ?? 10}`
+
+  const response = await api.get<GetTicketsResponse>(url.trim())
+
   return response.data
 }

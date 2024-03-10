@@ -14,52 +14,64 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import { TicketStatus } from '@/components/ticket-status'
+import { AppContext } from '@/contexts/app-context'
 import { TicketPriority } from '@/models/ticket-priority'
+import { useContext } from 'react'
 
 const orderFilterSchema = z.object({
   sector: z.string().optional(),
   title: z.string().optional(),
   status: z.string().optional(),
+  priority: z.string().optional(),
 })
 
 type OrderFilterSchema = z.infer<typeof orderFilterSchema>
 
 export function TicketTableFilter() {
+  const { sectors } = useContext(AppContext)
   const [searchParams, setSearchParams] = useSearchParams()
   const sector = searchParams.get('sector')
   const title = searchParams.get('title')
   const status = searchParams.get('status')
+  const priority = searchParams.get('priority')
 
   const { register, handleSubmit, control, reset } = useForm<OrderFilterSchema>(
     {
       resolver: zodResolver(orderFilterSchema),
       defaultValues: {
-        sector: sector ?? '',
+        sector: sector ?? 'all',
         title: title ?? '',
         status: status ?? 'all',
+        priority: priority ?? 'all',
       },
     },
   )
 
-  function handleFilter({ sector, title, status }: OrderFilterSchema) {
-    console.log(sector, title, status);
+  function handleFilter(data: OrderFilterSchema) {
     setSearchParams((state) => {
-      if (sector) {
-        state.set('sector', sector.trim())
+      if (data.sector) {
+        state.set('sector', data.sector.trim())
       } else {
         state.delete('sector')
       }
 
-      if (title) {
-        state.set('title', title.trim())
+      if (data.title) {
+        state.set('title', data.title.trim())
       } else {
         state.delete('title')
       }
 
-      if (status) {
-        state.set('status', status.trim())
+      if (data.status) {
+        state.set('status', data.status.trim())
       } else {
         state.delete('status')
+      }
+
+      if (data.priority) {
+        state.set('priority', data.priority.trim())
+      } else {
+        state.delete('priority')
       }
 
       state.set('page', '1')
@@ -72,14 +84,16 @@ export function TicketTableFilter() {
       state.delete('sector')
       state.delete('title')
       state.delete('status')
+      state.delete('priority')
       state.set('page', '1')
       return state
     })
 
     reset({
-      sector: '',
+      sector: 'all',
       title: '',
       status: 'all',
+      priority: 'all',
     })
   }
 
@@ -90,11 +104,35 @@ export function TicketTableFilter() {
         className="flex items-center gap-2"
       >
         <span className="text-sm font-semibold">Filters:</span>
-        <Input
-          className="h-8 w-auto"
-          placeholder="Sector"
-          {...register('sector')}
-        />
+        <Controller
+          name="sector"
+          control={control}
+          render={({ field: { name, onChange, value, disabled } }) => {
+            return (
+              <Select
+                defaultValue="all"
+                name={name}
+                onValueChange={onChange}
+                value={value}
+                disabled={disabled}
+              >
+                <SelectTrigger className="h-8 w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {sectors.map((sector) => {
+                    return (
+                      <SelectItem key={sector.id} value={sector.name}>
+                        {sector.name}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+            )
+          }}
+        ></Controller>
         <Input
           className="h-8 w-[320px]"
           placeholder="Title"
@@ -117,18 +155,48 @@ export function TicketTableFilter() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  {Object.keys(TicketPriority)
-                    .filter((value) => isNaN(Number(value)))
-                    .map((priority) => {
-                      return (
-                        <SelectItem
-                          key={priority.toLocaleLowerCase()}
-                          value={priority}
-                        >
-                          {priority}
-                        </SelectItem>
-                      )
-                    })}
+                  {Object.keys(TicketStatus).map((status) => {
+                    return (
+                      <SelectItem
+                        key={status.toLocaleLowerCase()}
+                        value={status}
+                      >
+                        {status}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+            )
+          }}
+        ></Controller>
+        <Controller
+          name="priority"
+          control={control}
+          render={({ field: { name, onChange, value, disabled } }) => {
+            return (
+              <Select
+                defaultValue="all"
+                name={name}
+                onValueChange={onChange}
+                value={value}
+                disabled={disabled}
+              >
+                <SelectTrigger className="h-8 w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {Object.keys(TicketPriority).map((priority) => {
+                    return (
+                      <SelectItem
+                        key={priority.toLocaleLowerCase()}
+                        value={priority}
+                      >
+                        {priority}
+                      </SelectItem>
+                    )
+                  })}
                 </SelectContent>
               </Select>
             )
