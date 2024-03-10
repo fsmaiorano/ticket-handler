@@ -44,7 +44,7 @@ const updateTicketForm = z.object({
 type UpdateTicketForm = z.infer<typeof updateTicketForm>
 
 export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
-  const { sectors, user, holder } = useContext(AppContext)
+  const { sectors, user, users, holder } = useContext(AppContext)
 
   const { handleSubmit, register, formState, control } =
     useForm<UpdateTicketForm>({

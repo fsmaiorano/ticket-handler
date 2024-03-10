@@ -3,6 +3,7 @@ using Application.UseCases.Holder.Commands.CreateHolder;
 using Application.UseCases.Holder.Commands.DeleteHolder;
 using Application.UseCases.Holder.Commands.UpdateHolder;
 using Application.UseCases.Holder.Queries;
+using Application.UseCases.User.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -59,6 +60,28 @@ namespace WebApi.Controllers
             await Mediator.Send(new DeleteHolderCommand { Id = id });
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/users")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<UserDto>> GetUsersByHolderId(Guid id)
+        {
+            var getUsersByHolderIdResponse = await Mediator.Send(new GetUsersByHolderIdQuery { HolderId = id });
+
+            if (getUsersByHolderIdResponse.Users is null)
+                return NotFound();
+
+            if (!getUsersByHolderIdResponse.Success)
+                return BadRequest(getUsersByHolderIdResponse.Message);
+
+            var userDtos = getUsersByHolderIdResponse.Users.Select(user => new UserDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            });
+
+            return Ok(userDtos);
         }
     }
 }
