@@ -16,7 +16,7 @@ public record UpdateTicketCommand : IRequest<UpdateTicketResponse>
     public string? Priority { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
-    public Guid AssigneeId { get; set; }
+    public Guid? AssigneeId { get; set; }
 }
 
 public class UpdateTicketResponse : BaseResponse
@@ -89,7 +89,7 @@ public class UpdateTicketCommandHandler(ILogger<UpdateTicketCommandHandler> logg
                     ticket.SectorId = sector.Id;
             }
 
-            if (request.AssigneeId != Guid.Empty)
+            if (request.AssigneeId is not null && request.AssigneeId != Guid.Empty)
             {
                 var assignee = await _context.Users
                     .Where(x => x.Id == request.AssigneeId)

@@ -9,10 +9,12 @@ interface IAppContextProps {
 
 interface IAppContext {
   user: User
+  users: User[]
   holder: Holder
   sectors: Sector[]
   token: string
   userHandler: (user: User) => void
+  usersHandler: (users: User[]) => void
   tokenHandler: (token: string) => void
   holderHandler: (holder: Holder) => void
   sectorsHandler: (sectors: Sector[]) => void
@@ -22,6 +24,7 @@ export const AppContext = createContext({} as IAppContext)
 
 export function AppContextProvider({ children }: IAppContextProps) {
   const [user, setUser] = useState<User>({} as User)
+  const [users, setUsers] = useState<User[]>([] as User[])
   const [token, setToken] = useState<string>({} as string)
   const [holder, setHolder] = useState<Holder>({} as Holder)
   const [sectors, setSectors] = useState<Sector[]>([] as Sector[])
@@ -42,14 +45,20 @@ export function AppContextProvider({ children }: IAppContextProps) {
     sectors && setSectors(sectors)
   }
 
+  function usersHandler(holderUsers: User[]) {
+    users && setUsers(holderUsers)
+  }
+
   return (
     <AppContext.Provider
       value={{
         user,
+        users,
         token,
         holder,
         sectors,
         userHandler,
+        usersHandler,
         tokenHandler,
         holderHandler,
         sectorsHandler,

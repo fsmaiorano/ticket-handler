@@ -39,18 +39,24 @@ const updateTicketForm = z.object({
   content: z.string(),
   priority: z.string(),
   sectorId: z.string(),
+  userId: z.string(),
+  assigneeId: z.string(),
 })
 
 type UpdateTicketForm = z.infer<typeof updateTicketForm>
 
 export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
-  const { sectors, user, holder } = useContext(AppContext)
+  const { sectors, user, users, holder } = useContext(AppContext)
 
   const { handleSubmit, register, formState, control } =
     useForm<UpdateTicketForm>({
       defaultValues: {
         subject: ticket?.title ?? '',
         content: ticket?.content ?? '',
+        priority: ticket?.priority.toString() ?? '',
+        sectorId: ticket?.sectorId.toString() ?? '',
+        userId: ticket?.userId.toString() ?? '',
+        assigneeId: ticket?.assigneeId?.toString() ?? 'Assign a user',
       },
     })
 
@@ -71,6 +77,7 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
         userId: user.id,
         holderId: holder.id,
         status: ticket.status,
+        assigneeId: data?.assigneeId ?? null,
       }
 
       const response = await updateTicketFn(request)
@@ -122,19 +129,17 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup defaultValue={ticket?.priority}>
-                              {Object.keys(TicketPriority)
-                                .filter((value) => isNaN(Number(value)))
-                                .map((priority) => {
-                                  return (
-                                    <SelectItem
-                                      key={priority}
-                                      value={priority}
-                                      {...register('priority')}
-                                    >
-                                      {priority}
-                                    </SelectItem>
-                                  )
-                                })}
+                              {Object.keys(TicketPriority).map((priority) => {
+                                return (
+                                  <SelectItem
+                                    key={priority}
+                                    value={priority}
+                                    {...register('priority')}
+                                  >
+                                    {priority}
+                                  </SelectItem>
+                                )
+                              })}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -143,11 +148,11 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                   ></Controller>
                 </div>
                 <div className="mt-5 space-y-3">
-                  <Label htmlFor="email">Sector</Label>
+                  <Label htmlFor="sector">Sector</Label>
                   <Controller
                     name="sectorId"
                     control={control}
-                    defaultValue={ticket?.sectorId.toString()}
+                    defaultValue={ticket?.sectorId?.toString()}
                     render={({
                       field: { name, onChange, value, disabled },
                     }) => {
@@ -181,6 +186,43 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                     }}
                   ></Controller>
                 </div>
+              </div>
+              <div className="mt-5 space-y-3">
+                <Label htmlFor="assigned">Assigned to</Label>
+                <Controller
+                  name="assigneeId"
+                  control={control}
+                  defaultValue={ticket?.assigneeId?.toString() ?? 'Assign a user'}
+                  render={({ field: { name, onChange, value, disabled } }) => {
+                    return (
+                      <Select
+                        name={name}
+                        onValueChange={onChange}
+                        value={value}
+                        disabled={disabled}
+                      >
+                        <SelectTrigger className="w-[220px]">
+                          <SelectValue placeholder="Assign a user" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {users.map((user) => {
+                              return (
+                                <SelectItem
+                                  key={user.id}
+                                  value={user.id}
+                                  {...register('assigneeId')}
+                                >
+                                  {user.name}
+                                </SelectItem>
+                              )
+                            })}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )
+                  }}
+                ></Controller>
               </div>
               <div className="mt-5 space-y-3">
                 <Label htmlFor="content">Message</Label>

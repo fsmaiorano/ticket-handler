@@ -47,13 +47,16 @@ dotnet test
 
 ## Backend
 
-- [ ] Assign ticket to a user
+- [x] Assign ticket to a user
 - [ ] Add comments to a ticket
+- [ ] Implement Redis cache
+- [ ] Implement Dashboard - Show total tickets, tickets by status, tickets by priority
+- [ ] Implement Dashboard - Show tickets assigned to the user
 
 ## Frontend
 
 - [ ] Implement skeleton loading
-- [ ] Assign ticket to a user
+- [x] Assign ticket to a user
 - [ ] Add comments to a ticket
 
 

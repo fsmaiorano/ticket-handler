@@ -11,6 +11,7 @@ import {
 import { AppContext } from '@/contexts/app-context'
 import { getSectors } from '@/services/get-sectors'
 import { getTickets } from '@/services/get-tickets'
+import { getUsers } from '@/services/get-users'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { RefreshCcw } from 'lucide-react'
 import { useContext } from 'react'
@@ -23,11 +24,12 @@ import { TicketTableRow } from './ticket-table-row'
 
 export function Tickets() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { user, sectorsHandler } = useContext(AppContext)
+  const { user, usersHandler, sectorsHandler } = useContext(AppContext)
   const sector = searchParams.get('sector')
   const title = searchParams.get('title')
   const status = searchParams.get('status')
   const priority = searchParams.get('priority')
+  const assigned = searchParams.get('assigned')
   const queryClient = useQueryClient()
 
   const pageSize = 10
@@ -45,12 +47,22 @@ export function Tickets() {
         return res
       }),
     staleTime: Infinity,
+    enabled: true,
   })
 
-  console.log(pageIndex)
+  useQuery({
+    queryKey: ['users'],
+    queryFn: () =>
+      getUsers({ holderId: user.holderId }).then((res) => {
+        usersHandler(res)
+        return res
+      }),
+    staleTime: Infinity,
+    enabled: true,
+  })
 
   const { data: result, isLoading: isLoadingTickets } = useQuery({
-    queryKey: ['tickets', pageIndex, sector, title, status, priority],
+    queryKey: ['tickets', pageIndex, sector, title, status, priority, assigned],
     queryFn: () =>
       getTickets({
         holderId: user.holderId,
@@ -61,9 +73,10 @@ export function Tickets() {
         page: pageIndex,
         pageSize: pageSize,
       }).then((res) => {
+        console.log(res)
         return res
       }),
-    staleTime: Infinity,
+    enabled: true,
   })
 
   function reloadTickets() {
