@@ -14,9 +14,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import { TicketStatus } from '@/components/ticket-status'
 import { AppContext } from '@/contexts/app-context'
 import { TicketPriority } from '@/models/ticket-priority'
+import { TicketStatus } from '@/models/ticket-status'
 import { useContext } from 'react'
 
 const orderFilterSchema = z.object({
