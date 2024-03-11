@@ -111,7 +111,7 @@ namespace WebApi.Controllers
 
             var ticketDtos = new List<TicketDto>();
 
-            if (getTicketsByHolderIdResponse.Tickets is not null && getTicketsByHolderIdResponse.Tickets.Any())
+            if (getTicketsByHolderIdResponse.Tickets is not null && getTicketsByHolderIdResponse.Tickets.Count != 0)
             {
                 foreach (var ticket in getTicketsByHolderIdResponse.Tickets)
                 {
@@ -124,7 +124,7 @@ namespace WebApi.Controllers
                         Priority = ticket.Priority,
                         HolderId = ticket.HolderId,
                         SectorId = ticket.SectorId,
-                        AssigneeId = ticket.AssigneeId,
+                        AssigneeId = ticket.AssigneeId ?? null,
                         UserId = ticket.UserId,
                         CreatedAt = ticket.CreatedAt,
                         UpdatedAt = ticket.UpdatedAt

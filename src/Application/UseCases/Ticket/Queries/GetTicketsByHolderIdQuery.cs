@@ -81,7 +81,8 @@ public class GetTicketByHolderHandler(ILogger<GetTicketByIdHandler> logger, IDat
                 Priority = x.Priority!.Code,
                 UserId = x.UserId,
                 HolderId = x.HolderId,
-                SectorId = x.SectorId
+                SectorId = x.SectorId,
+                AssigneeId = x.AssigneeId,
             }).ToList();
         }
         catch (Exception ex)

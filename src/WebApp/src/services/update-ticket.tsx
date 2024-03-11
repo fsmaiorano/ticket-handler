@@ -9,7 +9,8 @@ export interface UpdateTicketRequest {
   priority: string
   userId: string
   holderId: string
-  sectorId: string
+  sectorId: string,
+  assigneeId?: string | null
 }
 
 export interface UpdateTicketResponse {

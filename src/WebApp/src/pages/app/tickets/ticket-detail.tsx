@@ -40,6 +40,7 @@ const updateTicketForm = z.object({
   priority: z.string(),
   sectorId: z.string(),
   userId: z.string(),
+  assigneeId: z.string(),
 })
 
 type UpdateTicketForm = z.infer<typeof updateTicketForm>
@@ -55,6 +56,7 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
         priority: ticket?.priority.toString() ?? '',
         sectorId: ticket?.sectorId.toString() ?? '',
         userId: ticket?.userId.toString() ?? '',
+        assigneeId: ticket?.assigneeId?.toString() ?? 'Assign a user',
       },
     })
 
@@ -75,6 +77,7 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
         userId: user.id,
         holderId: holder.id,
         status: ticket.status,
+        assigneeId: data?.assigneeId ?? null,
       }
 
       const response = await updateTicketFn(request)
@@ -126,18 +129,17 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup defaultValue={ticket?.priority}>
-                              {Object.keys(TicketPriority)
-                                .map((priority) => {
-                                  return (
-                                    <SelectItem
-                                      key={priority}
-                                      value={priority}
-                                      {...register('priority')}
-                                    >
-                                      {priority}
-                                    </SelectItem>
-                                  )
-                                })}
+                              {Object.keys(TicketPriority).map((priority) => {
+                                return (
+                                  <SelectItem
+                                    key={priority}
+                                    value={priority}
+                                    {...register('priority')}
+                                  >
+                                    {priority}
+                                  </SelectItem>
+                                )
+                              })}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -146,11 +148,11 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                   ></Controller>
                 </div>
                 <div className="mt-5 space-y-3">
-                  <Label htmlFor="email">Sector</Label>
+                  <Label htmlFor="sector">Sector</Label>
                   <Controller
                     name="sectorId"
                     control={control}
-                    defaultValue={ticket?.sectorId.toString()}
+                    defaultValue={ticket?.sectorId?.toString()}
                     render={({
                       field: { name, onChange, value, disabled },
                     }) => {
@@ -186,11 +188,11 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                 </div>
               </div>
               <div className="mt-5 space-y-3">
-                <Label htmlFor="email">User</Label>
+                <Label htmlFor="assigned">Assigned to</Label>
                 <Controller
-                  name="userId"
+                  name="assigneeId"
                   control={control}
-                  defaultValue={ticket?.userId.toString()}
+                  defaultValue={ticket?.assigneeId?.toString() ?? 'Assign a user'}
                   render={({ field: { name, onChange, value, disabled } }) => {
                     return (
                       <Select
@@ -209,6 +211,7 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                                 <SelectItem
                                   key={user.id}
                                   value={user.id}
+                                  {...register('assigneeId')}
                                 >
                                   {user.name}
                                 </SelectItem>
