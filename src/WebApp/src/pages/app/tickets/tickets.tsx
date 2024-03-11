@@ -46,6 +46,7 @@ export function Tickets() {
         return res
       }),
     staleTime: Infinity,
+    enabled: true,
   })
 
   useQuery({
@@ -56,6 +57,7 @@ export function Tickets() {
         return res
       }),
     staleTime: Infinity,
+    enabled: true,
   })
 
   const { data: result, isLoading: isLoadingTickets } = useQuery({

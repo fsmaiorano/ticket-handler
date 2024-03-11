@@ -5,6 +5,7 @@ using Application.UseCases.Holder.Commands.UpdateHolder;
 using Application.UseCases.Holder.Queries;
 using Application.UseCases.User.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace WebApi.Controllers
 {
@@ -76,6 +77,7 @@ namespace WebApi.Controllers
 
             var userDtos = getUsersByHolderIdResponse.Users.Select(user => new UserDto
             {
+                Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 Role = user.Role

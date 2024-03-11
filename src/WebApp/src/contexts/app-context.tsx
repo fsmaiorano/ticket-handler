@@ -9,6 +9,7 @@ interface IAppContextProps {
 
 interface IAppContext {
   user: User
+  users: User[]
   holder: Holder
   sectors: Sector[]
   token: string
@@ -52,6 +53,7 @@ export function AppContextProvider({ children }: IAppContextProps) {
     <AppContext.Provider
       value={{
         user,
+        users,
         token,
         holder,
         sectors,
