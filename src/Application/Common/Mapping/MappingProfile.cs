@@ -29,9 +29,7 @@ public class MappingProfile : Profile
             var methodInfo = type.GetMethod(mappingMethodName);
 
             if (methodInfo != null)
-            {
                 methodInfo.Invoke(instance, new object[] { this });
-            }
             else
             {
                 var interfaces = type.GetInterfaces().Where(HasInterface).ToList();

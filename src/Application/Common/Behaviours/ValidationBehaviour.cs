@@ -3,13 +3,10 @@ using MediatR;
 
 namespace Application.Common.Behaviours;
 
-
-public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
      where TRequest : notnull
 {
-    private readonly IEnumerable<IValidator<TRequest>> _validators;
-
-    public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
+    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
@@ -22,12 +19,15 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
                     v.ValidateAsync(context, cancellationToken)));
 
             var failures = validationResults
-                .Where(r => r.Errors.Any())
+                .Where(r => r.Errors.Count != 0)
                 .SelectMany(r => r.Errors)
                 .ToList();
 
-            if (failures.Any())
-                throw new ValidationException(failures);
+            if (failures.Count != 0)
+            {
+                Console.WriteLine($"Validation failed for {typeof(TRequest).Name} - {failures.Count} errors - {string.Join(", ", failures.Select(f => f.ErrorMessage))}");
+                throw new Exceptions.ValidationException(failures);
+            }
         }
         return await next();
     }

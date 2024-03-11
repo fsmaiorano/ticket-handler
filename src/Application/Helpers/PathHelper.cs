@@ -6,10 +6,10 @@ public static class PathHelper
     {
         var directory = new DirectoryInfo(
             currentPath ?? Directory.GetCurrentDirectory());
-        while (directory != null && !directory.GetFiles("*.sln").Any())
-        {
+
+        while (directory != null && directory.GetFiles("*.sln").Length == 0)
             directory = directory.Parent;
-        }
+
         return directory!;
     }
 }

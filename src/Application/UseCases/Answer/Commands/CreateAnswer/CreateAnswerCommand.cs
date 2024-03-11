@@ -1,0 +1,84 @@
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
+using Domain.Entities;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace Application.UseCases.Answer.Commands.CreateAnswer;
+
+public record CreateAnswerCommand : IRequest<CreateAnswerResponse>
+{
+    public required string Content { get; set; }
+    public required Guid TicketId { get; set; }
+    public TicketDto? Ticket { get; set; }
+    public required Guid UserId { get; set; }
+    public UserDto? User { get; set; }
+    public required Guid HolderId { get; set; }
+    public required Guid SectorId { get; set; }
+}
+
+public class CreateAnswerResponse : BaseResponse
+{
+    public AnswerDto? Answer { get; set; }
+}
+
+public class CreateAnswerHandler(ILogger<CreateAnswerHandler> logger, IDataContext context) : IRequestHandler<CreateAnswerCommand, CreateAnswerResponse>
+{
+    private readonly IDataContext _context = context;
+    private readonly ILogger<CreateAnswerHandler> _logger = logger;
+
+    public async Task<CreateAnswerResponse> Handle(CreateAnswerCommand request, CancellationToken cancellationToken)
+    {
+        var response = new CreateAnswerResponse();
+
+        try
+        {
+            _logger.LogInformation("CreateAnswerCommand: {@Request}", request);
+
+            var answer = new AnswerEntity
+            {
+                Content = request.Content,
+                TicketId = request.TicketId,
+                UserId = request.UserId,
+                HolderId = request.HolderId,
+                SectorId = request.SectorId
+            };
+
+            var ticketExists = await _context.Tickets.AnyAsync(x => x.Id == request.TicketId, cancellationToken);
+
+            if (!ticketExists)
+            {
+                _logger.LogWarning("CreateAnswerCommand: Ticket not found");
+                response.Message = "Ticket not found";
+
+                return response;
+            }
+         
+            await _context.Answers.AddAsync(answer, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            response.Success = true;
+            response.Message = "Answer created";
+            response.Answer = new AnswerDto
+            {
+                Id = answer.Id,
+                Content = answer.Content,
+                TicketId = answer.TicketId,
+                UserId = answer.UserId,
+                HolderId = answer.HolderId,
+                SectorId = answer.SectorId,
+                CreatedAt = answer.CreatedAt,
+                UpdatedAt = answer.UpdatedAt,
+                IsActive = answer.IsActive
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "CreateAnswerCommand: {@Request}", request);
+            response.Message = ex.Message;
+        }
+
+        return response;
+    }
+}

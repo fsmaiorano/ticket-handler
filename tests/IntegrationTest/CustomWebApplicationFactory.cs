@@ -16,11 +16,11 @@ internal class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var solutionPath = GetSolutionPath();
             var builder = new ConfigurationBuilder()
                 .SetBasePath(solutionPath.FullName)
-                .AddJsonFile("src/Api/appsettings.json", optional: false)
+                .AddJsonFile("src/WebApi/appsettings.Development.json", optional: false)
                 .Build();
 
             configurationBuilder.AddConfiguration(builder);
-        });
+       });
 
         builder.ConfigureServices((builder, services) =>
         {

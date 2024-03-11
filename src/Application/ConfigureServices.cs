@@ -1,5 +1,6 @@
 ﻿using Application.Common.Behaviours;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -20,6 +21,7 @@ public static class ConfigureServices
         var mapper = configuration.CreateMapper();
 
         services.AddSingleton(mapper);
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddMediatR(cfg =>
         {

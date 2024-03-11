@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Infrastructure.Context;
 
@@ -14,6 +15,7 @@ public class DataContext : DbContext, IDataContext
     // private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
+#pragma warning disable CS8618 
     public DataContext()
     {
 
@@ -23,6 +25,7 @@ public class DataContext : DbContext, IDataContext
     {
 
     }
+#pragma warning restore CS8618 
 
     public DataContext(
        DbContextOptions<DataContext> options,
@@ -35,13 +38,13 @@ public class DataContext : DbContext, IDataContext
         // _configuration = configuration;
     }
 
-    //public DbSet<PokemonEntity> Pokemons => Set<PokemonEntity>();
-    //public DbSet<AbilityEntity> Abilities => Set<AbilityEntity>();
-    //public DbSet<MoveEntity> Moves => Set<MoveEntity>();
-    //public DbSet<TypeEntity> Types => Set<TypeEntity>();
-    //public DbSet<SpriteEntity> Sprites => Set<SpriteEntity>();
-    //public DbSet<PokemonDetailEntity> Details => Set<PokemonDetailEntity>();
     public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<HolderEntity> Holders => Set<HolderEntity>();
+    public DbSet<SectorEntity> Sectors => Set<SectorEntity>();
+    public DbSet<TicketEntity> Tickets => Set<TicketEntity>();
+    public DbSet<AnswerEntity> Answers => Set<AnswerEntity>();
+    public DbSet<StatusEntity> Statuses => Set<StatusEntity>();
+    public DbSet<PriorityEntity> Priorities => Set<PriorityEntity>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -65,28 +68,42 @@ public class DataContext : DbContext, IDataContext
                 var solutionPath = GetSolutionPath();
 
                 var connectionString = string.Empty;
-                Console.WriteLine($"DockerCompose Environment: {Environment.GetEnvironmentVariable("DockerCompose")}");
-                if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DefaultConnection")) && Environment.GetEnvironmentVariable("DockerCompose") == "false")
-                {
-                    Console.WriteLine($"Using appsettings.json to get connection string");
-                    var builder = new ConfigurationBuilder()
-                        .SetBasePath(solutionPath.FullName)
-                        .AddJsonFile("src/Api/appsettings.json", optional: false)
-                        .Build();
+                // if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DefaultConnection")))
+                // {
+                Console.WriteLine($"Using appsettings.json to get connection string");
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(solutionPath.FullName)
+                    .AddJsonFile("src/WebApi/appsettings.json", optional: false)
+                    .Build();
 
-                    Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
-                    connectionString = builder.GetConnectionString("DefaultConnection");
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Environment.SetEnvironmentVariable("ContainerConnection", builder.GetConnectionString("ContainerConnection"));
+                    connectionString = builder.GetConnectionString("ContainerConnection");
                 }
                 else
                 {
-                    Console.WriteLine($"Using Environment Variable to get connection string");
-
-                    //connectionString = Environment.GetEnvironmentVariable("DockerCompose_DefaultConnection");
-                    connectionString = "User ID=postgres;Password=postgres;Server=db;Port=5432;Database=pokemon_database;";
-                    Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
-
-                    Console.WriteLine($"Connection string: {connectionString}");
+                    Environment.SetEnvironmentVariable("DefaultConnection", builder.GetConnectionString("DefaultConnection"));
+                    connectionString = builder.GetConnectionString("DefaultConnection");
                 }
+                // }
+                // else
+                // {
+                //     Console.WriteLine($"Using Environment Variable to get connection string");
+
+                //     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                //     {
+                //         connectionString = "Server=db,1433;Database=tickethandler;User=sa;Password=Your_password123;MultipleActiveResultSets=true";
+                //         Environment.SetEnvironmentVariable("ContainerConnection", connectionString);
+                //     }
+                //     else
+                //     {
+                //         connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=tickethandler;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+                //         Environment.SetEnvironmentVariable("DefaultConnection", connectionString);
+                //     }
+
+                //     Console.WriteLine($"Connection string: {connectionString}");
+                // }
 
                 Console.WriteLine($"Connection string to be used: {connectionString}");
                 optionsBuilder.UseSqlServer(connectionString,
@@ -119,7 +136,7 @@ public class DataContext : DbContext, IDataContext
     {
         var directory = new DirectoryInfo(
             currentPath ?? Directory.GetCurrentDirectory());
-        while (directory != null && !directory.GetFiles("*.sln").Any())
+        while (directory != null && directory.GetFiles("*.sln").Length == 0)
         {
             directory = directory.Parent;
         }
