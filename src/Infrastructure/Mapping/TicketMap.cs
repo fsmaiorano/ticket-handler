@@ -28,6 +28,8 @@ namespace Infrastructure.Mapping
             builder.HasOne(p => p.Sector).WithMany(p => p.Tickets).HasForeignKey(p => p.SectorId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(p => p.Status).WithMany(p => p.Tickets).HasForeignKey(p => p.StatusId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(p => p.Priority).WithMany(p => p.Tickets).HasForeignKey(p => p.PriorityId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(p => p.Answers).WithOne(p => p.Ticket).HasForeignKey(p => p.TicketId).OnDelete(DeleteBehavior.NoAction);
+            
         }
     }
 }

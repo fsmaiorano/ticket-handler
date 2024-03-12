@@ -27,36 +27,48 @@ namespace Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnName("content");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("HolderId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("holder_id");
 
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("SectorId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("sector_id");
 
                     b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ticket_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Answers");
+                    b.HasIndex("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("Answers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.HolderEntity", b =>
@@ -337,6 +349,17 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserSectors", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.AnswerEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.TicketEntity", "Ticket")
+                        .WithMany("Answers")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("Domain.Entities.SectorEntity", b =>
                 {
                     b.HasOne("Domain.Entities.HolderEntity", "HolderEntity")
@@ -446,6 +469,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.StatusEntity", b =>
                 {
                     b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TicketEntity", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserEntity", b =>

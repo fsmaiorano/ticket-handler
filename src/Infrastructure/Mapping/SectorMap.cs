@@ -17,10 +17,10 @@ public class SectorMap : IEntityTypeConfiguration<SectorEntity>
         builder.Property(p => p.Name).HasColumnName("name").IsRequired().HasMaxLength(100);
 
         builder.HasOne(p => p.HolderEntity)
-            .WithMany(p => p.Sectors)
-            .HasForeignKey(p => p.HolderId)
-            .HasConstraintName("FK_Sectors_Holders_HolderId")
-            .OnDelete(DeleteBehavior.Cascade);
+               .WithMany(p => p.Sectors)
+               .HasForeignKey(p => p.HolderId)
+               .HasConstraintName("FK_Sectors_Holders_HolderId")
+               .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.Users)
         .WithMany(p => p.Sectors)

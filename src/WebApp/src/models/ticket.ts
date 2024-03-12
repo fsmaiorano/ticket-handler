@@ -11,6 +11,7 @@ export interface Ticket {
   sectorId: string
   assigneeId: string
   userId: string
+  aswers: string[]
   createdAt: string
   updatedAt: string
 }

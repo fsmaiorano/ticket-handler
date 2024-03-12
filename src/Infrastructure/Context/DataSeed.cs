@@ -331,6 +331,66 @@ namespace Infrastructure.Context
                     await context.Tickets.AddRangeAsync(tickets);
                     await context.SaveChangesAsync();
                 }
+
+                //create answer
+                if (!context.Answers.Any())
+                {
+                    var answers = new List<AnswerEntity>
+                {
+                    new() {
+                        Content = "Answer 1",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Content = "Answer 2",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Content = "Answer 3",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Content = "Answer 4",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Content = "Answer 5",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Content = "Answer 6",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    },
+                    new() {
+                        Content = "Answer 7",
+                        TicketId = context.Tickets.FirstOrDefault()!.Id,
+                        UserId = context.Users.FirstOrDefault()!.Id,
+                        HolderId = context.Holders.FirstOrDefault()!.Id,
+                        SectorId = context.Sectors.FirstOrDefault()!.Id
+                    }
+                };
+
+                    await context.Answers.AddRangeAsync(answers);
+                    await context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {

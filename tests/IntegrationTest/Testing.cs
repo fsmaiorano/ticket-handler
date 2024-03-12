@@ -12,7 +12,7 @@ public class Testing
 {
     private static WebApplicationFactory<Program> _factory = null!;
     private static IConfiguration _configuration = null!;
-    private static IServiceScopeFactory _scopeFactory = null!;
+    public static IServiceScopeFactory _scopeFactory = null!;
 
     //public readonly IAuthService _authService;
 

@@ -9,4 +9,5 @@ public class AnswerEntity : BaseEntity
     public required Guid UserId { get; set; }
     public required Guid HolderId { get; set; }
     public required Guid SectorId { get; set; }
+    public virtual TicketEntity? Ticket { get; set; }
 }

@@ -125,6 +125,7 @@ namespace WebApi.Controllers
                         HolderId = ticket.HolderId,
                         SectorId = ticket.SectorId,
                         AssigneeId = ticket.AssigneeId ?? null,
+                        Answers = ticket.Answers,
                         UserId = ticket.UserId,
                         CreatedAt = ticket.CreatedAt,
                         UpdatedAt = ticket.UpdatedAt

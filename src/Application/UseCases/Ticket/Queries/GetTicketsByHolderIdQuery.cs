@@ -1,5 +1,4 @@
 using Application.Common.Interfaces;
-using Application.Common.Mapping;
 using Application.Common.Models;
 using Domain.Entities;
 using MediatR;
@@ -21,7 +20,6 @@ public record GetTicketsByHolderIdQuery : IRequest<GetTicketsByHolderIdResponse>
 
 public class GetTicketsByHolderIdResponse : PaginatedBaseResponse
 {
-
     public List<TicketDto>? Tickets { get; set; }
 }
 
@@ -43,14 +41,15 @@ public class GetTicketByHolderHandler(ILogger<GetTicketByIdHandler> logger, IDat
                                                .Include(x => x.Status)
                                                .Include(x => x.Priority)
                                                .Include(x => x.Sector)
-                                               .Include(x => x.User);
+                                               .Include(x => x.Answers)
+                                               .Include(x => x.User)
+                                               .AsNoTracking();
 
             if (!string.IsNullOrEmpty(request.Title))
                 tickets = tickets.Where(x => EF.Functions.Like(x.Title, $"%{request.Title}%"));
 
             if (!string.IsNullOrEmpty(request.Sector) && !request.Sector.Equals("all", StringComparison.CurrentCultureIgnoreCase))
                 tickets = tickets.Where(x => EF.Functions.Like(x.Sector!.Name, request.Sector));
-
 
             if (!string.IsNullOrEmpty(request.Status) && !request.Status.Equals("all", StringComparison.CurrentCultureIgnoreCase))
                 tickets = tickets.Where(x => EF.Functions.Like(x.Status!.Code, request.Status));
@@ -79,6 +78,15 @@ public class GetTicketByHolderHandler(ILogger<GetTicketByIdHandler> logger, IDat
                 Content = x.Content,
                 Status = x.Status!.Code,
                 Priority = x.Priority!.Code,
+                Answers = x.Answers?.Select(a => new AnswerDto
+                               {
+                    Id = a.Id,
+                    Content = a.Content,
+                    UserId = a.UserId,
+                    HolderId = a.HolderId,
+                    SectorId = a.SectorId,
+                    TicketId = a.TicketId
+                }).ToList(),
                 UserId = x.UserId,
                 HolderId = x.HolderId,
                 SectorId = x.SectorId,
@@ -88,6 +96,7 @@ public class GetTicketByHolderHandler(ILogger<GetTicketByIdHandler> logger, IDat
         catch (Exception ex)
         {
             _logger.LogError(ex, "GetTicketsByHolderId: {@Request}", request);
+            response.Success = false;
             response.Message = ex.Message;
         }
 

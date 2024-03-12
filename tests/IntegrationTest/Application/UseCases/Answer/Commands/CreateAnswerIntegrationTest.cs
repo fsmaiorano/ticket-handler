@@ -1,10 +1,13 @@
 ﻿using Application.UseCases.Answer.Commands.CreateAnswer;
 using Bogus;
 using Domain.Entities;
+using Infrastructure.Context;
 using IntegrationTest.Application.UseCases.Holder.Commands;
 using IntegrationTest.Application.UseCases.Sector.Commands;
 using IntegrationTest.Application.UseCases.Ticket.Commands;
 using IntegrationTest.Application.UseCases.User.Commands;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace IntegrationTest.Application.UseCases.Answer.Commands;
@@ -68,6 +71,17 @@ public class CreateAnswerIntegrationTest : Testing
 
         var storedTickets = await CountAsync<AnswerEntity>();
         Assert.AreEqual(7, storedTickets);
+
+        var storedTicketsByTicketId = await FindAsync<TicketEntity>(CreateTicketIntegrationTest.CreatedTicket!.Id);
+
+        using var scope = _scopeFactory.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var storedAnswers = await context.Tickets
+            .Include(x => x.Answers)    
+            .Where(x => x.Id == CreateTicketIntegrationTest.CreatedTicket!.Id)
+            .ToListAsync();
     }
 
     [DataTestMethod]

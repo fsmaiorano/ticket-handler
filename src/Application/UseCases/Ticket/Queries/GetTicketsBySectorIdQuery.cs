@@ -36,6 +36,7 @@ public class GetTicketBySectorIdHandler(ILogger<GetTicketByIdHandler> logger, ID
             var tickets = await _context.Tickets.Where(x => x.SectorId == request.SectorId && x.HolderId == request.HolderId)
                                                 .Include(x => x.Status)
                                                 .Include(x => x.Priority)
+                                                .Include(x => x.Answers)
                                                 .PaginatedListAsync(request.PageNumber, request.PageSize);
 
             if (tickets is null)
@@ -57,6 +58,15 @@ public class GetTicketBySectorIdHandler(ILogger<GetTicketByIdHandler> logger, ID
                 Content = x.Content,
                 Status = x.Status!.Code,
                 Priority = x.Priority!.Code,
+                Answers = x.Answers?.Select(a => new AnswerDto
+                {
+                    Id = a.Id,
+                    Content = a.Content,
+                    UserId = a.UserId,
+                    HolderId = a.HolderId,
+                    SectorId = a.SectorId,
+                    TicketId = a.TicketId
+                }).ToList(),
                 UserId = x.UserId,
                 HolderId = x.HolderId,
                 SectorId = x.SectorId

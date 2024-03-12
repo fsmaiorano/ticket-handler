@@ -12,25 +12,6 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Answers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    HolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SectorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Answers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Holders",
                 columns: table => new
                 {
@@ -198,6 +179,40 @@ namespace Infrastructure.Migrations
                         principalColumn: "id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Answers",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    ticket_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    holder_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    sector_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answers", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Answers_Tickets_ticket_id",
+                        column: x => x.ticket_id,
+                        principalTable: "Tickets",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_id",
+                table: "Answers",
+                column: "id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_ticket_id",
+                table: "Answers",
+                column: "ticket_id");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Holders_id",
                 table: "Holders",
@@ -286,19 +301,19 @@ namespace Infrastructure.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "UserSectors");
 
             migrationBuilder.DropTable(
-                name: "UserSectors");
+                name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "Priorities");
 
             migrationBuilder.DropTable(
-                name: "Statuses");
+                name: "Sectors");
 
             migrationBuilder.DropTable(
-                name: "Sectors");
+                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Users");

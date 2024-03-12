@@ -74,6 +74,7 @@ export function Tickets() {
         pageSize: pageSize,
       }).then((res) => {
         console.log(res)
+        debugger
         return res
       }),
     enabled: true,
