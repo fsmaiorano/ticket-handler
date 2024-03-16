@@ -192,7 +192,9 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                 <Controller
                   name="assigneeId"
                   control={control}
-                  defaultValue={ticket?.assigneeId?.toString() ?? 'Assign a user'}
+                  defaultValue={
+                    ticket?.assigneeId?.toString() ?? 'Assign a user'
+                  }
                   render={({ field: { name, onChange, value, disabled } }) => {
                     return (
                       <Select
@@ -236,6 +238,7 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                 Cancel
               </Button>
             </DialogTrigger>
+            <Button disabled={formState.isSubmitting}>Answer</Button>
             <Button disabled={formState.isSubmitting} type="submit">
               Save
             </Button>
