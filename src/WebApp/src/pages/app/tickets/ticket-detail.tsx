@@ -25,6 +25,7 @@ import { useContext } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Ticket } from '@/models/ticket'
 import { updateTicket } from '@/services/update-ticket'
 import { toast } from 'sonner'
@@ -96,7 +97,10 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
 
   return (
     <>
-      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        // className="sm:max-w-[625px] md:max-w-[925px]"
+      >
         <form onSubmit={handleSubmit(handleUpdateTicket)} className="space-y-4">
           <DialogHeader>
             <DialogTitle>Ticket</DialogTitle>
@@ -228,7 +232,28 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
               </div>
               <div className="mt-5 space-y-3">
                 <Label htmlFor="content">Message</Label>
-                <Textarea id="content" {...register('content')} />
+                <Textarea id="content" {...register('content')} readOnly />
+              </div>
+              <div className="mt-5 space-y-3">
+                <Label>Answers</Label>
+                <ScrollArea className="h-[100px] rounded-md border p-4">
+                  {ticket.answers.map((answer) => {
+                    return (
+                      // <div key={answer.id} className="mt-5 space-y-3">
+                      //   <Label htmlFor="content">Answer</Label>
+                      //   <Textarea id="content" value={answer.content} readOnly />
+                      // </div>
+
+                      <div key={answer.id} className="mt-5 space-y-3">
+                        <label key={answer.id} className="block">
+                          <span className="text-gray-700">
+                            {answer.content}
+                          </span>
+                        </label>
+                      </div>
+                    )
+                  })}
+                </ScrollArea>
               </div>
             </DialogDescription>
           </DialogHeader>
@@ -238,7 +263,7 @@ export function TicketDetail({ ticket, hasUpdateTicket }: TicketDetailProps) {
                 Cancel
               </Button>
             </DialogTrigger>
-            <Button disabled={formState.isSubmitting}>Answer</Button>
+            {/* <Button disabled={formState.isSubmitting}>Answer</Button> */}
             <Button disabled={formState.isSubmitting} type="submit">
               Save
             </Button>

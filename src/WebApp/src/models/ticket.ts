@@ -1,5 +1,6 @@
-import { TicketPriority } from "./ticket-priority"
-import { TicketStatus } from "./ticket-status"
+import { Answer } from './answer'
+import { TicketPriority } from './ticket-priority'
+import { TicketStatus } from './ticket-status'
 
 export interface Ticket {
   id: string
@@ -11,7 +12,7 @@ export interface Ticket {
   sectorId: string
   assigneeId: string
   userId: string
-  aswers: string[]
+  answers: Answer[]
   createdAt: string
   updatedAt: string
 }
